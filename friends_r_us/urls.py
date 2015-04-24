@@ -3,5 +3,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^/*', include('social_network.urls', namespace="social_network")),
+    url(r'^login/$', 'django.contrib.auth.views.login', name="my_login"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),
     url(r'^admin/', include(admin.site.urls)),
 ]

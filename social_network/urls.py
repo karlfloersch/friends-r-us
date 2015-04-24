@@ -3,5 +3,7 @@ from . import views
 
 # Define the URLS that we are using
 urlpatterns = patterns('',
-                       (r'^home/$', views.home_view),
+                       (r'^accounts/profile/$', views.redirect_user),
+                       url(r'^accounts/(?P<username>\w+)/$',
+                           views.home_view, name='profile_view'),
                        )
