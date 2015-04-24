@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<div class="row">
+<div class="col-md-10">
     <h1>Display the first User's information</h1>
+    <p>{{ user_info }}</p>
+</div>
+<div class="col-md-2">
+    <p>Display the Ads!!!</p>
+</div>
+</div>
 
-    {{ user_info }}
 {% endblock %}

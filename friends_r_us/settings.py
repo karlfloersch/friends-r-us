@@ -107,6 +107,8 @@ TEMPLATE_DIRS = (
     'social_network/templates',
 )
 
+LOGIN_URL = '/login/'
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (

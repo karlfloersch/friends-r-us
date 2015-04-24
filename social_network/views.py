@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 
 
-def my_custom_sql():
+def get_user_info_by_id(cust_id):
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM person")
+    cursor.execute("SELECT * FROM person WHERE id=" + cust_id)
     row = cursor.fetchone()
     return row
 
@@ -15,9 +15,10 @@ def my_custom_sql():
 @login_required
 def home_view(request, username):
     """ Simple view to test querying the DB """
-    row = my_custom_sql()
+    row = get_user_info_by_id(request.user.first_name)
     html = str(row)
-    data = {"user_info": html}
+    data = {"user_info": html, "username": request.user.username,
+            "first_name": row[1]}
     return render(request, "home.html", dictionary=data)
 
 
