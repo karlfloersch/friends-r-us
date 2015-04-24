@@ -18,7 +18,8 @@ def home_view(request, username):
     row = get_user_info_by_id(request.user.first_name)
     html = str(row)
     data = {"user_info": html, "username": request.user.username,
-            "first_name": row[1]}
+            "first_name": row[1],
+            "last_name": row[2]}
     return render(request, "home.html", dictionary=data)
 
 
