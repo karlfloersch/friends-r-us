@@ -1,6 +1,7 @@
 import os
 from django.db import models
 from django.utils.deconstruct import deconstructible
+from .storage import OverwriteStorage
 
 # Create your models here.
 
@@ -41,5 +42,6 @@ path_and_rename = PathAndRename("avatars")
 class Document(models.Model):
     username = models.CharField(max_length=128, default='')
     docfile = models.FileField(upload_to=path_and_rename,
+                               storage=OverwriteStorage(),
                                null=True, blank=True,
                                default="avatars/default.png")
