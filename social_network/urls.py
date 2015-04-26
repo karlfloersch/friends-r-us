@@ -6,4 +6,5 @@ urlpatterns = patterns('',
                        (r'^accounts/profile/$', views.redirect_user),
                        url(r'^accounts/(?P<username>\w+)/$',
                            views.home_view, name='profile_view'),
+                       url(r'^list/$', views.list_view, name='list'),
                        )
