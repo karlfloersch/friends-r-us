@@ -1,5 +1,39 @@
 /* Custom styles for the site */
 
+/* Profile Image */
+.profile-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+.profile-ratio {
+    margin-top: 100%; /* 4:3 aspect ratio */
+}
+.profile-image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #EEEEEE;
+    text-align:center; /* Align center inline elements */
+    font: 0/0 a;
+}
+
+.profile-image:before {
+    content: ' ';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.profile-image img {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* Commenting CSS */
+
 .test {
     display: none;
 }

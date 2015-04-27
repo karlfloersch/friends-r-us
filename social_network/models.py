@@ -3,8 +3,6 @@ from django.db import models
 from django.utils.deconstruct import deconstructible
 from .storage import OverwriteStorage
 
-# Create your models here.
-
 
 @deconstructible
 class PathAndRename(object):
@@ -25,23 +23,10 @@ class PathAndRename(object):
 
 path_and_rename = PathAndRename("avatars")
 
-# def path_and_rename(path):
-#     def wrapper(instance, filename):
-#         ext = filename.split('.')[-1]
-#         # get filename
-#         if instance.pk:
-#             filename = '{}.{}'.format(instance.username, ext)
-#         else:
-#             # set filename as random string
-#             filename = '{}.{}'.format(instance.username, ext)
-#         # return the whole path to the file
-#         return os.path.join(path, filename)
-#     return wrapper
-
 
 class Document(models.Model):
     username = models.CharField(max_length=128, default='')
-    docfile = models.FileField(upload_to=path_and_rename,
-                               storage=OverwriteStorage(),
-                               null=True, blank=True,
-                               default="avatars/default.png")
+    docfile = models.ImageField(upload_to=path_and_rename,
+                                storage=OverwriteStorage(),
+                                null=True, blank=True,
+                                default="avatars/default.png")

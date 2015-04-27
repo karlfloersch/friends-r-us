@@ -1,17 +1,37 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+
+{% block js %}
+<script src="{% static "js/comments.js" %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="row">
 <div class="col-md-2">
-    <img src="
-{% with 'img/profile-imgs/'|add:username|add:'.png' as image_static %}
-  {% static image_static %}
-{% endwith %}
-        " class="img-responsive">
+    <div class="profile-container">
+        <div class="profile-ratio"></div>
+        <div class="profile-image">
+            <img src="{% with '../media/avatars/'|add:username|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now u %}" class="img-responsive">
+        </div>
+    </div>
     <h5>
         <small>Choose new profile picture.</small>
     </h5>
+    <h5><small>
+    <!-- Upload form. Note enctype attribute! -->
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form.non_field_errors }}</p>
+        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+        <p>
+            {{ form.docfile.errors }}
+            {{ form.docfile }}
+            Image file must be JPG
+        </p>
+        <p><input type="submit" value="Upload" /></p>
+    </form>
+    </small></h5>
 </div>
 <div class="col-md-8">
 
@@ -41,22 +61,13 @@
 
                 </div>
             </li>
-            <li>
-                <div class="commenterImage">
-                  <img src="http://lorempixel.com/50/50/people/9" />
-                </div>
-                <div class="commentText">
-                    <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>
-
-                </div>
-            </li>
         </ul>
         <form class="form-inline" role="form">
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Write a comment..." />
+                <input class="form-control comment-box" type="text" placeholder="Write a comment..." />
             </div>
             <div class="form-group">
-                <button class="btn btn-default">Add</button>
+                <button type="button" class="btn btn-default comment-add">Add</button>
             </div>
         </form>
     </div>

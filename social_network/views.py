@@ -24,6 +24,22 @@ def home_view(request, username):
     data = {"user_info": html, "username": request.user.username,
             "first_name": row[1],
             "last_name": row[2]}
+    # Handle file upload
+    if request.method == 'POST':
+        data['form'] = DocumentForm(request.POST, request.FILES)
+        if data['form'].is_valid():
+            username = request.user.username
+            newdoc = Document(username=username,
+                              docfile=request.FILES['docfile'])
+            print(newdoc)
+            newdoc.save()
+
+            # Redirect to the document list after POST
+            return HttpResponseRedirect('/accounts/' + username)
+        else:
+            return render(request, "home.html", dictionary=data)
+    else:
+        data['form'] = DocumentForm()  # A empty, unbound form
     return render(request, "home.html", dictionary=data)
 
 
@@ -36,7 +52,6 @@ def redirect_user(request):
 def list_view(request):
     # Handle file upload
     if request.method == 'POST':
-
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             username = request.user.username
