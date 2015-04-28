@@ -229,7 +229,7 @@ def delete_message(message_id):
     cursor.execute("DELETE FROM message WHERE id ="+message_id)
 
 
-def get_user_circles(user_id):
+def get_user_circles_ids(user_id):
     """ Get a list of all the user's circles """
     cursor = connection.cursor()
     sql_call = str("SELECT id FROM circle C WHERE C.owner_id = " + user_id +
@@ -240,3 +240,13 @@ def get_user_circles(user_id):
     #               + user_id)
     cursor.execute(sql_call)
     return cursor.fetchall()
+
+
+def get_user_circles_info(user_id):
+    circle_ids = get_user_circles_ids(user_id)
+    circle_info = []
+    cursor = connection.cursor()
+    for circle_id in circle_ids:
+        sql_call = str("SELECT * FROM circle WHERE id=" + str(circle_id[0]))
+        circle_info.append(cursor.execute(sql_call).fetchone())
+    return circle_info

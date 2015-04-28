@@ -12,7 +12,7 @@ from . import queries
 def home_view(request, username):
     """ Simple view to test querying the DB """
     user_info = queries.get_user_info_by_id(request.user.first_name)
-    my_circles = queries.get_user_circles(request.user.first_name)
+    my_circles = queries.get_user_circles_info(request.user.first_name)
     html = str(user_info)
     circles = str(my_circles)
     data = {"user_info": html, "username": request.user.username,
