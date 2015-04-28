@@ -1,5 +1,26 @@
 /* Custom styles for the site */
 
+#post-area {
+    padding: 10px;
+}
+
+#post-box {
+    width: 100%;
+    resize: none;
+}
+
+#post-add {
+    margin-top: 15px;
+}
+
+.comment-box {
+    resize: none;
+}
+
+.comment-add {
+    margin-top: 7px;
+}
+
 /* Profile Image */
 .profile-container {
     display: inline-block;
@@ -44,7 +65,8 @@ footer {
 
 .detailBox {
     border:1px solid #bbb;
-    margin:50px;
+    margin-top:10px; margin-left:50px;
+    margin-right:50px;
 }
 .titleBox {
     background-color:#fdfdfd;

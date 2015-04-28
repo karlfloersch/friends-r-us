@@ -7,78 +7,87 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
-<div class="col-md-2">
-    <div class="profile-container">
-        <div class="profile-ratio"></div>
-        <div class="profile-image">
-            <img src="{% with '../media/avatars/'|add:username|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now u %}" class="img-responsive">
+    <div class="col-md-2">
+        <div class="profile-container">
+            <div class="profile-ratio"></div>
+            <div class="profile-image">
+                <img src="{% with '../media/avatars/'|add:username|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now s %}" class="img-responsive">
+            </div>
+        </div>
+        <h5>
+            <small>Choose new profile picture.</small>
+        </h5>
+        <h5><small>
+            <!-- Upload form. Note enctype attribute! -->
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>{{ form.non_field_errors }}</p>
+                <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+                <p>
+                    {{ form.docfile.errors }}
+                    {{ form.docfile }}
+                    Image file must be JPG
+                </p>
+                <p><input type="submit" value="Upload" /></p>
+            </form>
+        </small></h5>
+    </div>
+    <div class="col-md-8">
+        <div id="post-area" class="detailBox">
+            <form role="form">
+                <div class="row">
+                    <div class="col-md-10">
+                        <textarea class="form-control" id="post-box" type="text" placeholder="What's on your mind?"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-default post-add" id="post-add">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="posts">
+            <div class="detailBox">
+                <div class="titleBox">
+                    <label>{{ first_name }} {{ last_name }}</label>
+                </div>
+                <div class="commentBox">
+                    <p class="taskDescription">♫I'm in love with a poodle!♫</p>
+                </div>
+                <div class="actionBox">
+                    <ul class="commentList">
+                        <li>
+                            <div class="commenterImage">
+                              <img src="http://lorempixel.com/50/50/people/6">
+                            </div>
+                            <div class="commentText">
+                                <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="commenterImage">
+                                <img src="http://lorempixel.com/50/50/people/7">
+                            </div>
+                            <div class="commentText">
+                                <p class="">Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <form role="form">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <textarea rows="1" cols="40" class="form-control comment-box" type="text" placeholder="Write a comment..."></textarea>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-default comment-add">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <h5>
-        <small>Choose new profile picture.</small>
-    </h5>
-    <h5><small>
-    <!-- Upload form. Note enctype attribute! -->
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>{{ form.non_field_errors }}</p>
-        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-        <p>
-            {{ form.docfile.errors }}
-            {{ form.docfile }}
-            Image file must be JPG
-        </p>
-        <p><input type="submit" value="Upload" /></p>
-    </form>
-    </small></h5>
-</div>
-<div class="col-md-8">
-
-<div class="detailBox">
-    <div class="titleBox">
-        <label>{{ first_name }} {{ last_name }}</label>
-    </div>
-    <div class="commentBox">
-        <p class="taskDescription">♫I'm in love with a poodle!♫</p>
-    </div>
-    <div class="actionBox">
-        <ul class="commentList">
-            <li>
-                <div class="commenterImage">
-                  <img src="http://lorempixel.com/50/50/people/6" />
-                </div>
-                <div class="commentText">
-                    <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>
-                </div>
-            </li>
-            <li>
-                <div class="commenterImage">
-                  <img src="http://lorempixel.com/50/50/people/7" />
-                </div>
-                <div class="commentText">
-                    <p class="">Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>
-
-                </div>
-            </li>
-        </ul>
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                <input class="form-control comment-box" type="text" placeholder="Write a comment..." />
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-default comment-add">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
-<div class="col-md-2">
-    <h5>
-        <small>Ads:</small>
-    </h5>
-    <img src="http://itsallfreeonline.com/wp-content/uploads/2009/10/Snuggie-Blanket.jpg" class="img-responsive">
-</div>
 </div>
 
 {% endblock %}
