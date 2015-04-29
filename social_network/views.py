@@ -14,7 +14,8 @@ def home_view(request, username):
     user_info = queries.get_user_info_by_id(request.user.first_name)
     my_circles = queries.get_user_circles_info(request.user.first_name)
     html = str(user_info)
-    circles = str(my_circles)
+    circles = my_circles
+    print(circles)
     data = {"user_info": html, "username": request.user.username,
             "first_name": user_info[1],
             "last_name": user_info[2],
