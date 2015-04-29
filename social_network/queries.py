@@ -3,7 +3,7 @@ from datetime import date
 import time
 
 
-def search_for_a_user_add_to_Circle(circle_id, real_first_name, real_last_name):
+def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
     # SELECT U.User_Id, U.First_Name, U.Last_Name FROM User U where U.First_Name
     # LIKE %?% OR U.Last_Name LIKE %?%
     # INSERT INTO AddedTo VALUES (?,?)
@@ -250,3 +250,32 @@ def get_user_circles_info(user_id):
         sql_call = str("SELECT * FROM circle WHERE id=" + str(circle_id[0]))
         circle_info.append(cursor.execute(sql_call).fetchone())
     return circle_info
+
+
+def add_employee(firstname, lastname, password, gender, address, city, state, zipcode, telephone, ssn, start_date, hourly_rate, role):
+    cursor = connection.cursor()
+    sql_call = str("Insert into person Values (NULL, " + firstname + ", " +
+    lastname + "," + password + "," + gender + ", " + address + "," + city + ", " + state + ", " + telephone + ")")
+    cursor.execute(sql_call)
+    sql_call= str("select id from person where lastname = "+ lastname +" and "+ "firstname = "+firstname+" address = "+address)
+    cursor.execute(sql_call)
+    id_val = cursor.fetchone()
+    sql_call = str("Insert into employee Values ("+id_val+", " + ssn + "," + start_date + ", "+ hourly_rate +" , " + role + " )")
+    
+    cursor.execute(sql_call)
+
+
+def update_employee(firstname, lastname, password, gender, address, city, state, zipcode, telephone, ssn, start_date, hourly_rate, role):
+    
+    # Update Person
+    # Set PhoneNumber = 6314136666
+    # Where SSN= 123456789
+
+    cursor = connection.cursor()
+    sql_call = str("Insert into person Values (NULL, " + firstname + ", " +
+    lastname + "," + password + "," + gender + ", " + address + "," + city + ", " + state + ", " + telephone + ")")
+    cursor.execute(sql_call)
+
+    sql_call = str("Insert into employee Values (NULL, " + ssn + "," + start_date + ", "+ hourly_rate +" , " + role + " )")
+    cursor.execute(sql_call)
+

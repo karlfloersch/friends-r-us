@@ -1,0 +1,665 @@
+/* Drop the TABLES */
+drop table person;
+drop table customer;
+drop table employee;
+drop table employeemanages;
+drop table customer_preferences;
+drop table account;
+drop table message;
+drop table advertisement;
+drop table buy;
+drop table circle;
+drop table page;
+drop table post;
+drop table likepost;
+drop table likecomment;
+drop table pagebelongstocircle;
+drop table createpage;
+drop table comment;
+drop table createcircle;
+drop table memberofcircle;
+drop table addcommenttopost;
+drop table advertise;
+/* CREATE TABLES */
+CREATE TABLE person 
+  ( 
+     id        INT, 
+     firstname VARCHAR(50), 
+     lastname  VARCHAR(50), 
+     password  CHAR(15), 
+     gender    VARCHAR(1),
+     address   VARCHAR(95), 
+     city      VARCHAR(50), 
+     state     VARCHAR(50), 
+     zipcode   INT, 
+     telephone VARCHAR(15), 
+     PRIMARY KEY (id) 
+  ); 
+
+CREATE TABLE customer 
+  ( 
+     cust_id     INT DEFAULT 0, 
+     email       VARCHAR(50), 
+     rating      INT, 
+     date_of_birth DATETIME NOT NULL, 
+     PRIMARY KEY (cust_id), 
+     FOREIGN KEY (cust_id) REFERENCES person(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE employee 
+  ( 
+     emp_id      INT, 
+     ssn         CHAR(11) NOT NULL UNIQUE, 
+     start_date  DATE, 
+     hourly_rate INT, 
+     role        VARCHAR(100),
+     PRIMARY KEY (emp_id), 
+     FOREIGN KEY (emp_id) REFERENCES person(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE employeemanages 
+  ( 
+     manager_id INT, 
+     sub_id     INT, 
+     PRIMARY KEY (manager_id, sub_id), 
+     FOREIGN KEY (manager_id) REFERENCES employee (emp_id) ON DELETE CASCADE,
+     FOREIGN KEY (sub_id) REFERENCES employee (emp_id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE customer_preferences 
+  ( 
+     customer_id INT, 
+     preference  VARCHAR(20), 
+     PRIMARY KEY (customer_id, preference), 
+     FOREIGN KEY (customer_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE account 
+  ( 
+     customer_id     INT, 
+     account_id       INT,
+     create_date DATETIME NOT NULL,
+     credit_card_num VARCHAR(50), 
+     PRIMARY KEY (account_id), 
+     FOREIGN KEY (customer_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE message 
+( 
+        id                                    INT,
+        content                           TEXT, 
+        sender                             INT,
+        receiver                          INT, 
+        subject                            VARCHAR(30),
+        date                              DATE, 
+        PRIMARY KEY              (id),
+        FOREIGN KEY              (sender) REFERENCES person(id),
+        FOREIGN KEY              (receiver) REFERENCES customer(cust_id)
+); 
+
+CREATE TABLE advertisement 
+  ( 
+     adv_id         INT(30), 
+     item_name      VARCHAR(50), 
+     num_aval_units INT, 
+     unit_price     INT, 
+     content        TEXT, 
+     employee_id    INT, 
+     type           VARCHAR(20), 
+     date           DATE, 
+     company        VARCHAR(150), 
+     PRIMARY KEY (adv_id), 
+     FOREIGN KEY (employee_id) REFERENCES employee(emp_id) 
+  ); 
+
+CREATE TABLE buy 
+  ( 
+     transaction_id   INT(30), 
+     num_units        INT, 
+     date             DATE, 
+     time             TIMESTAMP, 
+     customer_acc_num INT, 
+     adv_id           INT(30), 
+     PRIMARY KEY (transaction_id), 
+     FOREIGN KEY (customer_acc_num) REFERENCES account(account_id) ON DELETE 
+     CASCADE, 
+     FOREIGN KEY (adv_id) REFERENCES advertisement(adv_id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE circle 
+  ( 
+     id                   INT, 
+     owner_id       INT, 
+     name           VARCHAR(50), 
+     circle_type    VARCHAR(20), 
+     PRIMARY KEY (id), 
+     FOREIGN KEY (owner_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE page 
+  ( 
+     id                   INT, 
+     post_count           INT, 
+     associated_circle_id INT, 
+     PRIMARY KEY (id), 
+     FOREIGN KEY (associated_circle_id) REFERENCES circle(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE post 
+  ( 
+     id            INT, 
+     date          DATE, 
+     time          TIMESTAMP, 
+     content       TEXT, 
+     comment_count INT, 
+     customerid    INT, 
+     page_id        INT, 
+     PRIMARY KEY (id), 
+     FOREIGN KEY (customerid) REFERENCES customer(cust_id), 
+     FOREIGN KEY (page_id) REFERENCES page(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE likepost 
+  ( 
+     post_id INT, 
+     cust_id INT, 
+     PRIMARY KEY (post_id, cust_id), 
+     FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE, 
+     FOREIGN KEY (cust_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
+  ); 
+
+
+CREATE TABLE pagebelongstocircle 
+  ( 
+     page_id               INT, 
+     circle_id             INT, 
+     PRIMARY KEY (page_id, circle_id), 
+     FOREIGN KEY (circle_id) REFERENCES circle(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE createpage 
+  ( 
+     pageowner INT, 
+     page_id   INT, 
+     PRIMARY KEY (page_id), 
+     FOREIGN KEY (pageowner) REFERENCES customer (cust_id) ON DELETE CASCADE, 
+     FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE comment 
+  ( 
+     id        INT, 
+     date      DATE, 
+     time      TIMESTAMP, 
+     content   TEXT, 
+     author_id INT, 
+     post_id INT,
+     PRIMARY KEY (id), 
+     FOREIGN KEY (author_id) REFERENCES customer (cust_id) ON DELETE NO ACTION,
+     FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE
+
+  ); 
+
+CREATE TABLE likecomment 
+  ( 
+     comment_id INT, 
+     cust_id    INT, 
+     PRIMARY KEY (comment_id, cust_id), 
+     FOREIGN KEY (comment_id) REFERENCES comment(id) ON DELETE CASCADE, 
+     FOREIGN KEY (cust_id) REFERENCES customer(cust_id) ON DELETE NO ACTION
+  ); 
+
+
+CREATE TABLE createcircle 
+  ( 
+     cust_id   INT, 
+     circle_id INT, 
+     PRIMARY KEY (cust_id, circle_id), 
+     FOREIGN KEY (cust_id) REFERENCES customer (cust_id) ON DELETE CASCADE, 
+     FOREIGN KEY (circle_id) REFERENCES circle(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE memberofcircle 
+  ( 
+     cust_id   INT, 
+     circle_id INT, 
+     PRIMARY KEY (cust_id, circle_id), 
+     FOREIGN KEY (cust_id) REFERENCES customer (cust_id) ON DELETE CASCADE, 
+     FOREIGN KEY (circle_id) REFERENCES circle(id) ON DELETE CASCADE 
+  ); 
+
+CREATE TABLE addcommenttopost 
+  ( 
+     post_id INT, 
+     cust_id INT, 
+     PRIMARY KEY (post_id, cust_id), 
+     FOREIGN KEY (post_id) REFERENCES post(id) ON DELETE CASCADE, 
+     FOREIGN KEY (cust_id) REFERENCES customer(cust_id)
+  ); 
+
+CREATE TABLE advertise
+  ( 
+     emp_id INT, 
+     adv_id INT, 
+     PRIMARY KEY (emp_id, adv_id), 
+     FOREIGN KEY (emp_id) REFERENCES employee (emp_id) ON DELETE CASCADE,
+     FOREIGN KEY (adv_id) REFERENCES advertisement(adv_id) ON DELETE CASCADE 
+  );
+
+
+/* INSERT DATA INTO TABLES */
+
+/*CUSTOMER+ Person + Customer Preferences*/
+INSERT INTO person
+VALUES (100100101,'Alice','McKeeny','pw','F','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649881);
+INSERT INTO customer
+VALUES (100100101,'alice@blah.com',8,10/10/88);
+INSERT INTO customer_preferences
+VALUES (100100101,'l');
+
+INSERT INTO person
+VALUES (100100102,'Bob','Wonderwall','pw','M','21 MajorApt,Oak St.','NewYork','NY',11700,4314649882);
+INSERT INTO customer
+VALUES (100100102,'bob@blah.com',5,6/8/88);
+INSERT INTO customer_preferences
+VALUES (100100102,'o');
+
+INSERT INTO person
+VALUES (100100103,'Elisa','Roth','pw','F','43 Corvette Apt, Maple St','Stony Brook','NY',11790,4314649883);
+INSERT INTO customer
+VALUES (100100103,'elisa@blah.com',5,11/10/92);
+INSERT INTO customer_preferences
+VALUES (100100103,'l');
+
+INSERT INTO person
+VALUES (100100104,'Kelly','Mcdonald','pw','F','54 East Apt,Oak St','NewYork','NY',11700,4314649884);
+INSERT INTO customer
+VALUES (100100104,'kelly@blah.com',5,11/11/91);
+INSERT INTO customer_preferences
+VALUES (100100104,'e');
+
+INSERT INTO person
+VALUES (100100105,'Wendy','Stanley','pw','F','21 MajorApt,Oak St.','Stony Brook','NY',11790,4314649885);
+INSERT INTO customer
+VALUES (100100105,'wendy@blah.com',2,8/8/92);
+INSERT INTO customer_preferences
+VALUES (100100105,'e');
+
+INSERT INTO person
+VALUES (100100106,'Dennis','Ritchie','pw','M','43 Corvette Apt, Maple St','NewYork','NY',11700,4314649886);
+INSERT INTO customer
+VALUES (100100106,'den@blah.com',2,3/2/92);
+INSERT INTO customer_preferences
+VALUES (100100106,'e');
+
+INSERT INTO person
+VALUES (100100107,'Patrick','Norris','pw','M','Chapin Apt 1001,Health Drive','Stony Brook','NY',11790,4314649887);
+INSERT INTO customer
+VALUES (100100107,'patnor@blahblah.com',2,8/7/92);
+INSERT INTO customer_preferences
+VALUES (100100107,'a');
+
+INSERT INTO person
+VALUES (100100108,'Chuck','Stewart','pw','M','54 East Apt,Oak St','NewYork','NY',11700,4314649888);
+INSERT INTO customer
+VALUES (100100108,'chuck@blah.com',2,2/1/91);
+INSERT INTO customer_preferences
+VALUES (100100108,'h');
+
+INSERT INTO person
+VALUES (100100109,'Brad','Norton','pw','M','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649889);
+INSERT INTO customer
+VALUES (100100109,'brad@blah.com',2,9/1/92);
+INSERT INTO customer_preferences
+VALUES (100100109,'r');
+
+INSERT INTO person
+VALUES (100100110,'Jeniffer','Buffet','pw','F','Chapin Apt 1223,Health Drive','NewYork','NY',11700,4314649890);
+INSERT INTO customer
+VALUES (100100110,'jennycool123@blah.com',2,8/1/89);
+INSERT INTO customer_preferences
+VALUES (100100110,'e');
+
+
+/*ACCOUNTS*/
+
+INSERT INTO account
+VALUES (100100101,90010101,4/10/11,'4123132454456550');
+
+INSERT INTO account
+VALUES (100100102,90010102,4/10/11,'1221344356657880');
+
+INSERT INTO account
+VALUES (100100103,90010103,4/10/11,'9889677645543220');
+
+INSERT INTO account
+VALUES (100100104,90010104,4/10/11,'1221655609907660');
+
+INSERT INTO account
+VALUES (100100105,90010105,5/10/11,'1221322334434550');
+
+INSERT INTO account
+VALUES (100100106,90010106,5/10/11,'9889877867764550');
+
+INSERT INTO account
+VALUES (100100107,90010107,6/10/11,'3443566576678770');
+
+INSERT INTO account
+VALUES (100100108,90010108,6/10/11,'1221122132232330');
+
+INSERT INTO account
+VALUES (100100109,90010109,6/10/11,'1234432145544550');
+
+INSERT INTO account
+VALUES (100100110,90010110,6/10/11,'2345543289000980');
+
+INSERT INTO account
+VALUES (100100101,90010111,7/10/11,'2345543282424980');
+
+INSERT INTO account
+VALUES (100100102,90010112,7/10/11,'2345543289003440');
+
+
+/*CIRCLE*/
+
+INSERT INTO circle
+VALUES (8001,100100101,'My Friends','Friends');
+
+INSERT INTO circle
+VALUES (8002,100100102,'Best Friends','Friends');
+
+INSERT INTO circle
+VALUES (8003,100100105,'StonyBrookGang','Friends');
+
+INSERT INTO circle
+VALUES (8004,100100107,'CSJunkies','Group');
+
+INSERT INTO circle
+VALUES (8005,100100109,'Norris Family','Family');
+
+INSERT INTO circle
+VALUES (8006,100100106,'Microsoft Groupies','Company');
+
+
+
+/*PAGES*/
+
+INSERT INTO page
+VALUES (6900,2,8001);
+
+INSERT INTO page
+VALUES (6904,1,8003);
+
+INSERT INTO page
+VALUES (6905,1,8004);
+
+INSERT INTO page
+VALUES (6908,0,8005);
+
+INSERT INTO page
+VALUES (6910,1,8006);
+
+
+
+/*POSTS DATA*/
+INSERT INTO post
+VALUES (20111,10/10/11,'2008-01-01 00:00:01','Its Snowing! :D',2,100100105,6904);
+
+INSERT INTO post
+VALUES (20112,11/10/11,'2008-01-01 00:00:01','GO Seawolves!!!!',3,100100106,6910);
+
+INSERT INTO post
+VALUES (20113,11/10/11,'2008-01-01 00:00:01','Arrgh!I hate facebook!',0,100100103,6900);
+
+INSERT INTO post
+VALUES (20114,12/10/11,'2008-01-01 00:00:01','MackBook Finally!!!',1,100100104,6900);
+
+INSERT INTO post
+VALUES (20115,12/10/11,'2008-01-01 00:00:01','ritchie RIP :(',0,100100104,6905);
+
+
+
+/*COMMENT*/
+INSERT INTO comment
+VALUES (900001,10/10/11,'2008-01-01 00:00:01','Its beautiful! :)',100100101,20111);
+
+INSERT INTO comment
+VALUES (900002,11/10/11,'2008-01-01 00:00:01','Natures white blanket :D',100100107,20111);
+
+INSERT INTO comment
+VALUES (900003,11/10/11,'2008-01-01 00:00:01','GO! GO! GO!',100100104,20112);
+
+INSERT INTO comment
+VALUES (900004,11/10/11,'2008-01-01 00:00:01','we totally owned them!',100100103,20112);
+
+INSERT INTO comment
+VALUES (900005,12/10/11,'2008-01-01 00:00:01','we won! We won!',100100102,20112);
+
+INSERT INTO comment
+VALUES (900006,12/10/11,'2008-01-01 00:00:01','Congrats!',100100109,20114);
+
+
+/*MESSAGE*/
+INSERT INTO message
+VALUES (3001,'Hey! Do u have assignent 1 questions?',100100101,100100102,'hey!',10/10/11);
+
+INSERT INTO message
+VALUES (3002,'nope? I think patrick has them.',100100102,100100101,'re: hey!',10/10/11);
+
+INSERT INTO message
+VALUES (3003,'hey u there! Have an amazing and super duper bday! Don?t miss me too much :D',100100103,100100104,'happy bday!',11/11/11);
+
+INSERT INTO message
+VALUES (3004,'Hey! I am sorry I wont make it to tonights appointment.Stuck with some work! :(',100100105,100100105,'will be late',11/10/11);
+
+
+/*employee + person*/
+INSERT INTO person
+VALUES (111221,'Mike','Thomas','pw','M','43 Apple Apt,Maple Street','Stony Brook','NY',11790,6314648998);
+INSERT INTO employee
+VALUES (111221,'111222333',4/10/11,20,'Customer Representative');
+
+INSERT INTO person
+VALUES (111222,'Jonthan','Klaus','pw','M','76 PotterApt,Muriel Avenue','Stony Brook','NY',11790,6314651232);
+INSERT INTO employee
+VALUES (111222,'111333222',5/5/11,20,'Customer Representative');
+
+INSERT INTO person
+VALUES (111220,'Scott','Thomas','pw','M','11 Oak St,Mart Avenue','Stony Brook','NY',11790,4312345432);
+INSERT INTO employee
+VALUES (111220,'111444111',1/5/11,35,'Manager');
+
+/*employeemanages*/
+
+
+/*advertisement*/
+INSERT INTO advertisement
+VALUES (33331,'2012-Mustang',30,22000,'Ford Mustang! First 10 cutomers get a 10%Discount!',111221,'car',4/10/11,'Ford');
+
+INSERT INTO advertisement
+VALUES (33332,'Superman Shirt',100,5,'Just $5!!!!!!!',111222,'clothing',4/10/11,'GAP');
+
+/*buy*/
+INSERT INTO buy
+VALUES (200010001,1,4/22/11,'0000-00-00 00:00:00',90010101,33331);
+
+INSERT INTO buy
+VALUES (200010002,2,4/23/1,'0000-00-00 00:00:00',90010101,33332);
+
+INSERT INTO buy
+VALUES (200010003,4,4/23/11,'0000-00-00 00:00:00',90010102,33332);
+
+INSERT INTO buy
+VALUES (200010004,2,4/23/11,'0000-00-00 00:00:00',90010103,33332);
+
+/*likepost */
+INSERT INTO likepost
+VALUES (20111,100100101);
+
+INSERT INTO likepost
+VALUES (20111,100100102);
+
+INSERT INTO likepost
+VALUES (20111,100100103);
+
+INSERT INTO likepost
+VALUES (20111,100100104);
+
+INSERT INTO likepost
+VALUES (20112,100100101);
+
+INSERT INTO likepost
+VALUES (20112,100100102);
+
+INSERT INTO likepost
+VALUES (20112,100100103);
+
+INSERT INTO likepost
+VALUES (20112,100100104);
+
+INSERT INTO likepost
+VALUES (20112,100100105);
+
+INSERT INTO likepost
+VALUES (20112,100100107);
+
+INSERT INTO likepost
+VALUES (20112,100100108);
+
+INSERT INTO likepost
+VALUES (20112,100100109);
+
+INSERT INTO likepost
+VALUES (20113,100100105);
+
+INSERT INTO likepost
+VALUES (20114,100100106);
+
+INSERT INTO likepost
+VALUES (20114,100100102);
+
+/*pagebelongstocircle*/
+INSERT INTO pagebelongstocircle
+VALUES (6900,8001);
+
+INSERT INTO pagebelongstocircle
+VALUES (6904,8003);
+
+INSERT INTO pagebelongstocircle
+VALUES (6905,8004);
+
+INSERT INTO pagebelongstocircle
+VALUES (6908,8005);
+
+INSERT INTO pagebelongstocircle
+VALUES (6910,8006);
+
+/*createpage*/
+
+/*likecomment */
+INSERT INTO likecomment
+VALUES (900002,100100101);
+
+INSERT INTO likecomment
+VALUES (900002,100100102);
+
+INSERT INTO likecomment
+VALUES (900002,100100103);
+
+INSERT INTO likecomment
+VALUES (900002,100100104);
+
+INSERT INTO likecomment
+VALUES (900004,100100106);
+
+INSERT INTO likecomment
+VALUES (900004,100100107);
+
+INSERT INTO likecomment
+VALUES (900004,100100108);
+
+/*createcircle */
+
+/*memberofcircle */
+INSERT INTO memberofcircle
+VALUES (100100101,8001);
+
+INSERT INTO memberofcircle
+VALUES (100100102,8002);
+
+INSERT INTO memberofcircle
+VALUES (100100105,8003);
+
+INSERT INTO memberofcircle
+VALUES (100100107,8004);
+
+INSERT INTO memberofcircle
+VALUES (100100109,8005);
+
+INSERT INTO memberofcircle
+VALUES (100100106,8006);
+
+INSERT INTO memberofcircle
+VALUES (100100102,8001);
+
+INSERT INTO memberofcircle
+VALUES (100100103,8001);
+
+INSERT INTO memberofcircle
+VALUES (100100104,8001);
+
+INSERT INTO memberofcircle
+VALUES (100100101,8002);
+
+INSERT INTO memberofcircle
+VALUES (100100110,8002);
+
+INSERT INTO memberofcircle
+VALUES (100100106,8003);
+
+INSERT INTO memberofcircle
+VALUES (100100103,8004);
+
+INSERT INTO memberofcircle
+VALUES (100100104,8004);
+
+INSERT INTO memberofcircle
+VALUES (100100108,8005);
+
+INSERT INTO memberofcircle
+VALUES (100100110,8005);
+
+INSERT INTO memberofcircle
+VALUES (100100105,8005);
+
+INSERT INTO memberofcircle
+VALUES (100100107,8006);
+
+INSERT INTO memberofcircle
+VALUES (100100108,8006);
+
+INSERT INTO memberofcircle
+VALUES (100100109,8006);
+
+/*addcommenttopost */
+INSERT INTO addcommenttopost
+VALUES (20111,100100105);
+
+INSERT INTO addcommenttopost
+VALUES (20112,100100106);
+
+INSERT INTO addcommenttopost
+VALUES (20113,100100103);
+
+INSERT INTO addcommenttopost
+VALUES (20114,100100104);
+
+INSERT INTO addcommenttopost
+VALUES (20115,100100104);
+
+/*advertise*/
+INSERT INTO advertise
+VALUES (111221,33331);
+
+INSERT INTO advertise
+VALUES (111222,33332);
