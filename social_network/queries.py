@@ -265,6 +265,19 @@ def add_employee(firstname, lastname, password, gender, address, city, state, zi
     cursor.execute(sql_call)
 
 
+def get_employee_id(firstname, lastname, address):
+    sql_call= str("select id from person where lastname = "+ lastname +" and "+ "firstname = "+firstname+" address = "+address)
+    cursor.execute(sql_call)
+    id_val = cursor.fetchone()
+    return id_val
+
+
+def delete_employee(ssn):
+    sql_call = str("Delete from employee Where ssn = "ssn)
+    cursor.execute(sql_call)
+
+
+# needs to be done
 def update_employee(firstname, lastname, password, gender, address, city, state, zipcode, telephone, ssn, start_date, hourly_rate, role):
     
     # Update Person
@@ -272,10 +285,43 @@ def update_employee(firstname, lastname, password, gender, address, city, state,
     # Where SSN= 123456789
 
     cursor = connection.cursor()
-    sql_call = str("Insert into person Values (NULL, " + firstname + ", " +
+    sql_call = str("update person  " + firstname + ", " +
     lastname + "," + password + "," + gender + ", " + address + "," + city + ", " + state + ", " + telephone + ")")
     cursor.execute(sql_call)
 
     sql_call = str("Insert into employee Values (NULL, " + ssn + "," + start_date + ", "+ hourly_rate +" , " + role + " )")
     cursor.execute(sql_call)
 
+def obtain_sales_report_by_month(date):
+
+    cursor = connection.cursor()
+    # emp_id INT, 
+    # adv_id INT,
+    sql_call = str("SELECT  A.adv_id,  A.item_name , E.emp_id, "+
+        "SUM(P.num_units) as TSaleOnItem, SUM(P.num_units * A.unit_price) "+
+        " FROM employee E INNER JOIN buy P INNER JOIN advertisement A ON "+
+        "P.adv_id =A.adv_id AND A.Employee = E.emp_id  "+
+        "WHERE MONTH(P.Date) = " + date + " GROUP BY A.adv_id")
+    cursor.execute(sql_call)
+    val = cursor.fetchone()
+    return val
+
+def produce_list_of_all_items_advertised():
+    cursor = connection.cursor()
+    sql_call = str("SELECT A.item_name,A.unit_price,A.num_aval_units  FROM advertisement A")
+
+    cursor.execute(sql_call)
+    val = cursor.fetchone()
+    return val
+
+# check this one
+def produce_list_of_transactions_item_name_cust_name(item_name,lastname,firstname):
+    cursor = connection.cursor()
+    sql_call= str("SELECT * from buy B " +
+        "INNER JOIN Advertisement A INNER JOIN customer C" + 
+        "ON A.adv_id = B.adv_id  AND  " +
+        "B.customer_acc_num = C.cust_id  WHERE  A.item_name = "+ item_name +" OR (C.lastname="+ lastname +" AND C.firstname=" + firstname + ")")
+
+    cursor.execute(sql_call)
+    val = cursor.fetchone()
+    return val
