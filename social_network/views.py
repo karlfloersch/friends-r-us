@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -40,8 +41,44 @@ def home_view(request, username):
 
 
 @login_required
+def messages_view(request, username):
+    """ Simple view to test querying the DB """
+    user_info = queries.get_user_info_by_id(request.user.first_name)
+    my_circles = queries.get_user_circles_info(request.user.first_name)
+    html = str(user_info)
+    circles = my_circles
+    print(circles)
+    data = {"user_info": html, "username": request.user.username,
+            "first_name": user_info[1],
+            "last_name": user_info[2],
+            "circles": circles}
+    # Handle file upload
+    if request.method == 'POST':
+        data['form'] = DocumentForm(request.POST, request.FILES)
+        if data['form'].is_valid():
+            username = request.user.username
+            newdoc = Document(username=username,
+                              docfile=request.FILES['docfile'])
+            print(newdoc)
+            newdoc.save()
+
+            # Redirect to the document list after POST
+            return HttpResponseRedirect('/accounts/' + username)
+        else:
+            return render(request, "home.html", dictionary=data)
+    else:
+        data['form'] = DocumentForm()  # A empty, unbound form
+    return render(request, "home.html", dictionary=data)
+
+
+@login_required
 def redirect_user(request):
     return HttpResponseRedirect("../" + str(request.user.username))
+
+
+@login_required
+def redirect_to_home(request):
+    return HttpResponseRedirect("accounts/profile/")
 
 
 def list_view(request):
@@ -69,3 +106,10 @@ def list_view(request):
         {'documents': documents, 'form': form},
         context_instance=RequestContext(request)
     )
+
+
+def logout_view(request):
+    """ log current user out """
+    # Log the user out using Django Auth
+    logout(request)
+    return HttpResponseRedirect("/login")
