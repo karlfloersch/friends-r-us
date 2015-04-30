@@ -1,5 +1,9 @@
 /* Custom styles for the site */
 
+#page-title {
+    text-align: center;
+}
+
 #post-area {
     padding: 10px;
     background-color: #FDFDFD;
