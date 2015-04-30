@@ -44,6 +44,8 @@ def profile_view(request, username):
                  "circles": circles}
     data = make_data(request, username)
     data['page_data'] = page_data
+    if username == request.user.username:
+        data['nbar'] = "nav_home"
 
     # Handle file upload
     if request.method == 'POST':
@@ -57,41 +59,50 @@ def profile_view(request, username):
                 # Redirect to the document list after POST
                 return HttpResponseRedirect('/accounts/' + username)
             else:
-                return render(request, "home.html", dictionary=data)
+                return render(request, "profile.html", dictionary=data)
     else:
         data['form'] = DocumentForm()  # A empty, unbound form
-    return render(request, "home.html", dictionary=data)
+    return render(request, "profile.html", dictionary=data)
 
 
 @login_required
 def messages_view(request):
     """ Simple view to test querying the DB """
-    user_info = queries.get_user_info_by_id(request.user.first_name)
-    my_circles = queries.get_user_circles_info(request.user.first_name)
-    html = str(user_info)
-    circles = my_circles
-    print(circles)
-    data = {"user_info": html, "username": request.user.username,
-            "first_name": user_info[1],
-            "last_name": user_info[2],
-            "circles": circles}
-    # Handle file upload
-    if request.method == 'POST':
-        data['form'] = DocumentForm(request.POST, request.FILES)
-        if data['form'].is_valid():
-            username = request.user.username
-            newdoc = Document(username=username,
-                              docfile=request.FILES['docfile'])
-            print(newdoc)
-            newdoc.save()
+    messages = queries.get_user_messages(request.user.first_name)
+    conversations = {}
 
-            # Redirect to the document list after POST
-            return HttpResponseRedirect('/accounts/' + username)
+    def build_conversations(message):
+        """ Add the message to the conversations """
+        # Extract data from the message
+        message_id, content, sender_id = message[0], message[1], message[2]
+        reciever_id, subject, date = message[3], message[4], message[5]
+        # Get sender and reciever user info
+        sender_info = queries.get_user_info_by_id(str(sender_id))
+        sender_name = sender_info[1] + " " + sender_info[2]
+        reciever_info = queries.get_user_info_by_id(str(reciever_id))
+        reciever_name = reciever_info[1] + " " + reciever_info[2]
+        # Get the conversation to add this to
+        if str(sender_id) != str(request.user.first_name):
+            convo_name = sender_name
         else:
-            return render(request, "home.html", dictionary=data)
-    else:
-        data['form'] = DocumentForm()  # A empty, unbound form
-    return render(request, "home.html", dictionary=data)
+            convo_name = reciever_name
+        # Add the message to that conversation
+        if convo_name not in conversations.keys():
+            conversations[convo_name] = []
+        conversations[convo_name].append({'message_id': message_id,
+                                          'subject': subject,
+                                          'date': date,
+                                          'content': content,
+                                          'sender': sender_id,
+                                          'reciever': reciever_id,
+                                          'sender_name': sender_name,
+                                          'reciever_name': reciever_name})
+    # Loop over the messages and build the conversations
+    for message in messages:
+        build_conversations(message)
+    data = {'nbar': 'nav_messages', 'conversations': conversations}
+    print(conversations)
+    return render(request, "messages.html", dictionary=data)
 
 
 @login_required

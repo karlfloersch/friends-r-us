@@ -26,7 +26,7 @@ $( document ).ready(function() {
         $("#post-box").val('');
         var hostname = $('<a>').prop('href', url).prop('hostname');
         var url = hostname + username;
-        $posts.prepend('<div class="detailBox"><div class="titleBox"><label>' + fullname + '</label></div><div class="commentBox"><p class="taskDescription">' + post + '</p></div><div class="actionBox"><ul class="commentList"></ul><form role="form"><div class="row"><div class="col-md-10"><textarea rows="1" cols="40" class="form-control comment-box" type="text" placeholder="Write a comment..."></textarea></div><div class="col-md-2"><button type="button" class="btn btn-default comment-add">Add</button></div></div></form></div></div>');
+        $posts.prepend('<div class="detailBox"><div class="titleBox"><div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div><label>' + fullname + '</label></div><div class="commentBox"><p class="taskDescription">' + post + '</p></div><div class="actionBox"><ul class="commentList"></ul><form role="form"><div class="row"><div class="col-md-10"><textarea rows="1" cols="40" class="form-control comment-box" type="text" placeholder="Write a comment..."></textarea></div><div class="col-md-2"><button type="button" class="btn btn-default comment-add">Add</button></div></div></form></div></div>');
         $(".comment-add").click(commentClick);
     });
 

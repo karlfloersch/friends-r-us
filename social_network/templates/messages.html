@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block js %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <h2>
+            Conversations
+        </h2>
+        <div class="btn-group-vertical" role="group" aria-label="...">
+        {% for key, conversation in conversations.items %}
+        <button type="button" class="btn btn-default" aria-label="Left Align">
+            {{ key }}
+        </button>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <h2>Here are your convos son</h2>
+    </div>
+</div>
+{% endblock %}

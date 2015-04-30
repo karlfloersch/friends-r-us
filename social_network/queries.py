@@ -3,6 +3,35 @@ from datetime import date
 import time
 
 
+# Queries in use
+
+def get_user_info_by_id(cust_id):
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM person WHERE id=" + cust_id)
+    row = cursor.fetchone()
+    return row
+
+
+def get_user_circles_info(user_id):
+    circle_ids = get_user_circles_ids(user_id)
+    circle_info = []
+    cursor = connection.cursor()
+    for circle_id in circle_ids:
+        sql_call = str("SELECT * FROM circle WHERE id=" + str(circle_id[0]))
+        circle_info.append(cursor.execute(sql_call).fetchone())
+    return circle_info
+
+
+def get_user_messages(cust_id):
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM message WHERE sender=" + cust_id
+                   + " OR receiver=" + cust_id)
+    row = cursor.fetchall()
+    return row
+
+
+# End queries in use
+
 def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
     # SELECT U.User_Id, U.First_Name, U.Last_Name FROM User U where U.First_Name
     # LIKE %?% OR U.Last_Name LIKE %?%
@@ -99,13 +128,6 @@ def like_comment(comment_id, cust_id):
         "," +
         cust_id +
         ")")
-
-
-def get_user_info_by_id(cust_id):
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM person WHERE id=" + cust_id)
-    row = cursor.fetchone()
-    return row
 
 
 def remove_a_post(post_id):
@@ -240,16 +262,6 @@ def get_user_circles_ids(user_id):
     #               + user_id)
     cursor.execute(sql_call)
     return cursor.fetchall()
-
-
-def get_user_circles_info(user_id):
-    circle_ids = get_user_circles_ids(user_id)
-    circle_info = []
-    cursor = connection.cursor()
-    for circle_id in circle_ids:
-        sql_call = str("SELECT * FROM circle WHERE id=" + str(circle_id[0]))
-        circle_info.append(cursor.execute(sql_call).fetchone())
-    return circle_info
 
 
 def add_employee(
