@@ -122,6 +122,14 @@ def get_messages_ajax(request):
 
 
 @login_required
+def get_friends_ajax(request):
+    name = request.POST["name"]
+    friends = queries.get_users_by_firstname(name)
+    data = {'friends': friends}
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@login_required
 def redirect_user(request):
     return HttpResponseRedirect("../" + str(request.user.username))
 

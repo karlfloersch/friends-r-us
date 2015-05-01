@@ -12,6 +12,14 @@ def get_user_info_by_id(cust_id):
     return row
 
 
+def get_users_by_firstname(firstname):
+    cursor = connection.cursor()
+    cursor.execute('SELECT id,firstname,lastname FROM person WHERE firstname="'
+                   + firstname + '"')
+    rows = cursor.fetchall()
+    return rows
+
+
 def get_user_circles_info(user_id):
     circle_ids = get_user_circles_ids(user_id)
     circle_info = []
