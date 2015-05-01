@@ -56,6 +56,48 @@ def create_a_circle(owner_id, name, circle_type):
         circle_type +
         ")")
 
+def purchase_one_or_advertised_item(ad_id,num_units,date,customer_acc_num):
+    
+    cursor = connection.cursor("UPDATE advertisement SET num_aval_units = num_aval_units -1 WHERE adv_id= "+ad_id)
+    cursor.execute()
+    date_now = time.strftime("%d/%m/%Y")
+    ts = date.isoformat()
+    cursor = connection.cursor("INSERT INTO buy (NULL," + 
+        num_units + 
+        ","+
+        date_now+
+        ","+
+        ts+
+        ","+
+        customer_acc_num+
+        ","+
+        ad_id+
+        ")")
+    cursor.execute()
+
+
+    # not complete
+def list_each_customer_account_account_history(cust_id):
+    # SELECT P.* FROM Purchase P INNER JOIN Has_Account A ON (P.User,P.Account) = (A.User_Id,A.Account_Number) WHERE P.User = ?
+    # buy 
+    # transaction_id   INT(30), 
+    #  num_units        INT, 
+    #  date             DATE, 
+    #  time             TIMESTAMP, 
+    #  customer_acc_num INT, 
+    #  adv_id           INT(30), 
+
+    # account
+    # customer_id     INT, 
+    #  account_id       INT,
+    #  create_date DATETIME NOT NULL,
+    #  credit_card_num VARCHAR(50), 
+
+    # cursor = connection.cursor("SELECT * FROM buy B INNER JOIN account A ON (B.User,B.Account) = (A.User_Id,A.Account_Number) WHERE B.customer_acc_num = "+cust_id)
+    # cursor.execute()
+    val = cursor.fetchone()
+    return val
+
 
 def make_a_post(customer_id, page_id):
     # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
@@ -79,6 +121,19 @@ def make_a_post(customer_id, page_id):
         "," +
         page_id +
         ")")
+
+
+def list_customers_current_circles(owner_id, circle_id):
+    cursor = connection.cursor()
+    cursor.execute(
+        "SELECT * FROM circle WHERE C.owner_id = " +
+        owner_id + 
+        " UNION SELECT * FROM circle "+
+        "C INNER JOIN memberofcircle "+
+        "A ON C.id = A.circle_id WHERE A.circle_id ="+
+        circle_id)
+    val = cursor.fetchone()
+    return val
 
 
 def comment_on_a_post(content, author_id, post_id):
