@@ -18,6 +18,7 @@ def make_data(request, username):
     cust_id = request.user.first_name
     user_info = queries.get_user_info_by_id(cust_id)
     data = {"username": request.user.username,
+            "user_id": request.user.first_name,
             "first_name": user_info[1],
             "last_name": user_info[2],
             "homepage": homepage}
@@ -83,9 +84,11 @@ def messages_view(request):
         if str(sender_id) != str(request.user.first_name):
             convo_name = sender_name
             convo_username = User.objects.filter(first_name=sender_id)[0]
+            convo_id = sender_id
         else:
             convo_name = reciever_name
             convo_username = User.objects.filter(first_name=reciever_id)[0]
+            convo_id = reciever_id
         # Add the message to that conversation
         if convo_name not in conversations.keys():
             conversations[convo_username] = []
@@ -97,11 +100,14 @@ def messages_view(request):
                                               'reciever': reciever_id,
                                               'sender_name': sender_name,
                                               'reciever_name': reciever_name,
-                                              'convo_name': convo_name})
+                                              'convo_name': convo_name,
+                                              'convo_id': convo_id})
     # Loop over the messages and build the conversations
     for message in messages:
         build_conversations(message)
-    data = {'nbar': 'nav_messages', 'conversations': conversations}
+    data = make_data(request, request.user.first_name)
+    data['nbar'] = 'nav_messages'
+    data['conversations'] = conversations
     print(conversations)
     return render(request, "messages.html", dictionary=data)
 

@@ -21,6 +21,16 @@ body {
 #message-box {
 
 }
+#message-send {
+    margin-top: 15px;
+}
+.message-header {
+    padding-bottom: 3px;
+    font-weight: bold;
+}
+.message {
+    padding: 8px;
+}
 
 #profile-sidebar {
     margin-top: 10px;

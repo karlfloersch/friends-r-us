@@ -12,9 +12,12 @@
         <h4>
             Conversations:
         </h4>
+        <small>Send new message:</small>
+          <input type="text" class="form-control" placeholder="Enter Friend's Name">
+          <hr>
         <div class="btn-group-vertical" id="conversation-btns" role="group" aria-label="...">
             {% for key, conversation in conversations.items %}
-            <button type="button" class="btn btn-default convo-name" aria-label="Left Align" value="{{ key }}">
+            <button type="button" class="btn btn-default convo-name" aria-label="Left Align" value="{{ key }}" userID="{{ conversation.0.convo_id }}">
                 {{ conversation.0.convo_name }}
             </button>
             {% endfor %}
