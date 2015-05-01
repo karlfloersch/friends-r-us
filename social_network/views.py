@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from .forms import DocumentForm
 from .models import Document
 from . import queries
+import json
 
 
 def make_data(request, username):
@@ -20,9 +21,6 @@ def make_data(request, username):
             "first_name": user_info[1],
             "last_name": user_info[2],
             "homepage": homepage}
-    print(username)
-    print(request.user.username)
-    print(homepage)
     return data
 
 
@@ -84,25 +82,37 @@ def messages_view(request):
         # Get the conversation to add this to
         if str(sender_id) != str(request.user.first_name):
             convo_name = sender_name
+            convo_username = User.objects.filter(first_name=sender_id)[0]
         else:
             convo_name = reciever_name
+            convo_username = User.objects.filter(first_name=reciever_id)[0]
         # Add the message to that conversation
         if convo_name not in conversations.keys():
-            conversations[convo_name] = []
-        conversations[convo_name].append({'message_id': message_id,
-                                          'subject': subject,
-                                          'date': date,
-                                          'content': content,
-                                          'sender': sender_id,
-                                          'reciever': reciever_id,
-                                          'sender_name': sender_name,
-                                          'reciever_name': reciever_name})
+            conversations[convo_username] = []
+        conversations[convo_username].append({'message_id': message_id,
+                                              'subject': subject,
+                                              'date': date,
+                                              'content': content,
+                                              'sender': sender_id,
+                                              'reciever': reciever_id,
+                                              'sender_name': sender_name,
+                                              'reciever_name': reciever_name,
+                                              'convo_name': convo_name})
     # Loop over the messages and build the conversations
     for message in messages:
         build_conversations(message)
     data = {'nbar': 'nav_messages', 'conversations': conversations}
     print(conversations)
     return render(request, "messages.html", dictionary=data)
+
+
+@login_required
+def get_messages_ajax(request):
+    convo_user = User.objects.filter(username=request.POST["convo_user"])[0]
+    messages = queries.get_conversation_messages([request.user.first_name,
+                                                  convo_user.first_name])
+    data = {'messages': messages}
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 @login_required

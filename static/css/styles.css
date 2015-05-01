@@ -3,6 +3,18 @@ body {
     background-color: #fbfbfb;
 }
 
+/* Messages page */
+#conversation-btns {
+    width: 100%;
+}
+#conversation-btns button {
+    width: 100%;
+}
+.message {
+    background-color: #fff;
+    border:1px solid #ddd;
+}
+
 #profile-sidebar {
     margin-top: 10px;
     background-color: #fff;

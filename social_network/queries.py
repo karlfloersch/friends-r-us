@@ -30,6 +30,15 @@ def get_user_messages(cust_id):
     return row
 
 
+def get_conversation_messages(cust_ids):
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM message WHERE sender=" + cust_ids[0]
+                   + " AND receiver=" + cust_ids[1] + " OR sender="
+                   + cust_ids[1] + " AND receiver=" + cust_ids[0])
+    row = cursor.fetchall()
+    return row
+
+
 # End queries in use
 
 def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
@@ -57,13 +66,13 @@ def create_a_circle(owner_id, name, circle_type):
         ")")
 
 def purchase_one_or_advertised_item(ad_id,num_units,date,customer_acc_num):
-    
+
     cursor = connection.cursor("UPDATE advertisement SET num_aval_units = num_aval_units -1 WHERE adv_id= "+ad_id)
     cursor.execute()
     date_now = time.strftime("%d/%m/%Y")
     ts = date.isoformat()
-    cursor = connection.cursor("INSERT INTO buy (NULL," + 
-        num_units + 
+    cursor = connection.cursor("INSERT INTO buy (NULL," +
+        num_units +
         ","+
         date_now+
         ","+
@@ -79,19 +88,19 @@ def purchase_one_or_advertised_item(ad_id,num_units,date,customer_acc_num):
     # not complete
 def list_each_customer_account_account_history(cust_id):
     # SELECT P.* FROM Purchase P INNER JOIN Has_Account A ON (P.User,P.Account) = (A.User_Id,A.Account_Number) WHERE P.User = ?
-    # buy 
-    # transaction_id   INT(30), 
-    #  num_units        INT, 
-    #  date             DATE, 
-    #  time             TIMESTAMP, 
-    #  customer_acc_num INT, 
-    #  adv_id           INT(30), 
+    # buy
+    # transaction_id   INT(30),
+    #  num_units        INT,
+    #  date             DATE,
+    #  time             TIMESTAMP,
+    #  customer_acc_num INT,
+    #  adv_id           INT(30),
 
     # account
-    # customer_id     INT, 
+    # customer_id     INT,
     #  account_id       INT,
     #  create_date DATETIME NOT NULL,
-    #  credit_card_num VARCHAR(50), 
+    #  credit_card_num VARCHAR(50),
 
     # cursor = connection.cursor("SELECT * FROM buy B INNER JOIN account A ON (B.User,B.Account) = (A.User_Id,A.Account_Number) WHERE B.customer_acc_num = "+cust_id)
     # cursor.execute()
@@ -127,7 +136,7 @@ def list_customers_current_circles(owner_id, circle_id):
     cursor = connection.cursor()
     cursor.execute(
         "SELECT * FROM circle WHERE C.owner_id = " +
-        owner_id + 
+        owner_id +
         " UNION SELECT * FROM circle "+
         "C INNER JOIN memberofcircle "+
         "A ON C.id = A.circle_id WHERE A.circle_id ="+

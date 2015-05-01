@@ -3,24 +3,27 @@
 
 
 {% block js %}
+<script src="{% static "js/messages.js" %}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-4">
-        <h2>
-            Conversations
-        </h2>
-        <div class="btn-group-vertical" role="group" aria-label="...">
-        {% for key, conversation in conversations.items %}
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-            {{ key }}
-        </button>
-        {% endfor %}
+    <div class="col-sm-3">
+        <h4>
+            Conversations:
+        </h4>
+        <div class="btn-group-vertical" id="conversation-btns" role="group" aria-label="...">
+            {% for key, conversation in conversations.items %}
+            <button type="button" class="btn btn-default convo-name" aria-label="Left Align" value="{{ key }}">
+                {{ conversation.0.convo_name }}
+            </button>
+            {% endfor %}
         </div>
     </div>
-    <div class="col-sm-8">
-        <h2>Here are your convos son</h2>
+    <div class="col-sm-9">
+        <h4>Messages:</h4>
+        <div id="messages">
+        </div>
     </div>
 </div>
 {% endblock %}

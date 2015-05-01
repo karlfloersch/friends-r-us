@@ -1,21 +1,21 @@
 var commentClick = function() {
-        var $actionBox = $(this).parent().parent().parent().parent();
-        var $commentBox = $actionBox.find(".comment-box");
-        var comment = $commentBox.val();
-        var numLikes = 5;
-        if (comment === ""){
-            return;
-        }
-        $commentBox.val('');
-        var hostname = $('<a>').prop('href', url).prop('hostname');
-        var url = hostname + username;
-        $actionBox.find(".commentList").append('<li> <div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div> <div class="commentText"> <p class="">' + comment + '</p> <span class="date sub-text">' + numLikes + ' Likes - <a href="#">Like</a><br>' + fullname + ', on ' + today + '</span> </div> </li>');
+    "use strict";
+    var $actionBox = $(this).parent().parent().parent().parent();
+    var $commentBox = $actionBox.find(".comment-box");
+    var comment = $commentBox.val();
+    var numLikes = 5;
+    if (comment === ""){
+        return;
+    }
+    $commentBox.val('');
+    var hostname = $('<a>').prop('href', url).prop('hostname');
+    var url = hostname + username;
+    $actionBox.find(".commentList").append('<li> <div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div> <div class="commentText"> <p class="">' + comment + '</p> <span class="date sub-text">' + numLikes + ' Likes - <a href="#">Like</a><br>' + fullname + ', on ' + today + '</span> </div> </li>');
 };
 
 $( document ).ready(function() {
     "use strict";
     $(".comment-add").click(commentClick);
-
 
     $("#post-add").click(function() {
         var $posts = $("#posts");
