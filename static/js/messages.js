@@ -1,7 +1,14 @@
+var current_convo = "";
+
 $( document ).ready(function() {
     "use strict";
     $(".convo-name").click(function (){
         var convo_user = $(this).val();
+        $("#new-message").show();
+        if(convo_user.localeCompare(current_convo) === 0){
+            return;
+        }
+        current_convo = convo_user;
         // Create URL
         var getUrl = window.location;
         var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
