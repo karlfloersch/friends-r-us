@@ -1,25 +1,3 @@
-/* Drop the TABLES */
-drop table person;
-drop table customer;
-drop table employee;
-drop table employeemanages;
-drop table customer_preferences;
-drop table account;
-drop table message;
-drop table advertisement;
-drop table buy;
-drop table circle;
-drop table page;
-drop table post;
-drop table likepost;
-drop table likecomment;
-drop table pagebelongstocircle;
-drop table createpage;
-drop table comment;
-drop table createcircle;
-drop table memberofcircle;
-drop table addcommenttopost;
-drop table advertise;
 /* CREATE TABLES */
 CREATE TABLE person 
   ( 
@@ -49,7 +27,7 @@ CREATE TABLE customer
 CREATE TABLE employee 
   ( 
      emp_id      INT, 
-     ssn         CHAR(11) NOT NULL UNIQUE, 
+     ssn         CHAR(11) NOT NULL, 
      start_date  DATE, 
      hourly_rate INT, 
      role        VARCHAR(100),
