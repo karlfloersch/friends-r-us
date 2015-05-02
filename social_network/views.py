@@ -125,6 +125,8 @@ def get_messages_ajax(request):
 def get_friends_ajax(request):
     name = request.POST["name"]
     friends = queries.get_users_by_firstname(name)
+    friends = [f + (User.objects.filter(first_name=f[0])[0].username,)
+               for f in friends]
     data = {'friends': friends}
     return HttpResponse(json.dumps(data), content_type="application/json")
 
