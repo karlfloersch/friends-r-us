@@ -47,7 +47,6 @@ function addAutoComplete(element, values) {
 var searchFriends = function (redirect) {
     "use strict";
     var textValue = $('#page-search').val();
-    console.log(redirect);
     if(textValue.slice(-1) !== " " && !redirect){
         return;
     }
@@ -73,7 +72,6 @@ var searchFriends = function (redirect) {
                     // match the last name with what was provided 
                     if(name.length !== 1){
                         if(name[1] === response.friends[i][2]){
-                            console.log("in!");
                             bestGuess = i;
                         }
                     }
@@ -97,9 +95,13 @@ var searchFriends = function (redirect) {
 
 $( document ).ready(function() {
     "use strict";
-    $('#page-search').keyup(function() {
+    $('#page-search').keyup(function(event) {
+        if(event.keyCode === 13){
+            return searchFriends(true);
+        }
         return searchFriends(false);
     });
+
     $('#page-search-submit').click(function() {
         return searchFriends(true);
     });
