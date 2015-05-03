@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import connection
 from datetime import date
 import time
@@ -9,6 +10,39 @@ def get_user_info_by_id(cust_id):
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM person WHERE id=" + cust_id)
     row = cursor.fetchone()
+    return row
+
+
+def get_username_and_name_by_id(cust_id):
+    cursor = connection.cursor()
+    cursor.execute("SELECT firstname,lastname FROM person WHERE id="
+                   + str(cust_id))
+    row = cursor.fetchone()
+    user = User.objects.filter(first_name=cust_id)[0]
+    row = row + (user.username,)
+    return row
+
+
+def get_page(cust_id, circle_name):
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM circle JOIN page ON '
+                   + 'circle.id=associated_circle_id WHERE owner_id='
+                   + cust_id + ' AND name="' + circle_name + '"')
+    row = cursor.fetchone()
+    return row
+
+
+def get_posts(page_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM post WHERE page_id=' + str(page_id))
+    row = cursor.fetchall()
+    return row
+
+
+def get_comments(post_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM comment WHERE post_id=' + str(post_id))
+    row = cursor.fetchall()
     return row
 
 
@@ -73,27 +107,31 @@ def create_a_circle(owner_id, name, circle_type):
         circle_type +
         ")")
 
-def purchase_one_or_advertised_item(ad_id,num_units,date,customer_acc_num):
 
-    cursor = connection.cursor("UPDATE advertisement SET num_aval_units = num_aval_units -1 WHERE adv_id= "+ad_id)
+def purchase_one_or_advertised_item(ad_id, num_units, date, customer_acc_num):
+
+    cursor = connection.cursor(
+        "UPDATE advertisement SET num_aval_units = num_aval_units -1 WHERE adv_id= " +
+        ad_id)
     cursor.execute()
     date_now = time.strftime("%d/%m/%Y")
     ts = date.isoformat()
     cursor = connection.cursor("INSERT INTO buy (NULL," +
-        num_units +
-        ","+
-        date_now+
-        ","+
-        ts+
-        ","+
-        customer_acc_num+
-        ","+
-        ad_id+
-        ")")
+                               num_units +
+                               "," +
+                               date_now +
+                               "," +
+                               ts +
+                               "," +
+                               customer_acc_num +
+                               "," +
+                               ad_id +
+                               ")")
     cursor.execute()
 
-
     # not complete
+
+
 def list_each_customer_account_account_history(cust_id):
     # SELECT P.* FROM Purchase P INNER JOIN Has_Account A ON (P.User,P.Account) = (A.User_Id,A.Account_Number) WHERE P.User = ?
     # buy
@@ -145,9 +183,9 @@ def list_customers_current_circles(owner_id, circle_id):
     cursor.execute(
         "SELECT * FROM circle WHERE C.owner_id = " +
         owner_id +
-        " UNION SELECT * FROM circle "+
-        "C INNER JOIN memberofcircle "+
-        "A ON C.id = A.circle_id WHERE A.circle_id ="+
+        " UNION SELECT * FROM circle " +
+        "C INNER JOIN memberofcircle " +
+        "A ON C.id = A.circle_id WHERE A.circle_id =" +
         circle_id)
     val = cursor.fetchone()
     return val

@@ -37,10 +37,27 @@ def profile_view(request, username):
     user_id = user.first_name
     user_info = queries.get_user_info_by_id(user_id)
     circles = queries.get_user_circles_info(user_id)
+    # Get the page's posts and comments
+    page_info = queries.get_page(user_id, 'Friends')
+    page_id = page_info[4]
+    posts_info = queries.get_posts(page_id)
+    posts = []
+    for post in posts_info:
+        author_info = queries.get_username_and_name_by_id(post[5])
+        comment_info = queries.get_comments(post[0])
+        comments = []
+        for comment in comment_info:
+            comment_author_info = queries.get_username_and_name_by_id(
+                comment[4])
+            comments.append(comment + comment_author_info)
+        post = post + author_info + (comments,)
+        print(post)
+        posts.append(post)
     page_data = {"username": user.username,
                  "first_name": user_info[1],
                  "last_name": user_info[2],
-                 "circles": circles}
+                 "circles": circles,
+                 "posts": posts}
     data = make_data(request, username)
     data['page_data'] = page_data
     if username == request.user.username:

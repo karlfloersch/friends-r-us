@@ -341,7 +341,7 @@ VALUES (100100102,90010112,7/10/11,'2345543289003440');
 /*CIRCLE*/
 
 INSERT INTO circle
-VALUES (8001,100100101,'My Friends','Friends');
+VALUES (8001,100100101,'Friends','Friends');
 
 INSERT INTO circle
 VALUES (8002,100100102,'Best Friends','Friends');
@@ -357,6 +357,9 @@ VALUES (8005,100100109,'Norris Family','Family');
 
 INSERT INTO circle
 VALUES (8006,100100106,'Microsoft Groupies','Company');
+/*PAGE FOR USER PAGE THINGY*/
+INSERT INTO circle
+VALUES (8007,100100102,'Friends','Friends');
 
 
 
@@ -376,6 +379,9 @@ VALUES (6908,0,8005);
 
 INSERT INTO page
 VALUES (6910,1,8006);
+/*PAGES FOR USERS*/
+INSERT INTO page
+VALUES (6911,0,8007);
 
 
 
@@ -531,6 +537,9 @@ VALUES (6908,8005);
 
 INSERT INTO pagebelongstocircle
 VALUES (6910,8006);
+/*ADDED FOR ADDING DEFAULT PAGE*/
+INSERT INTO pagebelongstocircle
+VALUES (6911,8007);
 
 /*createpage*/
 
