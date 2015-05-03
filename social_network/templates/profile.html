@@ -83,8 +83,8 @@
                                   <img src="{% with '../media/avatars/'|add:comment.8|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now s %}">
                                 </div>
                                 <div class="commentText">
-                                    <p class="">{{ comment.3 }}</p> <span class="date sub-text">{{ comment.2|date:'Y-m-d' }}</span>
-                                </div>
+                                    <p class="">{{ comment.3 }}</p> 
+                                    <span class="date sub-text">5 Likes - <a href="#">Like</a><br>{{ comment.6 }} {{ comment.7 }}, on {{ comment.2|date:'m/d/Y' }} '</span>
                             </li>
                             {% endfor %}
                         </ul>

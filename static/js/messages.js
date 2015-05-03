@@ -19,7 +19,7 @@ function addMessage(message) {
 
 var populateConversation = function () {
     "use strict";
-    current_convo = ""; lastSender = ""; getName = {};
+    lastSender = ""; getName = {};
     convo_user = $(this).val();
     convo_name = $(this).html();
     convo_id = $(this).attr('userID');
