@@ -534,7 +534,7 @@ def obtain_sales_report_by_month(date):
 def produce_list_of_all_items_advertised():
     cursor = connection.cursor()
     sql_call = str(
-        "SELECT A.item_name,A.unit_price,A.num_aval_units FROM advertisement A")
+        "SELECT A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
 
     cursor.execute(sql_call)
     val = cursor.fetchone()
@@ -558,3 +558,24 @@ def produce_list_of_transactions_item_name_cust_name(
     cursor.execute(sql_call)
     val = cursor.fetchone()
     return val
+
+
+def create_advertisement(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO advertisement(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?,?)',(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
+    adv_obj = cursor.fetchone()
+    return adv_obj
+
+def get_revenue_of_item(adv_id, type_in, customer_acc_num):
+    if(adv_id == ""):
+        adv_id = 00000000000
+    if(type_in == ""):
+        type_in = "eoifdofusdosi"
+    if(customer_acc_num == ""):
+        customer_acc_num = 000000000
+
+    cursor = connection.cursor()
+    cursor.execute('CREATE VIEW TotalSale AS SELECT A.adv_id,  A.item_name,  A.unit_price, SUM(B.num_units) AS Number_Sold FROM Advertisement A  INNER JOIN buy B ON B.adv_id =? A.adv_id GROUP BY A.adv_id',(adv_id))
+    cursor.execute('SELECT TS.adv_id, TS.item_name, TS.num_units * TS.unit_price  AS Revenue FROM TotalSale TS where TS.adv_id = ? OR TS.type = ? OR TS.customer_acc_num = ?',(adv_id, type_in, customer_acc_num))
+    revenue_obj = cursor.fetchone()
+    return revenue_obj
