@@ -51,7 +51,6 @@ def profile_view(request, username):
                 comment[4])
             comments.append(comment + comment_author_info)
         post = post + author_info + (comments,)
-        print(post)
         posts.append(post)
     page_data = {"username": user.username,
                  "first_name": user_info[1],
@@ -145,6 +144,13 @@ def get_friends_ajax(request):
     friends = [f + (User.objects.filter(first_name=f[0])[0].username,)
                for f in friends]
     data = {'friends': friends}
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@login_required
+def submit_post_ajax(request):
+    name = request.POST["fullname"]
+    data = {'friends': name}
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
