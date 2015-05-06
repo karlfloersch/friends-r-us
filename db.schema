@@ -74,9 +74,9 @@ CREATE TABLE customer_preferences
 CREATE TABLE account 
   ( 
      customer_id     INT, 
-     account_id       INT,
+     account_id       INTEGER PRIMARY KEY,
      create_date DATETIME NOT NULL,
-     credit_card_num VARCHAR(50), 
+     credit_card_num INT, 
      PRIMARY KEY (account_id), 
      FOREIGN KEY (customer_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
   ); 
