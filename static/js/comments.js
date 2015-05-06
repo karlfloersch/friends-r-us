@@ -7,6 +7,13 @@ var addComment = function() {
     if (comment === ""){
         return;
     }
+    var data = {
+        'comment_text': comment,
+        'post_id': $actionBox.attr('value')
+    };
+    sendDefaultPOST('/submit-comment/', data, function(response) {
+        console.log(response);
+    });
     $commentBox.val('');
     $actionBox.find(".commentList").append('<li> <div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div> <div class="commentText"> <p class="">' + comment + '</p> <span class="date sub-text">' + numLikes + ' Likes - <a href="#">Like</a><br>' + fullname + ', on ' + today + '</span> </div> </li>');
     $('.commentList').scrollTop($('.commentList')[0].scrollHeight);
@@ -21,7 +28,6 @@ var addPost = function() {
         'page_name': $('#circle-name').attr('value'),
         'circle_id': $('#circle-id').attr('value')
     };
-
     sendDefaultPOST('/submit-post/', data, function(response) {
         console.log(response);
     });
@@ -35,7 +41,8 @@ function enableSubmitOnEnter() {
     "use strict";
     $(".comment-box").keydown(function(event) {
         if (event.keyCode === 13) {
-            $(".comment-add").click();
+            var $commentAdd = $(this).parent().parent().find('.comment-add');
+            $commentAdd.click();
             return false;
         }
     });

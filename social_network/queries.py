@@ -100,11 +100,24 @@ def make_a_post(content, customer_id, page_id):
     #  customerid    INT,
     #  page_id        INT,
     ts = 'null'
-    print('shit is here')
     date_now = time.strftime("%d/%m/%Y")
     cursor = connection.cursor()
     cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
-    print('dick is here')
+
+
+def make_a_comment(content, post_id, cust_id):
+    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
+    # id            INT,
+    #  date          DATE,
+    #  time          TIMESTAMP,
+    #  content       TEXT,
+    #  comment_count INT,
+    #  customerid    INT,
+    #  page_id        INT,
+    ts = datetime.datetime.now()
+    date_now = '0'  # time.strftime("%d/%m/%Y")
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO comment(date, time, content, author_id, post_id) VALUES(?,?,?,?,?)', (date_now, ts, content, cust_id, post_id))
 
 
 # End queries in use

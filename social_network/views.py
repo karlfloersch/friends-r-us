@@ -10,7 +10,6 @@ from .forms import DocumentForm
 from .models import Document
 from . import queries
 import datetime
-from datetime import datetime
 import json
 
 
@@ -66,6 +65,7 @@ def profile_view(request, username, sub_page=None):
                  "posts": posts}
     data = make_data(request, username)
     data['page_data'] = page_data
+    print(data['page_data']['posts'][0])
     if username == request.user.username:
         data['nbar'] = "nav_home"
     if not request.method == 'POST':
@@ -175,6 +175,16 @@ def submit_post_ajax(request):
     print(data)
     queries.make_a_post(data['post_text'], request.user.first_name,
                         data['page_id'])
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def submit_comment_ajax(request):
+
+    data = {'comment_text': request.POST.get('comment_text'),
+            'post_id': request.POST.get('post_id')}
+    print(data)
+    queries.make_a_comment(data['comment_text'], data['post_id'],
+                           request.user.first_name)
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
