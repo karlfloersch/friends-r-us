@@ -11,6 +11,8 @@ urlpatterns = patterns('',
                            views.profile_view, name='page_view'),
                        url(r'^messages/$', views.messages_view,
                            name='messages_view'),
+                       url(r'^employee/$', views.employee_view,
+                           name='employee_view'),
                        # Non-visual ajax urls
                        url(r'^accounts/submit-post/$', views.submit_post_ajax,
                            name='submit_post'),

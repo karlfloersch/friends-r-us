@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block js %}
+<script src="{% static "js/employee.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+ <select name = "month">
+			  <option value="1">jan</option>
+			  <option value="2">feb</option>
+			  <option value="3">march</option>
+			  <option value="4">april</option>
+			  <option value="5">may</option>
+			  <option value="6">june</option>
+			  <option value="7">july</option>
+			  <option value="8">august</option>
+			  <option value="9">september</option>
+			  <option value="10">october</option>
+			  <option value="11">november</option>
+			  <option value="12">december</option>
+		 </select> 
+ <button type="getsalesreportbutton" onclick="getsalesreport" >Obtain a sales report for a particular month</button> 
+ <!-- <button type="bhidesalesreportbutton" onclick="hidesalesreport" >hide</button>  -->
+ <table border="1" table style="width:25%" id = "sales_table">
+  <tr>
+  <!-- A.AdvertisementId,  A.Item_Name , E.EmployeeId, SUM(P.Number_Of_Units) -->
+    <td><th>Ad ID</th></td>
+    <td><th>Item Name</th></td>		
+    <td><th>employee id</th></td>
+    <td><th>sales</th></td>
+    <tbody style="display:none" id = "sales_table_values">
+      <tr>
+		    <td>Jill</td>
+		    <td>Smith</td>		
+		    <td>50</td>
+		    <td>50</td>
+  		</tr>
+    </tbody>
+  </tr>
+
+ </table>
+{% endblock %}

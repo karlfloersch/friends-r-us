@@ -9,7 +9,8 @@ from django.shortcuts import render_to_response
 from .forms import DocumentForm
 from .models import Document
 from . import queries
-import datetime
+import datetime 
+from datetime import datetime
 import json
 
 
@@ -41,6 +42,8 @@ def profile_view(request, username, sub_page=None):
     circles = queries.get_user_circles_info(user_id)
     circle_name, circle_id = get_current_circle(circles, sub_page)
     # Get the page's posts and comments
+    if request.user.last_name == 'employee':
+        return HttpResponseRedirect('/employee')
     if not circle_id:
         return HttpResponseNotFound('<h1>Page not found</h1>')
     page_info = queries.get_page(user_id, circle_name)
@@ -65,12 +68,9 @@ def profile_view(request, username, sub_page=None):
                  "posts": posts}
     data = make_data(request, username)
     data['page_data'] = page_data
-    print(data['page_data']['posts'][0])
     if username == request.user.username:
         data['nbar'] = "nav_home"
     if not request.method == 'POST':
-        if request.user.last_name == 'employee':
-            return render(request, 'employee.html', dictionary=data)
         return render(request, "profile.html", dictionary=data)
     # Handle file upload
     if request.method == 'POST':
@@ -103,7 +103,7 @@ def get_current_circle(circles, sub_page):
 
 @login_required
 def messages_view(request):
-    """ Simple view to test querying the DB """
+    """ Display users messages page """
     messages = queries.get_user_messages(request.user.first_name)
     conversations = {}
 
@@ -147,6 +147,12 @@ def messages_view(request):
     data['conversations'] = conversations
     print(conversations)
     return render(request, "messages.html", dictionary=data)
+
+
+@login_required
+def employee_view(request):
+    """ Employee dashboard view """    
+    return render(request, "employee.html")
 
 
 @login_required
