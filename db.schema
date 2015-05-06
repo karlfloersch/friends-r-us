@@ -40,7 +40,6 @@ CREATE TABLE customer
      email       VARCHAR(50), 
      rating      INT, 
      date_of_birth DATETIME NOT NULL, 
-     PRIMARY KEY (cust_id), 
      FOREIGN KEY (cust_id) REFERENCES person(id) ON DELETE CASCADE 
   ); 
 
