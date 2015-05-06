@@ -1,5 +1,32 @@
+// Wrapper function for sending POST requests.
+var sendPOST = function(url, data, onSuccess){
+    "use strict";
+    var getUrl = window.location;
+    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    var urlSubmit = baseUrl + url;
+    $.ajax({
+        type: "POST",
+        url: urlSubmit,
+        dataType: "json",
+        data : data,
+        success: onSuccess
+    });
+};
+
+var sendDefaultPOST = function(url, data, onSuccess){
+    "use strict";
+    var userInfo = {
+        'username': username,
+        'userID': userID,
+        'fullname': fullname
+    };
+    data = $.extend(data, userInfo);
+    sendPOST(url, data, onSuccess); 
+};
+
 // Setup stuff for the CSRF Token/post requests
-// using jQuery
+// using jQuery. Code supplied from Django
+// and can be found here: https://docs.djangoproject.com/en/1.8/ref/csrf/
 function getCookie(name) {
     "use strict";
     var cookieValue = null;

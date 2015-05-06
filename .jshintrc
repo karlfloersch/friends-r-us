@@ -75,5 +75,5 @@
     "yui"           : false,    // Yahoo User Interface
 
     // Custom Globals
-    "globals"       : {"$": false, "jQuery": false, "username": false, "fullname": false, "today": false, "userID": false}        // additional predefined global variables
+    "globals"       : {"$": false, "jQuery": false, "username": true, "fullname": true, "today": true, "userID": true, "sendPOST": true, "sendDefaultPOST": true}        // additional predefined global variables
 }

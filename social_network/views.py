@@ -53,7 +53,6 @@ def profile_view(request, username):
                 comment[4])
             comments.append(comment + comment_author_info)
         post = post + author_info + (comments,)
-        print(post)
         posts.append(post)
     page_data = {"username": user.username,
                  "first_name": user_info[1],
@@ -150,17 +149,9 @@ def get_friends_ajax(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
-@login_required
-def save_post_ajax(request):
-    # TODO: Fill this out with saving post using queries.py
-    # comment_on_a_post(content, author_id, post_id):
-    convo_user = User.objects.filter(username=request.POST["convo_user"])[0]
-    messages = queries.get_conversation_messages([request.user.first_name,
-                                                  convo_user.first_name])
-    author_id = ""
-    post_id = ""
-    queries.comment_on_a_post(messages, author_id, post_id)
-    data = {'messages': messages}
+def submit_post_ajax(request):
+    name = request.POST["fullname"]
+    data = {'friends': name}
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
