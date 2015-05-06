@@ -372,6 +372,28 @@ def get_user_circles_ids(user_id):
     #               + user_id)
     cursor.execute(sql_call)
     return cursor.fetchall()
+def add_customer(
+        firstname_,
+        lastname_,
+        password_,
+        gender_,
+        address_,
+        city_,
+        state_,
+        zipcode_,
+        telephone_,
+        email_,
+        dob_,
+        ):
+    cursor = connection.cursor()
+ 
+    cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
+    cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
+    id_val = cursor.fetchone()
+    cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val[0], email_, 5, dob_))
+    
+    
+
 
 
 def add_employee(
@@ -389,70 +411,77 @@ def add_employee(
         hourly_rate,
         role):
     cursor = connection.cursor()
-    sql_call = str(
-        "Insert into person Values (NULL, " +
-        firstname +
-        ", " +
-        lastname +
-        "," +
-        password +
-        "," +
-        gender +
-        ", " +
-        address +
-        "," +
-        city +
-        ", " +
-        state +
-        ", " +
-        telephone +
-        ")")
-    cursor.execute(sql_call)
-    sql_call = str(
-        "select id from person where lastname = " +
-        lastname +
-        " and " +
-        "firstname = " +
-        firstname +
-        " address = " +
-        address)
-    cursor.execute(sql_call)
-    id_val = cursor.fetchone()
-    sql_call = str(
-        "Insert into employee Values (" +
-        id_val +
-        ", " +
-        ssn +
-        "," +
-        start_date +
-        ", " +
-        hourly_rate +
-        " , " +
-        role +
-        " )")
+    #sql_call = str(
+    #    "Insert into person Values (NULL, " +
+    #    firstname +
+    #    ", " +
+    #    lastname +
+    #    "," +
+    #    password +
+    #    "," +
+    #    gender +
+    #    ", " +
+    #    address +
+    #    "," +
+    #    city +
+    #    ", " +
+    #    state +
+    #    ", " +
+    #    telephone +
+    #    ")")
 
-    cursor.execute(sql_call)
+    cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, telephone) VALUES(?,?,?,?,?,?,?,?)',(firstname, lastname, password, gender, address, city, state,telephone))
+    cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
+    id_val = cursor.fetchone()
+    cursor.execute('INSERT INTO employee(id, ssn, start_date, hourly_rate, role) VALUES(?,?,?,?,?)', (id_val[0], ssn, start_date, hourly_rate, role))
+    #cursor.execute(sql_call)'SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
+    #sql_call = str(
+    #    "select id from person where lastname = " +
+    #    lastname +
+    #    " and " +
+    #    "firstname = " +
+    #    firstname +
+    #    " address = " +
+    #    address)
+    #cursor.execute(sql_call)
+    #id_val = cursor.fetchone()
+    #sql_call = str(
+    #   "Insert into employee Values (" +
+    #   id_val +
+    #    ", " +
+    #    ssn +
+    #   "," +
+    #   start_date +
+    #   ", " +
+    #    hourly_rate +
+    #    " , " +
+    #    role +
+    #    " )")
+
+    #cursor.execute(sql_call)
 
 
 def get_employee_id(firstname, lastname, address):
-    sql_call = str(
-        "select id from person where lastname = " +
-        lastname +
-        " and " +
-        "firstname = " +
-        firstname +
-        " address = " +
-        address)
+    #sql_call = str(
+    #    "select id from person where lastname = " +
+    #    lastname +
+    #    " and " +
+    #    "firstname = " +
+    #    firstname +
+    #    " address = " +
+    #    address)
     cursor = connection.cursor()
-    cursor.execute(sql_call)
+    cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
+    #cursor.execute(sql_call)
     id_val = cursor.fetchone()
-    return id_val
+    return id_val[0]
 
 
 def delete_employee(ssn):
-    sql_call = str("Delete from employee Where ssn = " + ssn)
+    #sql_call = str("Delete from employee Where ssn = " + ssn)
     cursor = connection.cursor()
-    cursor.execute(sql_call)
+    cursor.execute('DELETE FROM users WHERE ssn = ?',(ssn))
+    #cursor.execute(sql_call)
 
 
 # needs to be done
@@ -475,23 +504,31 @@ def update_employee(
     # Set PhoneNumber = 6314136666
     # Where SSN= 123456789
 
-    cursor = connection.cursor()
-    sql_call = str("update person  " + firstname + ", " +
-                   lastname + "," + password + "," + gender + ", " + address +
-                   "," + city + ", " + state + ", " + telephone + ")")
-    cursor.execute(sql_call)
 
-    sql_call = str(
-        "Insert into employee Values (NULL, " +
-        ssn +
-        "," +
-        start_date +
-        ", " +
-        hourly_rate +
-        " , " +
-        role +
-        " )")
-    cursor.execute(sql_call)
+    cursor = connection.cursor()
+    cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
+    target_id = cursor.fetchone()
+ 
+    cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, target_id))
+    cursor.execute('UPDATE employee SET ssn=?, start_date=?, hourly_rate=?, role=? WHERE id=?',(ssn, start_date, hourly_rate, role, target_val[0]))
+
+
+    #sql_call = str("update person  " + firstname + ", " +
+    #               lastname + "," + password + "," + gender + ", " + address +
+    #               "," + city + ", " + state + ", " + telephone + ")")
+    #cursor.execute(sql_call)
+
+    #sql_call = str(
+    #    "Insert into employee Values (NULL, " +
+    #    ssn +
+    #    "," +
+    #    start_date +
+    #    ", " +
+    #    hourly_rate +
+    #    " , " +
+    #    role +
+    #    " )")
+    #cursor.execute(sql_call)
 
 
 def obtain_sales_report_by_month(date):
@@ -507,6 +544,7 @@ def obtain_sales_report_by_month(date):
         "WHERE MONTH(P.Date) = " +
         date +
         " GROUP BY A.adv_id")
+
     cursor.execute(sql_call)
     val = cursor.fetchone()
     return val
