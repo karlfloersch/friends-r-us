@@ -16,10 +16,13 @@ var addPost = function() {
     "use strict";
     var $posts = $("#posts");
     var post = $("#post-box").val();
-    if (post === ""){
-        return;
-    }
-    sendDefaultPOST('/submit-post/', {'post': post}, function(response) {
+    var data = {
+        'post_text': post,
+        'page_name': $('#circle-name').attr('value'),
+        'page_id': $('#circle-id').attr('value')
+    };
+
+    sendDefaultPOST('/submit-post/', data, function(response) {
         console.log(response);
     });
     $("#post-box").val('');

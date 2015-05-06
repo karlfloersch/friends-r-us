@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import connection
 from datetime import date
+import datetime
 import time
 
 
@@ -154,7 +155,7 @@ def list_each_customer_account_account_history(cust_id):
     return val
 
 
-def make_a_post(customer_id, page_id):
+def make_a_post(content, customer_id, page_id):
     # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
     # id            INT,
     #  date          DATE,
@@ -163,19 +164,18 @@ def make_a_post(customer_id, page_id):
     #  comment_count INT,
     #  customerid    INT,
     #  page_id        INT,
-    ts = date.isoformat()
+    print(content)
+    print(customer_id)
+    print(page_id)
+    print("NEW PRINT")
+    ts = datetime.datetime.now()
     date_now = time.strftime("%d/%m/%Y")
+    print(ts)
+    print(date_now)
     cursor = connection.cursor()
-    cursor.execute(
-        "insert into post values(NULL," +
-        date_now +
-        "," +
-        ts +
-        ",0," +
-        customer_id +
-        "," +
-        page_id +
-        ")")
+    cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
+    print("I AM REALLY STUPID POODLES")
+
 
 
 def list_customers_current_circles(owner_id, circle_id):

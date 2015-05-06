@@ -7,6 +7,8 @@ urlpatterns = patterns('',
                        # Actual view urls
                        url(r'^accounts/(?P<username>\w+)/$',
                            views.profile_view, name='profile_view'),
+                       url(r'^accounts/(?P<username>\w+)/(?P<sub_page>\w+)/$',
+                           views.profile_view, name='page_view'),
                        url(r'^messages/$', views.messages_view,
                            name='messages_view'),
                        # Non-visual ajax urls

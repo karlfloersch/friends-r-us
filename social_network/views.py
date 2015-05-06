@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, \
+    HttpResponseNotFound
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
@@ -26,7 +27,7 @@ def make_data(request, username):
 
 
 @login_required
-def profile_view(request, username):
+def profile_view(request, username, sub_page=None):
     """ Simple view to test querying the DB """
     user = User.objects.filter(username=username)
     if user.count() == 0:
@@ -37,8 +38,11 @@ def profile_view(request, username):
     user_id = user.first_name
     user_info = queries.get_user_info_by_id(user_id)
     circles = queries.get_user_circles_info(user_id)
+    circle_name, circle_id = get_current_circle(circles, sub_page)
     # Get the page's posts and comments
-    page_info = queries.get_page(user_id, 'Friends')
+    if not circle_id:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+    page_info = queries.get_page(user_id, circle_name)
     page_id = page_info[4]
     posts_info = queries.get_posts(page_id)
     posts = []
@@ -56,12 +60,14 @@ def profile_view(request, username):
                  "first_name": user_info[1],
                  "last_name": user_info[2],
                  "circles": circles,
+                 "current_circle": {'name': circle_name, 'id': circle_id},
                  "posts": posts}
     data = make_data(request, username)
     data['page_data'] = page_data
     if username == request.user.username:
         data['nbar'] = "nav_home"
-
+    if not request.method == 'POST':
+        return render(request, "profile.html", dictionary=data)
     # Handle file upload
     if request.method == 'POST':
         if request.user.username == username:
@@ -77,7 +83,18 @@ def profile_view(request, username):
                 return render(request, "profile.html", dictionary=data)
     else:
         data['form'] = DocumentForm()  # A empty, unbound form
-    return render(request, "profile.html", dictionary=data)
+
+
+def get_current_circle(circles, sub_page):
+    if sub_page:
+        circle_name = sub_page.replace('_', ' ')
+    else:
+        circle_name = 'Friends'
+    circle_id = None
+    for circle in circles:
+        if circle[2] == circle_name:
+            circle_id = circle[0]
+    return circle_name, circle_id
 
 
 @login_required
@@ -149,8 +166,14 @@ def get_friends_ajax(request):
 
 @login_required
 def submit_post_ajax(request):
-    name = request.POST["fullname"]
-    data = {'friends': name}
+    # userID = request.user.first_name
+    data = {'post_text': request.POST.get('post_text'),
+            'page_name': request.POST.get('page_name'),
+            'page_id': request.POST.get('page_id')}
+    print('poodlejfiowejf')
+    print(data)
+    queries.make_a_post(data['post_text'], request.user.first_name,
+                        data['page_id'])
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
