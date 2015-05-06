@@ -174,6 +174,17 @@ def get_friends_ajax(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
+@login_required
+def create_advertisement_ajax(request):
+    item_name = request.POST["item_name"]
+    num_un = request.POST["num_aval_units"]
+    cust_id = request.user.first_name
+
+    # add ur querey friends = queries.get_users_by_firstname(name)
+    data = {'item_name': item_name}
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
 def submit_post_ajax(request):
     # userID = request.user.first_name
     page_id = queries.get_page_by_circle_id(request.POST.get('circle_id'))[0]
@@ -363,6 +374,7 @@ def validate_new_user(request):
         valid_data = False
         data['err_telephone'] = "Please enter a telephone"
     if len(data['credit'].strip()) ==0 or isInt(data['credit'])==False:
+        print('credit')
         valid_data = False
         data['err_credit'] = "Please enter a credit"
 
@@ -398,6 +410,7 @@ def validate_new_employee(request):
     data['smonth'] = request.POST.get('smonth', False)
     data['sday'] = request.POST.get('sday', False)
     data['syear'] = request.POST.get('syear', False)
+
     data['ssn'] = request.POST.get('ssn', False)
     data['rate'] = request.POST.get('rate', False)
     data['role'] = request.POST.get('role', False)
@@ -407,24 +420,30 @@ def validate_new_employee(request):
 
     # username gender
     valid_data = True
+    error_location = 0
     # If any data is invalid, set valid_data to False and print error
     if len(data['name']) < 2 or len(data['name']) > 2:
         valid_data = False
+        error_location = 1
         data['err_studName'] = "Please enter a valid name"
     else:
         data['first_name'] = data['name'][0]
         data['last_name'] = data['name'][1]
     if User.objects.filter(username=data['username']).count():
         valid_data = False
+        error_location = 2
         data['err_email'] = "A user with that email already exists"
     if len(data['address'].strip()) == 0:
         valid_data = False
+        error_location = 3
         data['err_address'] = "Please enter an address"
     if len(data['pw'].strip()) == 0:
         valid_data = False
+        error_location = 4
         data['err_pw'] = "Please enter a password"
     if len(data['syear'].strip()) == 0 or len(data['sday'].strip()) == 0 or len(data['smonth'].strip()) == 0:
         valid_data = False
+        error_location = 5
         data['err_date'] = "Please enter a date"
     # elif datetime.datetime(year=1900, month=1, day=1) <
     # datetime.datetime(year=int(data['year']), month=int(data['month']),
@@ -432,29 +451,35 @@ def validate_new_employee(request):
     elif validate_date(str(data['smonth'] + "/" + data['sday'] + "/" + data['syear'])) == False:
         # print('money')
         valid_data = False
+        error_location = 6
+        print(str(data['smonth'] + "/" + data['sday'] + "/" + data['syear']))
         data['err_date'] = "Please enter a date"
     if len(data['city'].strip()) == 0:
         valid_data = False
+        error_location = 7
         data['err_city'] = "Please enter a city"
     if len(data['state'].strip()) == 0:
         valid_data = False
+        error_location = 8
         data['err_state'] = "Please enter a state"
     if len(data['zipcode'].strip()) == 0:
         valid_data = False
+        error_location = 9
         data['err_zipcode'] = "Please enter a zip"
     if len(data['telephone'].strip()) == 0:
         valid_data = False
+        error_location = 10
         data['err_telephone'] = "Please enter a telephone"
     if len(data['ssn'].strip()) == 0:
         valid_data = False
+        error_location = 11
         data['err_ssn'] = "Please enter a ssn"
     if len(data['rate'].strip()) == 0:
         valid_data = False
+        error_location = 12
         data['err_rate'] = "Please enter a rate"
-    if len(data['role'].strip()) == 0:
-        valid_data = False
-        data['err_role'] = "Please enter a role"
 
+    print(error_location)
     # Return if the valid
     return valid_data, data
 

@@ -422,7 +422,6 @@ def add_customer(firstname_, lastname_, password_, gender_, address_, city_, sta
     id_val = cursor.fetchone()
     id_val = id_val[0]
     cursor.execute('INSERT INTO account(customer_id, create_date, credit_card_num) VALUES(?,?,?)',(id_val, ts, credit_card_num))
-
     cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val, email_, 5, dob_))
     id_circle = create_a_circle(id_val, "Friends", "Friends")
     create_page(id_val, id_circle)
@@ -454,6 +453,7 @@ def add_employee(
         city,
         state,
         zipcode,
+
         telephone,
         ssn,
         start_date,
