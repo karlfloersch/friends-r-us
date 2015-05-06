@@ -428,8 +428,21 @@ def add_customer(firstname_, lastname_, password_, gender_, address_, city_, sta
     create_page(id_val, id_circle)
     return id_val
 
+def remove_customer(cust_id, acc_id):
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM customer WHERE cust_id=?',(cust_id))
+    #Check to see if account is deleted when a customer is removed from the system.
 
-#def update_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_):
+
+def update_customer(cust_id, rating, firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_):
+    cursor = conneciton.cursor()
+    cursor.execute('UPDATE customer SET email=?, rating=?, date_of_birth=? WHERE id =?',(email_, rating, dob_))
+    cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, cust_id))
+
+def update_customer_credit_card(account_id, credit_card_num):
+    cursor = connection.cursor()
+    cursor.execute('UPDATE account SET credit_card_num=? WHERE account_id=?',(credit_card_num, account_id))
+
 
 
 def add_employee(
@@ -583,6 +596,10 @@ def create_advertisement(item_name, num_aval_units, unit_price, content, employe
     cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
     adv_obj = cursor.fetchone()
     return adv_obj
+
+def delete_advertisement(adv_id):
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM advertisement WHERE adv_id=?',(adv_id))
 
 def get_revenue_of_item(adv_id, type_in, customer_acc_num):
     if(adv_id == ""):

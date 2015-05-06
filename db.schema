@@ -36,7 +36,7 @@ CREATE TABLE person
 
 CREATE TABLE customer 
   ( 
-     cust_id     INT DEFAULT 0, 
+     cust_id     INTEGER PRIMARY KEY, 
      email       VARCHAR(50), 
      rating      INT, 
      date_of_birth DATETIME NOT NULL, 
@@ -74,10 +74,9 @@ CREATE TABLE customer_preferences
 CREATE TABLE account 
   ( 
      customer_id     INT, 
-     account_id       INTEGER PRIMARY KEY,
+     account_id      INTEGER PRIMARY KEY,
      create_date DATETIME NOT NULL,
      credit_card_num INT, 
-     PRIMARY KEY (account_id), 
      FOREIGN KEY (customer_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
   ); 
 
