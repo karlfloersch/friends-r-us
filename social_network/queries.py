@@ -408,6 +408,7 @@ def get_user_circles_ids(user_id):
     #               + user_id)
     cursor.execute(sql_call)
     return cursor.fetchall()
+
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
     cursor = connection.cursor()
     #customer_id     INTEGER PRIMARY KEY, 
@@ -426,6 +427,9 @@ def add_customer(firstname_, lastname_, password_, gender_, address_, city_, sta
     id_circle = create_a_circle(id_val, "Friends", "Friends")
     create_page(id_val, id_circle)
     return id_val
+
+
+#def update_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_):
 
 
 def add_employee(
@@ -451,7 +455,7 @@ def add_employee(
     return id_val[0]
 
 
-#def update_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_):
+
     
 
 
@@ -574,9 +578,9 @@ def produce_list_of_transactions_item_name_cust_name(
     return val
 
 
-def create_advertisement(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO advertisement(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?,?)',(adv_id, item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
+    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
     adv_obj = cursor.fetchone()
     return adv_obj
 
