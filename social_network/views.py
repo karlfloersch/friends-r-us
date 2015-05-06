@@ -207,11 +207,14 @@ def create_account_view(request):
             print("valid")
 
             dob = data['month'] + "-" + data['day'] + "-" + data['year']
-            queries.add_customer(firstname_=data['first_name'], lastname_=data['last_name'], password_=data['pw'], gender_=data['gender'], address_=data[
-                                 'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data['telephone'], email_=data['email'], dob_=dob)
+            cust_id = queries.add_customer(firstname_=data['first_name'], lastname_=data['last_name'], password_=data['pw'], gender_=data['gender'], address_=data[
+                                           'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data['telephone'], email_=data['email'], dob_=dob)
             user = User.objects.create_user(username=data['username'],
-                                            password=data['pw'])
-            user.is_active = False
+                                            password=data['pw'],
+                                            first_name= cust_id)
+            print(cust_id)
+            user.first_name = cust_id
+            user.is_active = True
             user.save()
             # month day year
            

@@ -22,6 +22,18 @@ def get_username_and_name_by_id(cust_id):
     row = row + (user.username,)
     return row
 
+def create_page(cust_id, associated_circle):
+    cursor = connection.cursor()
+    #id, post_count, associated_circle
+    #pageowner, pageid
+    cursor.execute('INSERT INTO page(id, post_count, associated_circle_id) VALUES(?,?,?)',(cust_id, 0, associated_circle))
+    cursor.execute('SELECT id FROM page WHERE associated_circle_id=? AND post_count=?', (associated_circle, 0))
+
+    page_id = cursor.fetchone()
+
+    cursor.execute('INSERT INTO createpage(pageowner, page_id) VALUES(?,?)',(cust_id, page_id[0]))
+    return page_id[0]
+
 
 def get_page(cust_id, circle_name):
     cursor = connection.cursor()
@@ -80,6 +92,28 @@ def get_conversation_messages(cust_ids):
     row = cursor.fetchall()
     return row
 
+def get_likes_by_post(post_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT COUNT(*) FROM likepost WHERE post_id=?', (post_id))
+    id_val = cursor.fetchone()
+    id_val = id_val[0]
+    return id_val
+
+def get_likes_by_comment(comment_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT COUNT(*) FROM likecomment WHERE post_id=?', (comment_id))
+    id_val = cursor.fetchone()
+    id_val = id_val[0]
+    return id_val
+
+def like_post(post_id, cust_id):
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO likepost(post_id, cust_id) VALUES(?,?)',(post_id, cust_id))
+
+def like_post(comment_id, cust_id):
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO likecomment(comment_id, cust_id) VALUES(?,?)',(comment_id, cust_id))
+
 
 # End queries in use
 
@@ -98,14 +132,21 @@ def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
 
 def create_a_circle(owner_id, name, circle_type):
     cursor = connection.cursor()
-    cursor.execute(
-        "INSERT INTO Circle VALUES( NULL," +
-        owner_id +
-        "," +
-        name +
-        "," +
-        circle_type +
-        ")")
+    cursor.execute('INSERT INTO circle(owner_id, name, circle_type) VALUES(?,?,?)',(owner_id, name, circle_type))    
+    cursor.execute('SELECT id FROM circle WHERE owner_id=? AND name=? AND circle_type=?', (owner_id, name, circle_type))
+    circle_id = cursor.fetchone()
+    print(circle_id)
+    circle_id_ = circle_id[0]
+    cursor.execute('INSERT INTO createcircle(cust_id, circle_id) VALUES(?,?)',(owner_id, circle_id_))
+    return circle_id_
+    #cursor.execute(
+    #    "INSERT INTO Circle VALUES( NULL," +
+    #    owner_id +
+    #    "," +
+    #    name +
+    #    "," +
+    #    circle_type +
+    #    ")")
 
 
 def purchase_one_or_advertised_item(ad_id, num_units, date, customer_acc_num):
@@ -217,28 +258,6 @@ def comment_on_a_post(content, author_id, post_id):
         ")")
     cursor.execute("UPDATE post SET Comment_Count = Comment_Count + 1" +
                    "WHERE Post_Id =" + post_id)
-
-
-def like_post(post_id, cust_id):
-    # INSERT INTO User_Likes_Post VALUES (?,?);
-    # post_id INT,
-    # cust_id INT,
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO likepost  VALUES ("+post_id+","+cust_id+")")
-
-
-def like_comment(comment_id, cust_id):
-    # INSERT INTO likecomment VALUES (?,?)
-    # comment_id INT,
-    # cust_id    INT,
-    cursor = connection.cursor()
-    cursor.execute(
-        "INSERT INTO likecomment VALUES (" +
-        comment_id +
-        "," +
-        cust_id +
-        ")")
-
 
 def remove_a_post(post_id):
     cursor = connection.cursor()
@@ -390,8 +409,11 @@ def add_customer(
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     id_val = cursor.fetchone()
-    cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val[0], email_, 5, dob_))
-    
+    id_val = id_val[0]
+    cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val, email_, 5, dob_))
+    id_circle = create_a_circle(id_val, "Friends", "Friends")
+    create_page(id_val, id_circle)
+    return id_val
     
 
 
@@ -434,6 +456,7 @@ def add_employee(
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     id_val = cursor.fetchone()
     cursor.execute('INSERT INTO employee(id, ssn, start_date, hourly_rate, role) VALUES(?,?,?,?,?)', (id_val[0], ssn, start_date, hourly_rate, role))
+    return id_val[0]
     #cursor.execute(sql_call)'SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     #sql_call = str(
     #    "select id from person where lastname = " +
