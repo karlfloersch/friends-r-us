@@ -69,6 +69,8 @@ def profile_view(request, username, sub_page=None):
     if username == request.user.username:
         data['nbar'] = "nav_home"
     if not request.method == 'POST':
+        if request.user.last_name == 'employee':
+            return render(request, 'employee.html', dictionary=data)
         return render(request, "profile.html", dictionary=data)
     # Handle file upload
     if request.method == 'POST':
