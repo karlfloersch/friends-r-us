@@ -192,6 +192,39 @@ def list_view(request):
     )
 
 
+def create_employee_account_view(request):
+
+    if request.method == 'GET':
+        return render(request, "employeeregistration.html")
+    elif request.method == 'POST':
+        # print('poodle')
+
+        print("checkValid")
+        is_valid, data = validate_new_employee(request)
+
+        if is_valid:
+                # Data is valid and let's store it in the db
+            print("employee creation")
+
+            date = data['smonth'] + "-" + data['sday'] + "-" + data['syear']
+            cust_id = queries.add_employee(firstname=data['first_name'], lastname=data['last_name'], password=data['pw'], gender=data['gender'], address=data['address'], city=data[
+                                           'city'], state=data['state'], zipcode=data['zipcode'], telephone=data['telephone'], ssn=data['ssn'], start_date=date, hourly_rate=data['rate'], role=data['role'])
+            user = User.objects.create_user(username=data['username'],
+                                            password=data['pw'],
+                                            first_name=cust_id, last_name = "employee")
+            print(cust_id)
+            user.first_name = cust_id
+            user.is_active = True
+            user.save()
+            print("employee created")
+            # month day year
+
+            return HttpResponseRedirect("/login")
+        else:
+            print("invalid")
+            return render(request, 'employeeregistration.html', dictionary=data)
+
+
 def create_account_view(request):
 
     if request.method == 'GET':
@@ -208,16 +241,17 @@ def create_account_view(request):
 
             dob = data['month'] + "-" + data['day'] + "-" + data['year']
             cust_id = queries.add_customer(firstname_=data['first_name'], lastname_=data['last_name'], password_=data['pw'], gender_=data['gender'], address_=data[
-                                           'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data['telephone'], email_=data['email'], dob_=dob)
+                                           'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data[
+                                           'telephone'], email_=data['email'], dob_=dob)
             user = User.objects.create_user(username=data['username'],
                                             password=data['pw'],
-                                            first_name= cust_id)
+                                            first_name=cust_id, last_name = "customer")
             print(cust_id)
             user.first_name = cust_id
             user.is_active = True
             user.save()
             # month day year
-           
+
             return HttpResponseRedirect("/login")
         else:
             print("invalid")
@@ -228,20 +262,6 @@ def validate_new_user(request):
     """ return (True if data is valid, Dictionary of input and errors)
     validate the user data that was entered in request
     """
-    #     email       VARCHAR(50),
-    # rating      INT,
-    # date_of_birth DATETIME NOT NULL,
-    # id        INT,
-    # firstname VARCHAR(50),
-    # lastname  VARCHAR(50),
-    # password  CHAR(15),
-    # gender    VARCHAR(1),
-    # address   VARCHAR(95),
-    # city      VARCHAR(50),
-    # state     VARCHAR(50),
-    # zipcode   INT,
-    # telephone VARCHAR(15),
-    # Fill data with the information that the user entered
     data = {}
     data['name'] = request.POST.get('name', False).strip().split()
     data['email'] = request.POST.get('email', False)
@@ -281,8 +301,10 @@ def validate_new_user(request):
     if len(data['year'].strip()) == 0 or len(data['day'].strip()) == 0 or len(data['month'].strip()) == 0:
         valid_data = False
         data['err_date'] = "Please enter a date"
-    # elif datetime.datetime(year=1900, month=1, day=1) < datetime.datetime(year=int(data['year']), month=int(data['month']), day=int(data['day'])) <= datetime.datetime.now():
-    elif validate_date(str(data['month']+"/"+data['day']+"/"+data['year']))==False:  
+    # elif datetime.datetime(year=1900, month=1, day=1) <
+    # datetime.datetime(year=int(data['year']), month=int(data['month']),
+    # day=int(data['day'])) <= datetime.datetime.now():
+    elif validate_date(str(data['month'] + "/" + data['day'] + "/" + data['year'])) == False:
         # print('money')
         valid_data = False
         data['err_date'] = "Please enter a date"
@@ -298,6 +320,86 @@ def validate_new_user(request):
     if len(data['telephone'].strip()) == 0:
         valid_data = False
         data['err_telephone'] = "Please enter a telephone"
+
+    # Return if the valid
+    return valid_data, data
+
+
+def validate_new_employee(request):
+    """ return (True if data is valid, Dictionary of input and errors)
+    validate the user data that was entered in request
+    """
+    data = {}
+    data['name'] = request.POST.get('name', False).strip().split()
+    data['pw'] = request.POST.get('password', False)
+    data['gender'] = request.POST.get('gender', False)
+    data['username'] = request.POST.get('username', False)
+    data['password'] = request.POST.get('password', False)
+    data['address'] = request.POST.get('address', False)
+    data['city'] = request.POST.get('city', False)
+    data['state'] = request.POST.get('state', False)
+    data['zipcode'] = request.POST.get('zipcode', False)
+    data['telephone'] = request.POST.get('telephone', False)
+
+    data['smonth'] = request.POST.get('smonth', False)
+    data['sday'] = request.POST.get('sday', False)
+    data['syear'] = request.POST.get('syear', False)
+    data['ssn'] = request.POST.get('ssn', False)
+    data['rate'] = request.POST.get('rate', False)
+    data['role'] = request.POST.get('role', False)
+#     ssn: <input type ="text" name="ssn"><br>
+# Hourly rate: <input type ="text" name="rate"><br>
+# Role: <input type ="text" name="role"><br>
+
+    # username gender
+    valid_data = True
+    # If any data is invalid, set valid_data to False and print error
+    if len(data['name']) < 2 or len(data['name']) > 2:
+        valid_data = False
+        data['err_studName'] = "Please enter a valid name"
+    else:
+        data['first_name'] = data['name'][0]
+        data['last_name'] = data['name'][1]
+    if User.objects.filter(username=data['username']).count():
+        valid_data = False
+        data['err_email'] = "A user with that email already exists"
+    if len(data['address'].strip()) == 0:
+        valid_data = False
+        data['err_address'] = "Please enter an address"
+    if len(data['pw'].strip()) == 0:
+        valid_data = False
+        data['err_pw'] = "Please enter a password"
+    if len(data['syear'].strip()) == 0 or len(data['sday'].strip()) == 0 or len(data['smonth'].strip()) == 0:
+        valid_data = False
+        data['err_date'] = "Please enter a date"
+    # elif datetime.datetime(year=1900, month=1, day=1) <
+    # datetime.datetime(year=int(data['year']), month=int(data['month']),
+    # day=int(data['day'])) <= datetime.datetime.now():
+    elif validate_date(str(data['smonth'] + "/" + data['sday'] + "/" + data['syear'])) == False:
+        # print('money')
+        valid_data = False
+        data['err_date'] = "Please enter a date"
+    if len(data['city'].strip()) == 0:
+        valid_data = False
+        data['err_city'] = "Please enter a city"
+    if len(data['state'].strip()) == 0:
+        valid_data = False
+        data['err_state'] = "Please enter a state"
+    if len(data['zipcode'].strip()) == 0:
+        valid_data = False
+        data['err_zipcode'] = "Please enter a zip"
+    if len(data['telephone'].strip()) == 0:
+        valid_data = False
+        data['err_telephone'] = "Please enter a telephone"
+    if len(data['ssn'].strip()) == 0:
+        valid_data = False
+        data['err_ssn'] = "Please enter a ssn"
+    if len(data['rate'].strip()) == 0:
+        valid_data = False
+        data['err_rate'] = "Please enter a rate"
+    if len(data['role'].strip()) == 0:
+        valid_data = False
+        data['err_role'] = "Please enter a role"
 
     # Return if the valid
     return valid_data, data

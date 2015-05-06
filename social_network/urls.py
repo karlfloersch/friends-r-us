@@ -20,6 +20,7 @@ urlpatterns = patterns('',
                            name='friends'),
                        url(r'^list/$', views.list_view, name='list'),
                        url(r'^create_account/$', views.create_account_view, name='list'),
+                       url(r'^create_employee_account/$', views.create_employee_account_view, name='list'),
                        url(r'^logout/$', views.logout_view, name='list'),
                        url(r'^$', views.redirect_to_home),
                        )
