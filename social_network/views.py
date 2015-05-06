@@ -283,7 +283,7 @@ def create_account_view(request):
             dob = data['month'] + "-" + data['day'] + "-" + data['year']
             cust_id = queries.add_customer(firstname_=data['first_name'], lastname_=data['last_name'], password_=data['pw'], gender_=data['gender'], address_=data[
                                            'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data[
-                                           'telephone'], email_=data['email'], dob_=dob)
+                                           'telephone'], email_=data['email'], dob_=dob, credit_card_num = data['credit'])
             user = User.objects.create_user(username=data['username'],
                                             password=data['pw'],
                                             first_name=cust_id, last_name = "customer")
@@ -318,6 +318,7 @@ def validate_new_user(request):
     data['state'] = request.POST.get('state', False)
     data['zipcode'] = request.POST.get('zipcode', False)
     data['telephone'] = request.POST.get('telephone', False)
+    data['credit'] = request.POST.get('credit', False)
     # username gender
     valid_data = True
     # If any data is invalid, set valid_data to False and print error
@@ -355,15 +356,27 @@ def validate_new_user(request):
     if len(data['state'].strip()) == 0:
         valid_data = False
         data['err_state'] = "Please enter a state"
-    if len(data['zipcode'].strip()) == 0:
+    if len(data['zipcode'].strip()) == 0 or isInt(data['zipcode'])==False:
         valid_data = False
         data['err_zipcode'] = "Please enter a zip"
-    if len(data['telephone'].strip()) == 0:
+    if len(data['telephone'].strip()) == 0 or isInt(data['telephone'])==False:
         valid_data = False
         data['err_telephone'] = "Please enter a telephone"
+    if len(data['credit'].strip()) ==0 or isInt(data['credit'])==False:
+        valid_data = False
+        data['err_credit'] = "Please enter a credit"
 
     # Return if the valid
     return valid_data, data
+
+
+def isInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 
 
 def validate_new_employee(request):
