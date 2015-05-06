@@ -168,10 +168,10 @@ def get_friends_ajax(request):
 
 def submit_post_ajax(request):
     # userID = request.user.first_name
+    page_id = queries.get_page_by_circle_id(request.POST.get('circle_id'))[0]
     data = {'post_text': request.POST.get('post_text'),
             'page_name': request.POST.get('page_name'),
-            'page_id': request.POST.get('page_id')}
-    print('poodlejfiowejf')
+            'page_id': page_id}
     print(data)
     queries.make_a_post(data['post_text'], request.user.first_name,
                         data['page_id'])
@@ -237,7 +237,7 @@ def create_account_view(request):
             user.is_active = False
             user.save()
             # month day year
-           
+
             return HttpResponseRedirect("/login")
         else:
             print("invalid")
@@ -302,7 +302,7 @@ def validate_new_user(request):
         valid_data = False
         data['err_date'] = "Please enter a date"
     # elif datetime.datetime(year=1900, month=1, day=1) < datetime.datetime(year=int(data['year']), month=int(data['month']), day=int(data['day'])) <= datetime.datetime.now():
-    elif validate_date(str(data['month']+"/"+data['day']+"/"+data['year']))==False:  
+    elif validate_date(str(data['month']+"/"+data['day']+"/"+data['year']))==False:
         # print('money')
         valid_data = False
         data['err_date'] = "Please enter a date"

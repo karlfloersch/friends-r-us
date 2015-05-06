@@ -33,6 +33,14 @@ def get_page(cust_id, circle_name):
     return row
 
 
+def get_page_by_circle_id(circle_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM page WHERE associated_circle_id='
+                   + circle_id)
+    row = cursor.fetchone()
+    return row
+
+
 def get_posts(page_id):
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM post WHERE page_id=' + str(page_id))
@@ -80,6 +88,23 @@ def get_conversation_messages(cust_ids):
                    + cust_ids[1] + " AND receiver=" + cust_ids[0])
     row = cursor.fetchall()
     return row
+
+
+def make_a_post(content, customer_id, page_id):
+    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
+    # id            INT,
+    #  date          DATE,
+    #  time          TIMESTAMP,
+    #  content       TEXT,
+    #  comment_count INT,
+    #  customerid    INT,
+    #  page_id        INT,
+    ts = 'null'
+    print('shit is here')
+    date_now = time.strftime("%d/%m/%Y")
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
+    print('dick is here')
 
 
 # End queries in use
@@ -154,27 +179,6 @@ def list_each_customer_account_account_history(cust_id):
     val = cursor.fetchone()
     return val
 
-
-def make_a_post(content, customer_id, page_id):
-    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
-    # id            INT,
-    #  date          DATE,
-    #  time          TIMESTAMP,
-    #  content       TEXT,
-    #  comment_count INT,
-    #  customerid    INT,
-    #  page_id        INT,
-    print(content)
-    print(customer_id)
-    print(page_id)
-    print("NEW PRINT")
-    ts = datetime.datetime.now()
-    date_now = time.strftime("%d/%m/%Y")
-    print(ts)
-    print(date_now)
-    cursor = connection.cursor()
-    cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
-    print("I AM REALLY STUPID POODLES")
 
 
 
@@ -386,13 +390,13 @@ def add_customer(
         dob_,
         ):
     cursor = connection.cursor()
- 
+
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     id_val = cursor.fetchone()
     cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val[0], email_, 5, dob_))
-    
-    
+
+
 
 
 
@@ -508,7 +512,7 @@ def update_employee(
     cursor = connection.cursor()
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     target_id = cursor.fetchone()
- 
+
     cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, target_id))
     cursor.execute('UPDATE employee SET ssn=?, start_date=?, hourly_rate=?, role=? WHERE id=?',(ssn, start_date, hourly_rate, role, target_val[0]))
 

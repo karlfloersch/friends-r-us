@@ -19,7 +19,7 @@ var addPost = function() {
     var data = {
         'post_text': post,
         'page_name': $('#circle-name').attr('value'),
-        'page_id': $('#circle-id').attr('value')
+        'circle_id': $('#circle-id').attr('value')
     };
 
     sendDefaultPOST('/submit-post/', data, function(response) {
