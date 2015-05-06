@@ -1,7 +1,28 @@
+drop table person;
+drop table customer;
+drop table employee;
+drop table employeemanages;
+drop table customer_preferences;
+drop table account;
+drop table message;
+drop table advertisement;
+drop table buy;
+drop table circle;
+drop table page;
+drop table post;
+drop table likepost;
+drop table likecomment;
+drop table pagebelongstocircle;
+drop table createpage;
+drop table comment;
+drop table createcircle;
+drop table memberofcircle;
+drop table addcommenttopost;
+drop table advertise;
 /* CREATE TABLES */
 CREATE TABLE person 
   ( 
-     id        INT, 
+     id        INTEGER PRIMARY KEY, 
      firstname VARCHAR(50), 
      lastname  VARCHAR(50), 
      password  CHAR(15), 
@@ -10,8 +31,7 @@ CREATE TABLE person
      city      VARCHAR(50), 
      state     VARCHAR(50), 
      zipcode   INT, 
-     telephone VARCHAR(15), 
-     PRIMARY KEY (id) 
+     telephone VARCHAR(15)
   ); 
 
 CREATE TABLE customer 
@@ -26,12 +46,11 @@ CREATE TABLE customer
 
 CREATE TABLE employee 
   ( 
-     emp_id      INT, 
+     emp_id      INTEGER PRIMARY KEY, 
      ssn         CHAR(11) NOT NULL, 
      start_date  DATE, 
      hourly_rate INT, 
      role        VARCHAR(100),
-     PRIMARY KEY (emp_id), 
      FOREIGN KEY (emp_id) REFERENCES person(id) ON DELETE CASCADE 
   ); 
 
@@ -77,7 +96,7 @@ CREATE TABLE message
 
 CREATE TABLE advertisement 
   ( 
-     adv_id         INT(30), 
+     adv_id         INTEGER PRIMARY KEY, 
      item_name      VARCHAR(50), 
      num_aval_units INT, 
      unit_price     INT, 
@@ -85,8 +104,7 @@ CREATE TABLE advertisement
      employee_id    INT, 
      type           VARCHAR(20), 
      date           DATE, 
-     company        VARCHAR(150), 
-     PRIMARY KEY (adv_id), 
+     company        VARCHAR(150),
      FOREIGN KEY (employee_id) REFERENCES employee(emp_id) 
   ); 
 
@@ -106,33 +124,30 @@ CREATE TABLE buy
 
 CREATE TABLE circle 
   ( 
-     id                   INT, 
+     id             INTEGER PRIMARY KEY, 
      owner_id       INT, 
      name           VARCHAR(50), 
-     circle_type    VARCHAR(20), 
-     PRIMARY KEY (id), 
+     circle_type    VARCHAR(20),  
      FOREIGN KEY (owner_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
   ); 
 
 CREATE TABLE page 
   ( 
-     id                   INT, 
+     id                   INTEGER PRIMARY KEY, 
      post_count           INT, 
      associated_circle_id INT, 
-     PRIMARY KEY (id), 
      FOREIGN KEY (associated_circle_id) REFERENCES circle(id) ON DELETE CASCADE 
   ); 
 
 CREATE TABLE post 
   ( 
-     id            INT, 
+     id            INTEGER PRIMARY KEY, 
      date          DATE, 
      time          TIMESTAMP, 
      content       TEXT, 
      comment_count INT, 
      customerid    INT, 
      page_id        INT, 
-     PRIMARY KEY (id), 
      FOREIGN KEY (customerid) REFERENCES customer(cust_id), 
      FOREIGN KEY (page_id) REFERENCES page(id) ON DELETE CASCADE 
   ); 

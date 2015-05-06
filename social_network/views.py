@@ -8,6 +8,8 @@ from django.shortcuts import render_to_response
 from .forms import DocumentForm
 from .models import Document
 from . import queries
+import datetime
+from datetime import datetime
 import json
 
 
@@ -149,6 +151,20 @@ def get_friends_ajax(request):
 
 
 @login_required
+def save_post_ajax(request):
+    # TODO: Fill this out with saving post using queries.py
+    # comment_on_a_post(content, author_id, post_id):
+    convo_user = User.objects.filter(username=request.POST["convo_user"])[0]
+    messages = queries.get_conversation_messages([request.user.first_name,
+                                                  convo_user.first_name])
+    author_id = ""
+    post_id = ""
+    queries.comment_on_a_post(messages, author_id, post_id)
+    data = {'messages': messages}
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@login_required
 def redirect_user(request):
     return HttpResponseRedirect("../" + str(request.user.username))
 
@@ -185,8 +201,133 @@ def list_view(request):
     )
 
 
+def create_account_view(request):
+
+    if request.method == 'GET':
+        return render(request, "registration.html")
+    elif request.method == 'POST':
+        # print('poodle')
+
+        print("checkValid")
+        is_valid, data = validate_new_user(request)
+
+        if is_valid:
+                # Data is valid and let's store it in the db
+            print("valid")
+
+            dob = data['month'] + "-" + data['day'] + "-" + data['year']
+            queries.add_customer(firstname_=data['first_name'], lastname_=data['last_name'], password_=data['pw'], gender_=data['gender'], address_=data[
+                                 'address'], city_=data['city'], state_=data['state'], zipcode_=data['zipcode'], telephone_=data['telephone'], email_=data['email'], dob_=dob)
+            user = User.objects.create_user(username=data['username'],
+                                            password=data['pw'])
+            user.is_active = False
+            user.save()
+            # month day year
+           
+            return HttpResponseRedirect("/login")
+        else:
+            print("invalid")
+            return render(request, 'registration.html', dictionary=data)
+
+
+def validate_new_user(request):
+    """ return (True if data is valid, Dictionary of input and errors)
+    validate the user data that was entered in request
+    """
+    #     email       VARCHAR(50),
+    # rating      INT,
+    # date_of_birth DATETIME NOT NULL,
+    # id        INT,
+    # firstname VARCHAR(50),
+    # lastname  VARCHAR(50),
+    # password  CHAR(15),
+    # gender    VARCHAR(1),
+    # address   VARCHAR(95),
+    # city      VARCHAR(50),
+    # state     VARCHAR(50),
+    # zipcode   INT,
+    # telephone VARCHAR(15),
+    # Fill data with the information that the user entered
+    data = {}
+    data['name'] = request.POST.get('name', False).strip().split()
+    data['email'] = request.POST.get('email', False)
+    data['pw'] = request.POST.get('password', False)
+    data['month'] = request.POST.get('month', False)
+    data['day'] = request.POST.get('day', False)
+    data['year'] = request.POST.get('year', False)
+    data['gender'] = request.POST.get('gender', False)
+    data['username'] = request.POST.get('username', False)
+    data['password'] = request.POST.get('password', False)
+    data['address'] = request.POST.get('address', False)
+    data['city'] = request.POST.get('city', False)
+    data['state'] = request.POST.get('state', False)
+    data['zipcode'] = request.POST.get('zipcode', False)
+    data['telephone'] = request.POST.get('telephone', False)
+    # username gender
+    valid_data = True
+    # If any data is invalid, set valid_data to False and print error
+    if len(data['name']) < 2 or len(data['name']) > 2:
+        valid_data = False
+        data['err_studName'] = "Please enter a valid name"
+    else:
+        data['first_name'] = data['name'][0]
+        data['last_name'] = data['name'][1]
+    if validate_email(data['email']):
+        valid_data = False
+        data['err_email'] = "Invalid email"
+    if User.objects.filter(username=data['username']).count():
+        valid_data = False
+        data['err_email'] = "A user with that email already exists"
+    if len(data['address'].strip()) == 0:
+        valid_data = False
+        data['err_address'] = "Please enter an address"
+    if len(data['pw'].strip()) == 0:
+        valid_data = False
+        data['err_pw'] = "Please enter a password"
+    if len(data['year'].strip()) == 0 or len(data['day'].strip()) == 0 or len(data['month'].strip()) == 0:
+        valid_data = False
+        data['err_date'] = "Please enter a date"
+    # elif datetime.datetime(year=1900, month=1, day=1) < datetime.datetime(year=int(data['year']), month=int(data['month']), day=int(data['day'])) <= datetime.datetime.now():
+    elif validate_date(str(data['month']+"/"+data['day']+"/"+data['year']))==False:  
+        # print('money')
+        valid_data = False
+        data['err_date'] = "Please enter a date"
+    if len(data['city'].strip()) == 0:
+        valid_data = False
+        data['err_city'] = "Please enter a city"
+    if len(data['state'].strip()) == 0:
+        valid_data = False
+        data['err_state'] = "Please enter a state"
+    if len(data['zipcode'].strip()) == 0:
+        valid_data = False
+        data['err_zipcode'] = "Please enter a zip"
+    if len(data['telephone'].strip()) == 0:
+        valid_data = False
+        data['err_telephone'] = "Please enter a telephone"
+
+    # Return if the valid
+    return valid_data, data
+
+
+def validate_email(email):
+    """ validate an email string """
+    import re
+    a = re.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    if a.match(email):
+        return False
+    return True
+
+
 def logout_view(request):
     """ log current user out """
     # Log the user out using Django Auth
     logout(request)
     return HttpResponseRedirect("/login")
+
+
+def validate_date(d):
+    try:
+        datetime.strptime(d, '%m/%d/%Y')
+        return True
+    except ValueError:
+        return False

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block js %}
+<script src="{% static "js/registration.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+{% csrf_token %}
+<!--  firstname VARCHAR(50), 
+     lastname  VARCHAR(50), 
+     password  CHAR(15), 
+     gender    VARCHAR(1),
+     address   VARCHAR(95), 
+     city      VARCHAR(50), 
+     state     VARCHAR(50), 
+     zipcode   INT, 
+     telephone VARCHAR(15), -->
+username: <input type="text" name="username"><br>
+email: <input type ="text" name="email"><br>
+name: <input type="text" name="name"><br>
+password: <input type ="text" name="password"><br>
+gender:  <select name = "gender">
+			  <option value="m">male</option>
+			  <option value="f">female</option>
+			  <option value="n">neutral</option>
+			  <option value="d">dont ask</option>
+		 </select> <br>
+D.O.B. month/day/year: 
+<select name = "month">
+			  <option value="1">jan</option>
+			  <option value="2">feb</option>
+			  <option value="3">march</option>
+			  <option value="4">april</option>
+			  <option value="5">may</option>
+			  <option value="6">june</option>
+			  <option value="7">july</option>
+			  <option value="8">august</option>
+			  <option value="9">september</option>
+			  <option value="10">october</option>
+			  <option value="11">november</option>
+			  <option value="12">december</option>
+		 </select>
+<input type ="text" name="day">
+<input type ="text" name="year"><br>
+address: <input type ="text" name="address"><br>
+city: <input type ="text" name="city"><br>
+state: <input type ="text" name="state"><br>
+zipcode: <input type ="text" name="zipcode"><br>
+telephone: <input type ="text" name="telephone"><br>
+
+
+<input type="submit" value="Submit">
+</form>
+{% endblock %}
