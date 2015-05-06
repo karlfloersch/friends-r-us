@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import connection
 from datetime import date
+import datetime
 import time
 
 
@@ -40,6 +41,14 @@ def get_page(cust_id, circle_name):
     cursor.execute('SELECT * FROM circle JOIN page ON '
                    + 'circle.id=associated_circle_id WHERE owner_id='
                    + cust_id + ' AND name="' + circle_name + '"')
+    row = cursor.fetchone()
+    return row
+
+
+def get_page_by_circle_id(circle_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM page WHERE associated_circle_id='
+                   + circle_id)
     row = cursor.fetchone()
     return row
 
@@ -113,6 +122,36 @@ def like_post(post_id, cust_id):
 def like_post(comment_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO likecomment(comment_id, cust_id) VALUES(?,?)',(comment_id, cust_id))
+
+
+def make_a_post(content, customer_id, page_id):
+    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
+    # id            INT,
+    #  date          DATE,
+    #  time          TIMESTAMP,
+    #  content       TEXT,
+    #  comment_count INT,
+    #  customerid    INT,
+    #  page_id        INT,
+    ts = 'null'
+    date_now = time.strftime("%d/%m/%Y")
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
+
+
+def make_a_comment(content, post_id, cust_id):
+    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
+    # id            INT,
+    #  date          DATE,
+    #  time          TIMESTAMP,
+    #  content       TEXT,
+    #  comment_count INT,
+    #  customerid    INT,
+    #  page_id        INT,
+    ts = datetime.datetime.now()
+    date_now = '0'  # time.strftime("%d/%m/%Y")
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO comment(date, time, content, author_id, post_id) VALUES(?,?,?,?,?)', (date_now, ts, content, cust_id, post_id))
 
 
 # End queries in use
@@ -195,28 +234,6 @@ def list_each_customer_account_account_history(cust_id):
     return val
 
 
-def make_a_post(customer_id, page_id):
-    # INSERT INTO POSTS VALUES (?,Date(),?,0,?,?);
-    # id            INT,
-    #  date          DATE,
-    #  time          TIMESTAMP,
-    #  content       TEXT,
-    #  comment_count INT,
-    #  customerid    INT,
-    #  page_id        INT,
-    ts = date.isoformat()
-    date_now = time.strftime("%d/%m/%Y")
-    cursor = connection.cursor()
-    cursor.execute(
-        "insert into post values(NULL," +
-        date_now +
-        "," +
-        ts +
-        ",0," +
-        customer_id +
-        "," +
-        page_id +
-        ")")
 
 
 def list_customers_current_circles(owner_id, circle_id):
@@ -405,7 +422,7 @@ def add_customer(
         dob_,
         ):
     cursor = connection.cursor()
- 
+
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     id_val = cursor.fetchone()
@@ -414,7 +431,6 @@ def add_customer(
     id_circle = create_a_circle(id_val, "Friends", "Friends")
     create_page(id_val, id_circle)
     return id_val
-    
 
 
 
@@ -489,7 +505,7 @@ def update_employee(
     cursor = connection.cursor()
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     target_id = cursor.fetchone()
- 
+
     cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, target_id))
     cursor.execute('UPDATE employee SET ssn=?, start_date=?, hourly_rate=?, role=? WHERE id=?',(ssn, start_date, hourly_rate, role, target_val[0]))
 

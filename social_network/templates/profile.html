@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+<!-- hidden page info -->
+<div id="circle-name" value="{{ page_data.current_circle.name }}"></div>
+<div id="circle-id" value="{{ page_data.current_circle.id }}"></div>
 
 <div class="row">
     <div class="col-sm-10">
@@ -75,7 +78,7 @@
                     <div class="commentBox">
                         <p class="taskDescription">{{ post.3 }}</p>
                     </div>
-                    <div class="actionBox">
+                    <div class="actionBox" value="{{ post.0 }}">
                         <ul class="commentList">
                             {% for comment in post.10 %}
                             <li>

@@ -74,6 +74,12 @@ body {
 }
 
 /* Profile Image */
+#circle-name {
+    display: none;
+}
+#circle-id {
+    display: none;
+}
 .profile-container {
     display: inline-block;
     position: relative;
