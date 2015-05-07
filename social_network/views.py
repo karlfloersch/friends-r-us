@@ -28,10 +28,16 @@ def make_data(request, username):
 
 
 def sort_posts(posts):
-    print(posts)
-    sorted(posts, key=lambda x: x[2], reverse=True)
+    print("\n\n\n")
     for post in posts:
         print(post)
+        print("*** NEXT ***")
+    print("\n\n\nSHIIT\n\n\n")
+    posts = sorted(posts, key=lambda x: x[2], reverse=True)
+    for post in posts:
+        print(post)
+        print("*** NEXT ***")
+    return posts
 
 
 def build_page(username, user_info, user_id, circles, circle_name, circle_id):
@@ -51,7 +57,7 @@ def build_page(username, user_info, user_id, circles, circle_name, circle_id):
         post = post + author_info + (comments,)
         posts.append(post)
 
-    sort_posts(posts)
+    posts = sort_posts(posts)
     page_data = {"username": username,
                  "first_name": user_info[1],
                  "last_name": user_info[2],
@@ -166,7 +172,6 @@ def messages_view(request):
     data = make_data(request, request.user.first_name)
     data['nbar'] = 'nav_messages'
     data['conversations'] = conversations
-    print(conversations)
     return render(request, "messages.html", dictionary=data)
 
 
@@ -212,7 +217,6 @@ def submit_post_ajax(request):
     data = {'post_text': request.POST.get('post_text'),
             'page_name': request.POST.get('page_name'),
             'page_id': page_id}
-    print(data)
     queries.make_a_post(data['post_text'], request.user.first_name,
                         data['page_id'])
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -222,7 +226,6 @@ def submit_comment_ajax(request):
 
     data = {'comment_text': request.POST.get('comment_text'),
             'post_id': request.POST.get('post_id')}
-    print(data)
     queries.make_a_comment(data['comment_text'], data['post_id'],
                            request.user.first_name)
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -246,7 +249,6 @@ def list_view(request):
             username = request.user.username
             newdoc = Document(username=username,
                               docfile=request.FILES['docfile'])
-            print(newdoc)
             newdoc.save()
 
             # Redirect to the document list after POST
