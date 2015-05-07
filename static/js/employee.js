@@ -15,20 +15,20 @@ var getsalesreport = function() {
 };
 var create_advertisement = function() {
      // item_name, num_aval_units, unit_price, content, employee_id, type, date, company
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-    var yyyy = today.getFullYear();
+    // var today = new Date();
+    // var dd = today.getDate();
+    // var mm = today.getMonth()+1; //January is 0!
+    // var yyyy = today.getFullYear();
 
-    if(dd<10) {
-        dd='0'+dd
-    } 
+    // if(dd<10) {
+    //     dd='0'+dd
+    // } 
 
-    if(mm<10) {
-        mm='0'+mm
-    } 
+    // if(mm<10) {
+    //     mm='0'+mm
+    // } 
 
-    today = mm+'/'+dd+'/'+yyyy;
+    // today = mm+'/'+dd+'/'+yyyy;
     var data = {
 
         'item_name': $('#item_name').val(),
@@ -37,23 +37,19 @@ var create_advertisement = function() {
         'content': $('#content').val(),
         'type': $('#type').val(),
         'company': $('#company').val(),
-        'date': today 
+        // 'date': today 
 
     };
-    sendDefaultPOST('/create_advertisement/', data, function(response) {
+    sendDefaultPOST('/create-advertisement/', data, function(response) {
         console.log(response);
 
         // in here, populate the shit
     });
 
 };
-// var hidesalesreport = function(){
-// $.ajax({
-//    /* ... other options here... */
-//    success: function (){
-//        $('#sales_table_values').hide();
-//    }
-// });
+$( document ).ready(function() {
+    "use strict";
+    $("#create-advertisement").click(create_advertisement);
+});
 
 
-// };

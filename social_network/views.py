@@ -176,12 +176,31 @@ def get_friends_ajax(request):
 
 @login_required
 def create_advertisement_ajax(request):
-    item_name = request.POST["item_name"]
-    num_un = request.POST["num_aval_units"]
-    cust_id = request.user.first_name
-
+       # 'item_name': $('#item_name').val(),
+       #  'num_aval_units': $('#num_aval_units').val(),
+       #  'unit_price': $('#unit_price').val(),
+       #  'content': $('#content').val(),
+       #  'type': $('#type').val(),
+       #  'company': $('#company').val(),
+    # print("things went well")
+    item_name = request.POST.get("item_name")
+    num_units = request.POST.get("num_aval_units")
+    unit_price = request.POST.get("unit_price")
+    content = request.POST.get("content")
+    type_ad = request.POST.get("type")
+    company = request.POST.get("company")
+    employee_id = request.user.first_name
+    print('things went well')
+    print(item_name)
+    print(unit_price)
+    print(content)
+    print(type_ad)
+    print(company)
+    print(employee_id)
+    print('things went well')
+    #data = {'item_name':item_name}
     # add ur querey friends = queries.get_users_by_firstname(name)
-    data = {'item_name': item_name}
+    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad, date, company)
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
