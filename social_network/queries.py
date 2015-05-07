@@ -596,7 +596,7 @@ def obtain_sales_report_by_month(date):
 def produce_list_of_all_items_advertised():
     cursor = connection.cursor()
     sql_call = str(
-        "SELECT A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
+        "SELECT A.adv_id, A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
 
     cursor.execute(sql_call)
     val = cursor.fetchone()
@@ -626,6 +626,12 @@ def transactions_by_customer_id(cust_id):
     cursor.execute('SELECT P.firstname, P.lastname, B.transaction_id, B.num_units, B.time FROM person P INNER JOIN buy B ON P.id =? B.customer_acc_num', (cust_id))
     transactions = cursor.fetchall()
     return transactions
+
+def list_users_by_product(product_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT P.firstname, P.lastname, C.email FROM buy B INNER JOIN (person P INNER JOIN customer C ON P.id = C.cust_id) ON B.adv_id=?)',(product_id))
+    users = cursor.fetchall()
+    return users
 
 def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
     cursor = connection.cursor()
@@ -659,11 +665,16 @@ def customer_rep_highest_revenue():
     rep = cursor.fetchone()
     return rep
 
-
 def customer_list():
     cursor = connection.cursor()
     cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth FROM person P INNER JOIN customer C ON P.id = C.cust_id')
     cust_list = cursor.fetchall()
     return cust_list
 
-# def advertisements_by_company():
+def advertisements_by_company(company_name):
+    cursor = connection.cursor()
+    cursor.execute('SELECT DISTINCT A.adv_id, A.item_name, A.num_aval_units, A.unit_price, A.content, A.type, A.date FROM advertisement A WHERE A.company=?', (company_name))
+    adv_list = cursor.fetchall()
+    return adv_list
+
+
