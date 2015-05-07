@@ -214,7 +214,22 @@ def update_customer_ajax(request):
     val = request.POST.getlist('ar[]')
     # val = vals[0]
     print(val)
-    queries.update_customer(cust_id = val[0], rating= val[1], firstname_= val[2], lastname_= val[3], password_= val[4], gender_= val[5], address_= val[6], city_= val[7], state_= val[8], zipcode_= val[9], telephone_= val[10], email_= val[11], dob_= val[12])
+    # 100100102 Bob Wonderwall  M   21 MajorApt,Oak St. NewYork NY  11700   4314649882  bob@blah.com    5   08-06-1988
+    id = val[0]
+    first= val[1]
+    last = val[2]
+    gender = val[3]
+    address = val[4]
+    state = val[5]
+    city = val[6]
+    zip = val[7]
+    phone = val[8]
+    email = val[9]
+    rating = val[10]
+    dob = val[11] 
+
+    # id  firstname   lastname    gender  address city    state   zipcode telephone   email   rating  date_of_birth
+    queries.update_customer(id, rating, first, last, gender, address, city, state, zip, phone, email)
     # print("bob")
     return HttpResponse(json.dumps({}), content_type="application/json")
 @login_required
@@ -443,11 +458,16 @@ def create_account_view(request):
             user.is_active = True
             user.save()
             # month day year
-
-            return HttpResponseRedirect("/login")
+            if not request.POST.get("employee_create", False):
+                return HttpResponseRedirect("/login")
+            else:
+                return HttpResponseRedirect("/employee")
         else:
+            if not request.POST.get("employee_create", False):
+                return HttpResponseRedirect("/login")
+            else:
+                return HttpResponseRedirect("/employee")
             print("invalid")
-            return render(request, 'registration.html', dictionary=data)
 
 
 def validate_new_user(request):

@@ -102,7 +102,7 @@ var list_all_customers = function(){
             array_to_store =[]
             var i;
             console.log("hello")
-            for(i=0; i <13; i++){
+            for(i=0; i <12; i++){
                 array_to_store[i] = $(this).parent().children('td').eq(i).text();
                 // console.log($(this).parent().children('td').eq(i).text());
             }
