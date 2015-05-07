@@ -39,7 +39,7 @@ CREATE TABLE customer
      cust_id     INTEGER PRIMARY KEY, 
      email       VARCHAR(50), 
      rating      INT, 
-     date_of_birth TIMESTAMP NOT NULL, 
+     date_of_birth DATETIME NOT NULL, 
      FOREIGN KEY (cust_id) REFERENCES person(id) ON DELETE CASCADE 
   ); 
 
@@ -47,7 +47,7 @@ CREATE TABLE employee
   ( 
      emp_id      INTEGER PRIMARY KEY, 
      ssn         CHAR(11) NOT NULL, 
-     start_date  TIMESTAMP NOT NULL, 
+     start_date  DATETIME NOT NULL, 
      hourly_rate INT, 
      role        VARCHAR(100),
      FOREIGN KEY (emp_id) REFERENCES person(id) ON DELETE CASCADE 
@@ -110,7 +110,7 @@ CREATE TABLE buy
   ( 
      transaction_id   INTEGER PRIMARY KEY,  
      num_units        INT, 
-     date             TIMESTAMP, 
+     date             DATETIME, 
      time             TIMESTAMP, 
      customer_acc_num INT, 
      adv_id           INT(30), 
@@ -242,7 +242,7 @@ CREATE TABLE advertise
 INSERT INTO person
 VALUES (100100101,'Alice','McKeeny','pw','F','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649881);
 INSERT INTO customer
-VALUES (100100101,'alice@blah.com',8,'1988-10-10 00:00:01');
+VALUES (100100101,'alice@blah.com',8,'2008-10-10 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100101,'cars, life insurance');
 
