@@ -76,7 +76,7 @@ def get_users_by_firstname(firstname):
 
 
 def get_user_circles_info(user_id):
-    circle_ids = get_user_circles_ids(user_id)
+    circle_ids = get_user_circles_ids((user_id,))
     circle_info = []
     cursor = connection.cursor()
     for circle_id in circle_ids:
@@ -430,12 +430,12 @@ def get_user_circles_ids(user_id):
     #              " UNION SELECT circle_id FROM circle C INNER JOIN " +
     #               "memberofcircle A ON C.id = A.circle_id WHERE " +
     #               "A.cust_id = " + str(user_id))
-    sql_call = str("SELECT circle_id FROM memberofcircle WHERE cust_id="
-                   + user_id)
+    # sql_call = str("SELECT circle_id FROM memberofcircle WHERE cust_id="
+    #                + user_id)
 
-    #cursor = connection.cursor()
-    #connection.execute('SELECT C.id, C.owner_id FROM circle C INNER JOIN circlemember CM ON C.id = CM.circle_id WHERE CM.cust_id=?', (user_id))
-    cursor.execute(sql_call)
+    cursor = connection.cursor()
+    cursor.execute('SELECT C.id, C.owner_id FROM circle C INNER JOIN memberofcircle CM ON C.id = CM.circle_id WHERE CM.cust_id=?', (user_id))
+    #cursor.execute(sql_call)
     return cursor.fetchall()
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
@@ -452,9 +452,15 @@ def add_customer(firstname_, lastname_, password_, gender_, address_, city_, sta
     create_page(id_val, id_circle)
     return id_val
 
-def remove_customer(cust_id, acc_id):
+def remove_customer(cust_id):
     cursor = connection.cursor()
     cursor.execute('DELETE FROM customer WHERE cust_id=?',(cust_id))
+    #Check to see if account is deleted when a customer is removed from the system.
+
+def remove_employee(cust_id):
+    print(cust_id)
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM employee WHERE emp_id=?',(cust_id))
     #Check to see if account is deleted when a customer is removed from the system.
 
 def update_customer(cust_id, rating, firstname_, lastname_, gender_, address_, city_, state_, zipcode_, telephone_, email_):
@@ -538,22 +544,21 @@ def update_employee(
         state,
         zipcode,
         telephone,
-        ssn,
-        start_date,
         hourly_rate,
-        role):
+        role,
+        emp_id):
 
     # Update Person
     # Set PhoneNumber = 6314136666
     # Where SSN= 123456789
 
+    print('IN THIS SON')
 
     cursor = connection.cursor()
-    cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
-    target_id = cursor.fetchone()
+    target_id = emp_id
 
     cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, target_id))
-    cursor.execute('UPDATE employee SET ssn=?, start_date=?, hourly_rate=?, role=? WHERE id=?',(ssn, start_date, hourly_rate, role, target_val[0]))
+    cursor.execute('UPDATE employee SET hourly_rate=?, role=? WHERE id=?', (hourly_rate, role, target_id[0]))
 
 
     #sql_call = str("update person  " + firstname + ", " +
@@ -678,7 +683,7 @@ def customer_list():
 
 def employee_list():
     cursor = connection.cursor()
-    row = cursor.execute("SELECT P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role FROM person P INNER JOIN employee E ON P.id = E.emp_id")
+    row = cursor.execute("SELECT P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role, P.id FROM person P INNER JOIN employee E ON P.id = E.emp_id")
     return row.fetchall()
 
 def advertisements_by_company(company_name):

@@ -72,7 +72,7 @@ var list_all_employees = function(){
     sendDefaultPOST('/list-all-employees/', data, function(response) {
         $('#employee_table').toggle();
         var i;
-        $('#employee_table').append('<tr><td>' + "firstname" +'</td><td>' + "lastname" + '</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"SSN"+'</td><td>'+"hourly rate"+'</td><td>'+"role"+'</td><td>'+ '</td></tr>');
+        $('#employee_table').append('<tr><td>' + "firstname" +'</td><td>' + "lastname" + '</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"SSN"+'</td><td>'+"hourly rate"+'</td><td>'+"role"+'</td><td>'+"ID"+'</td><td>'+ '</td></tr>');
         $('#employee_table').find("tr:gt(0)").remove();
         // console.log("bobs");
         for (i = 0; i < response.items.length; i++) {
@@ -97,7 +97,7 @@ var list_all_employees = function(){
             array_to_store =[]
             var i;
             console.log("hello")
-            for(i=0; i <13; i++){
+            for(i=0; i <14; i++){
                 array_to_store[i] = $(this).parent().children('td').eq(i).text();
                 // console.log($(this).parent().children('td').eq(i).text());
             }
@@ -106,26 +106,26 @@ var list_all_employees = function(){
                 'ar': array_to_store
             };
             console.log("we wanna be here");
-             sendDefaultPOST('/update-customer/', data, function(response) {
+             sendDefaultPOST('/update-employee/', data, function(response) {
                 console.log(response);
             });
 
         });
         $('.delete-cust-list-row').click(function() {
-            var id = $(this).parent().children('td').eq(0).text();
+            var id = $(this).parent().children('td').eq(11).text();
             $(this).parent().remove();
 
             var data = {
                 'id': id
             };
-            sendDefaultPOST('/delete-customer/', data, function(response) {
+            sendDefaultPOST('/delete-employee/', data, function(response) {
                 console.log(response);
             });
         });
 
 
        $(function () {
-    $("#employee_table td:not(:nth-child(11) , :nth-child(12))").click(function (e) {
+    $("#employee_table td:not(:nth-child(11) , :nth-child(12), :nth-child(13))").click(function (e) {
         e.preventDefault(); // <-- consume event
         e.stopImmediatePropagation();
 

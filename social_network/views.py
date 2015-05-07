@@ -188,7 +188,8 @@ def employee_view(request):
 @login_required
 def manager_view(request):
     """ Manager dashboard view """
-    return render(request, "manager.html")
+    data = {'cust_rep_high_rev': queries.customer_rep_highest_revenue()}
+    return render(request, "manager.html", dictionary=data)
 
 
 @login_required
@@ -213,7 +214,6 @@ def get_friends_ajax(request):
 def update_customer_ajax(request):
     val = request.POST.getlist('ar[]')
     # val = vals[0]
-    print(val)
     # 100100102 Bob Wonderwall  M   21 MajorApt,Oak St. NewYork NY  11700   4314649882  bob@blah.com    5   08-06-1988
     id = val[0]
     first= val[1]
@@ -226,10 +226,35 @@ def update_customer_ajax(request):
     phone = val[8]
     email = val[9]
     rating = val[10]
-    dob = val[11] 
+    dob = val[11]
 
     # id  firstname   lastname    gender  address city    state   zipcode telephone   email   rating  date_of_birth
     queries.update_customer(id, rating, first, last, gender, address, city, state, zip, phone, email)
+    # print("bob")
+    return HttpResponse(json.dumps({}), content_type="application/json")
+
+
+@login_required
+def update_employee_ajax(request):
+    val = request.POST.getlist('ar[]')
+    print(val)
+    print('\n\n\n\nPPOOOOSLE')
+    # val = vals[0]
+    # 100100102 Bob Wonderwall  M   21 MajorApt,Oak St. NewYork NY  11700   4314649882  bob@blah.com    5   08-06-1988
+    first= val[0]
+    last= val[1]
+    gender = val[2]
+    address = val[3]
+    city = val[4]
+    state = val[5]
+    zip = val[6]
+    phone = val[7]
+    hourly = val[9]
+    role = val[10]
+    emp_id = val[11]
+
+    # id  firstname   lastname    gender  address city    state   zipcode telephone   email   rating  date_of_birth
+    queries.update_employee(first, last, '', gender, address, city, state, zip, phone, hourly, role, emp_id)
     # print("bob")
     return HttpResponse(json.dumps({}), content_type="application/json")
 @login_required
@@ -301,6 +326,13 @@ def list_all_employees_ajax(request):
 def del_customer_ajax(request):
     id_ = request.POST.get("id")
     val = queries.remove_customer(id_)
+    return HttpResponse(json.dumps({}) ,content_type="application/json")
+
+
+@login_required
+def del_employee_ajax(request):
+    id_ = request.POST.get("id")
+    val = queries.remove_employee((id_,))
     return HttpResponse(json.dumps({}) ,content_type="application/json")
 
 def generate_mailing_list_ajax(request):
