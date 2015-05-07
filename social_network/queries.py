@@ -621,6 +621,11 @@ def produce_list_of_transactions_item_name_cust_name(
     val = cursor.fetchone()
     return val
 
+def transactions_by_customer_id(cust_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT P.firstname, P.lastname, B.transaction_id, B.num_units, B.time FROM person P INNER JOIN buy B ON P.id =? B.customer_acc_num', (cust_id))
+    transactions = cursor.fetchall()
+    return transactions
 
 def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
     cursor = connection.cursor()
