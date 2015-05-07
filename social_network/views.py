@@ -198,6 +198,13 @@ def delete_advertisement_ajax(request):
     queries.delete_advertisement(id_)
 
     return HttpResponse(json.dumps({}) ,content_type="application/json")
+
+    
+@login_required
+def list_all_customers_ajax(request):
+    val = queries.customer_list()
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
 def generate_mailing_list_ajax(request):
     val = queries.customer_mailing_list()
     
@@ -228,7 +235,7 @@ def create_advertisement_ajax(request):
     employee_id = request.user.first_name
 
     queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
- 
+
     return HttpResponse(json.dumps({}) , content_type="application/json")
 
 

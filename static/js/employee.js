@@ -66,6 +66,39 @@ var get_all_advertisment = function() {
     });
 
 };
+var list_all_customers = function(){
+// list_all_customers_ajax
+    // ('#customer_table').toggle()
+    var data = {
+
+    };
+
+    sendDefaultPOST('/list-all-customers/', data, function(response) {
+        // console.log(response);
+        // mailing-list
+        // P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth
+
+         var i;
+        $('#customer_table').append('<tr><td>' + "id" +'</td><td>' + "firstname" + '</td><td>'+"lastname"+'</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"email"+'</td><td>'+"rating"+'</td><td>'+"date_of_birth"+ '</td></tr>');
+        $('#customer_table').find("tr:gt(0)").remove();
+        for (i = 0; i < response.items.length; i++) {
+            var j;
+            var strings = '<tr><td>'
+            for(j = 0 ; j<response.items[i].length; j++){
+                if(j==response.items[i].length-1){
+                    strings = strings + response.items[i][j];
+                }else{
+
+                strings = strings + response.items[i][j] + '</td><td>';
+                }
+            }
+            strings = strings + '</td></tr>'
+
+            $('#customer_table').append(strings);
+        }
+        
+    });
+}
 var delete_advertisement = function() {
 
     var data = {
@@ -104,4 +137,5 @@ $(document).ready(function() {
     $("#delete-advertisement").click(create_advertisement);
     $("#produce-list-of-all-items-advertised").click(get_all_advertisment);
     $("#generate-mailing-list").click(generate_mailing_list);
+    $("#list-all-customers").click(list_all_customers);
 });
