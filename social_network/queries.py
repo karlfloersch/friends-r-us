@@ -92,6 +92,27 @@ def get_user_messages(cust_id):
     row = cursor.fetchall()
     return row
 
+def check_aval_units(adv_id, qty):
+    cursor = connection.cursor()
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?', (adv_id))
+    val = cursor.fetchone()
+
+    return (val[0] - qty > 0)
+
+def buy_item(adv_id, qty, cust_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?', (adv_id))
+    val = cursor.fetchone()
+    sumval = int(val[0]) - int(qty[0])
+    cursor.execute('UPDATE advertisement SET num_aval_units=? WHERE adv_id =?', (sumval, adv_id))
+    cursor.execute('INSERT INTO buy(num_units, customer_acc_num, adv_id) VALUES(?,?,?)', (qty, cust_id, adv_id));
+
+    #num_units        INT, 
+    # date             DATETIME, 
+    # time             TIMESTAMP, 
+    # customer_acc_num INT, 
+    # adv_id           INT(30),
+
 
 def get_conversation_messages(cust_ids):
     cursor = connection.cursor()
@@ -202,12 +223,13 @@ def get_number_available_units(adv_id):
     return num[0]
 
 def validate_purchase_quantity(adv_id, num_units):
+    print(num_units)
     cursor = connection.cursor()
     cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     num_ = num[0]
 
-    if (num_ - num_units) > 0:
+    if (num_ - int(num_units[0])) > 0:
         return True
     else:
         return False
@@ -481,11 +503,20 @@ def customer_mailing_list():
 def item_suggestions(emp_id, cust_id):
     #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? )
     cursor = connection.cursor()
-    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    print(emp_id)
+    print(cust_id)
+    #cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type from advertisement A INNER JOIN buy B INNER JOIN account AC INNER JOIN customer C ON AC.account_id = B.customer_acc_num AND AC.customer_id = C.cust_id AND A.adv_id = B.adv_id WHERE C.customer_id =?)', (emp_id, cust_id))
     item_suggestions = cursor.fetchall()
+    print(item_suggestions)
     del item_suggestions[0]
     return item_suggestions
 
+def adv_list():
+    cursor = connection.cursor()
+    cursor.execute('SELECT * from advertisement')
+    adv = cursor.fetchall()
+    return adv 
 
 def add_employee(
         firstname,
@@ -643,8 +674,10 @@ def list_users_by_product(product_id):
     users = cursor.fetchall()
     return users
 
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):
     cursor = connection.cursor()
+    date = datetime.datetime.now()
+    #dt = datetime.datetime.strptime(date, '%Y-%d-%m')
     cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))
     adv_obj = cursor.fetchone()
     return adv_obj

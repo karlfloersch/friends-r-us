@@ -12,7 +12,7 @@ from . import queries
 import pprint
 import datetime
 import json
-
+import random
 pp = pprint.PrettyPrinter(indent=4)
 
 def make_data(request, username):
@@ -116,6 +116,9 @@ def profile_view(request, page_owner, sub_page=None):
         # Handle file upload
         return upload_image(data, request, request.user.username, page_owner)
     data['form'] = DocumentForm()  # A empty, unbound form
+    val = queries.adv_list()
+    data['ad_id'] = random.choice(val)
+
     return render(request, "profile.html", dictionary=data)
 
 
@@ -348,6 +351,16 @@ def produce_list_of_all_items_advertised_ajax(request):
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
 
 @login_required
+def list_item_suggestions_ajax(request):
+
+    cust_id = request.POST.get("cust_id")
+
+    val = queries.item_suggestions(request.user.first_name, cust_id)
+    print(val)
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
+
+@login_required
 def create_advertisement_ajax(request):
        # 'item_name': $('#item_name').val(),
        #  'num_aval_units': $('#num_aval_units').val(),
@@ -365,12 +378,12 @@ def create_advertisement_ajax(request):
     employee_id = request.user.first_name
 
     # print("bob")
-    print(datetime.datetime.now())
-    product_id =33331
-    val= queries.list_users_by_product(product_id)
-    print (val)
-    print("bob")
-    # queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
+    #pdate = datetime.datetime.now()
+    # product_id =33331
+    # val= queries.list_users_by_product(product_id)
+    # print (val)
+    # print("bob")
+    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
 
     return HttpResponse(json.dumps({}) , content_type="application/json")
 
@@ -393,6 +406,20 @@ def submit_comment_ajax(request):
     queries.make_a_comment(data['comment_text'], data['post_id'],
                            request.user.first_name)
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+@login_required
+def purchase_item_ajax(request):
+    item_id = request.POST.get("item_id_input")
+    quant_id = request.POST.get("quantity_input")
+    cust_id = request.user.first_name
+    tvalue = queries.validate_purchase_quantity((item_id,), (quant_id,))
+    if not tvalue:
+        return HttpResponse(json.dumps({}), content_type="application/json")
+    else:
+        queries.buy_item((item_id,), (quant_id,), (cust_id,))
+        return HttpResponseRedirect("/")
+
+
 
 
 @login_required
