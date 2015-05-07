@@ -440,13 +440,13 @@ def get_user_circles_ids(user_id):
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
     cursor = connection.cursor()
     ts = datetime.datetime.now()
-
+    dt = datetime.datetime.strptime(dob_, '%m-%d-%Y')
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
     cursor.execute('SELECT id FROM person WHERE lastname=? AND firstname=? AND address=?', (lastname_, firstname_, address_))
     id_val = cursor.fetchone()
     id_val = id_val[0]
     cursor.execute('INSERT INTO account(customer_id, create_date, credit_card_num) VALUES(?,?,?)',(id_val, ts, credit_card_num))
-    cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val, email_, 5, dob_))
+    cursor.execute('INSERT INTO customer(cust_id, email, rating, date_of_birth) VALUES(?,?,?,?)', (id_val, email_, 5, dt))
     id_circle = create_a_circle(id_val, "Friends", "Friends")
     create_page(id_val, id_circle)
     return id_val
