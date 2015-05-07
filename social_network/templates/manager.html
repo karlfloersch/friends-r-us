@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block js %}
+<script src="{% static "js/manager.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- item_name, num_aval_units, unit_price, content, employee_id, type, date, company) -->
+
+<label>item name:</label> <input type ="text" id="item_name" class="form-control">
+
+<label>num avaliable units:</label> <input type ="text" id="num_aval_units" class="form-control">
+<label>unit price:</label> <input type ="text" id="unit_price" class="form-control">
+<label>content: </label> <input type ="text" id="content" class="form-control">
+<label>type: </label> <input type ="text" id="type" class="form-control">
+<label>company:</label> <input type ="text" id="company" class="form-control">
+
+<!-- item name: <input type ="text" name="item_name"><br> -->
+
+<button class="btn btn-default" type="create_advertisement" id="create-advertisement">Create Advertisement</button> 
+
+<br>
+<br>
+
+
+<button class="btn btn-default" type="produce_list_of_all_items_advertised" id="produce-list-of-all-items-advertised">produce list of all items advertised</button> 
+<table class="table" id = "advertisement-list" style="display:none;">
+</table>
+<br>
+
+<button class="btn btn-default" type="generate_mailing_list" id="generate-mailing-list">Generate mailing list</button> 
+<table class="table" id = "mailing-list" style="display:none;">
+</table>
+<br>
+<br>
+<button class="btn btn-default" type="getsalesreportbutton" onclick="getsalesreport" >Obtain a sales report for a particular month</button> 
+<select name = "month"  class="form-control" style="max-width: 200px">
+	<option value="1">jan</option>
+	<option value="2">feb</option>
+	<option value="3">march</option>
+	<option value="4">april</option>
+	<option value="5">may</option>
+	<option value="6">june</option>
+	<option value="7">july</option>
+	<option value="8">august</option>
+	<option value="9">september</option>
+	<option value="10">october</option>
+	<option value="11">november</option>
+	<option value="12">december</option>
+</select> 
+
+<!-- <button type="bhidesalesreportbutton" onclick="hidesalesreport" >hide</button>  -->
+<table border="1" id = "sales_table" style="display:none;">
+</table>
+
+<button class="btn btn-default" type="list-all-employees" id="list-all-employees">list all customers</button> 
+<table class="table" id = "employee_table" style="display:none;">
+</table>
+{% endblock %}

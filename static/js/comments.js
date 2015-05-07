@@ -3,7 +3,7 @@ var addComment = function() {
     var $actionBox = $(this).parent().parent().parent().parent();
     var $commentBox = $actionBox.find(".comment-box");
     var comment = $commentBox.val();
-    var numLikes = 5;
+    var numLikes = 0;
     if (comment === ""){
         return;
     }
@@ -23,7 +23,7 @@ var addPost = function() {
     "use strict";
     var $posts = $("#posts");
     var post = $("#post-box").val();
-    var numLikes = 5;
+    var numLikes = 0;
     var data = {
         'post_text': post,
         'page_name': $('#circle-name').attr('value'),
@@ -52,7 +52,6 @@ var toggleLikePost = function() {
         var current_likes = parseInt($($(this).parent().find('.num-likes').get(0)).text());
         $($(this).parent().find('.num-likes').get(0)).text(String(current_likes + 1));
         sendDefaultPOST('/submit-like/', data, function(response) {
-            console.log(response);
         });
     }else if($(this).text().localeCompare('Unlike') === 0) {
         $(this).text('Like');

@@ -13,7 +13,13 @@ urlpatterns = patterns('',
                            name='messages_view'),
                        url(r'^employee/$', views.employee_view,
                            name='employee_view'),
+                       url(r'^manager/$', views.manager_view,
+                           name='manager_view'),
                        # Non-visual ajax urls
+                       # Employee Stuff
+                       url(r'^manager/list-all-employees/$', views.list_all_employees_ajax,
+                           name='list_all_employees'),
+                       # Customer and other
                        url(r'^accounts/submit-post/$', views.submit_post_ajax,
                            name='submit_post'),
                        url(r'^accounts/submit-comment/$', views.submit_comment_ajax,

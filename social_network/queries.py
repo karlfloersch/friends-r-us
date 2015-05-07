@@ -113,7 +113,8 @@ def get_likes_by_post(post_id, user_id):
 
 def get_likes_by_comment(comment_id, user_id):
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM likecomment WHERE comment_id=?', (comment_id))
+    cursor.execute('SELECT * FROM likecomment WHERE comment_id=' + str(comment_id[0])
+                   + ' AND cust_id=' + str(user_id))
     likes = cursor.fetchall()
     is_liked = False
     for like in likes:
@@ -424,17 +425,17 @@ def delete_message(message_id):
 
 def get_user_circles_ids(user_id):
     #""" Get a list of all the user's circles """
-    #cursor = connection.cursor()
+    cursor = connection.cursor()
     #sql_call = str("SELECT id FROM circle C WHERE C.owner_id = " + user_id +
     #              " UNION SELECT circle_id FROM circle C INNER JOIN " +
     #               "memberofcircle A ON C.id = A.circle_id WHERE " +
     #               "A.cust_id = " + str(user_id))
-    # sql_call = str("SELECT circle_id FROM memberofcircle WHERE cust_id="
-    #               + user_id)
+    sql_call = str("SELECT circle_id FROM memberofcircle WHERE cust_id="
+                   + user_id)
 
-    cursor = connection.cursor()
-    connection.execute('SELECT C.id, C.owner_id FROM circle C INNER JOIN circlemember CM ON C.id = CM.circle_id WHERE CM.cust_id=?', (user_id))
-    #cursor.execute(sql_call)
+    #cursor = connection.cursor()
+    #connection.execute('SELECT C.id, C.owner_id FROM circle C INNER JOIN circlemember CM ON C.id = CM.circle_id WHERE CM.cust_id=?', (user_id))
+    cursor.execute(sql_call)
     return cursor.fetchall()
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
@@ -677,7 +678,8 @@ def customer_list():
 
 def employee_list():
     cursor = connection.cursor()
-    cursor.execute("SELECT P.firstnae, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role FROM person P INNER JOIN employee E ON P.id = E.employee_id")
+    row = cursor.execute("SELECT P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role FROM person P INNER JOIN employee E ON P.id = E.emp_id")
+    return row.fetchall()
 
 def advertisements_by_company(company_name):
     cursor = connection.cursor()
