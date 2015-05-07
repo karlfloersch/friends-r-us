@@ -108,13 +108,12 @@ CREATE TABLE advertisement
 
 CREATE TABLE buy 
   ( 
-     transaction_id   INT(30), 
+     transaction_id   INTEGER PRIMARY KEY,  
      num_units        INT, 
      date             DATE, 
      time             TIMESTAMP, 
      customer_acc_num INT, 
      adv_id           INT(30), 
-     PRIMARY KEY (transaction_id), 
      FOREIGN KEY (customer_acc_num) REFERENCES account(account_id) ON DELETE 
      CASCADE, 
      FOREIGN KEY (adv_id) REFERENCES advertisement(adv_id) ON DELETE CASCADE 
