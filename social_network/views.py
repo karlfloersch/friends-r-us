@@ -47,9 +47,14 @@ def build_page(username, user_info, user_id, circles, circle_name, circle_id):
         for comment in comment_info:
             comment_author_info = queries.get_username_and_name_by_id(
                 comment[4])
-            comments.append(comment + comment_author_info)
+            num_likes, is_liked = queries.get_likes_by_comment((comment[5],),
+                                                               user_id)
+            comments.append(comment + comment_author_info
+                            + (num_likes,) + (is_liked,))
         comments = sorted(comments, key=lambda x: x[2], reverse=True)
-        post = post + author_info + (comments,)
+        num_likes, is_liked = queries.get_likes_by_post((post[0],), user_id)
+        post = post + author_info + (comments,) + (num_likes,) + (is_liked,)
+        pp.pprint(post)
         posts.append(post)
 
     posts = sort_posts(posts)
@@ -98,7 +103,6 @@ def profile_view(request, page_owner, sub_page=None):
     # Get the page's posts, comments and all related data
     page_data = build_page(page_owner, user_info, user_id,
                            circles, circle_name, circle_id)
-    pp.pprint(page_data)
     # Add the page data to our data object
     data = make_data(request, page_owner)
     data['page_data'] = page_data
@@ -194,6 +198,53 @@ def get_friends_ajax(request):
                for f in friends]
     data = {'friends': friends}
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@login_required
+def submit_like_ajax(request):
+    post_id = request.POST.get("post_id")
+    data = {'success': False}
+    post_type = request.POST.get("text_type")
+    like_type = request.POST.get("like_type")
+    if like_type == 'like':
+        if post_type == 'post':
+            num_likes, is_liked =\
+                queries.get_likes_by_post((post_id,),
+                                          request.user.first_name)
+        elif post_type == 'comment':
+            num_likes, is_liked =\
+                queries.get_likes_by_comment((post_id,),
+                                             request.user.first_name)
+        if is_liked:
+            return HttpResponse(json.dumps(data),
+                                content_type="application/json")
+        data['success'] = True
+        print("I AM INSANE\n\n\n\n\nINDSIOF")
+        if post_type == 'post':
+            queries.like_post(post_id, request.user.first_name)
+        elif post_type == 'comment':
+            queries.like_comment(post_id, request.user.first_name)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+    elif like_type == 'unlike':
+        if post_type == 'post':
+            num_likes, is_liked =\
+                queries.get_likes_by_post((post_id,),
+                                          request.user.first_name)
+        elif post_type == 'comment':
+            num_likes, is_liked =\
+                queries.get_likes_by_comment((post_id,),
+                                             request.user.first_name)
+        if not is_liked:
+            return HttpResponse(json.dumps(data),
+                                content_type="application/json")
+        data['success'] = True
+        if post_type == 'post':
+            queries.unlike_a_post(post_id, request.user.first_name)
+        elif post_type == 'comment':
+            queries.unlike_a_comment(post_id, request.user.first_name)
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
 
 @login_required
 def delete_advertisement_ajax(request):

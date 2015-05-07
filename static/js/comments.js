@@ -38,6 +38,63 @@ var addPost = function() {
     enableSubmitOnEnter();
 };
 
+var toggleLikePost = function() {
+    "use strict";
+    var data;
+    if($(this).text().localeCompare('Like') === 0){
+        $(this).text('Unlike');
+        data = {
+            'like_type': 'like',
+            'text_type': 'post',
+            'post_id': $(this).attr('postID')
+        };
+        console.log(data);
+        sendDefaultPOST('/submit-like/', data, function(response) {
+            console.log(response);
+        });
+    }else if($(this).text().localeCompare('Unlike') === 0) {
+        $(this).text('Like');
+        console.log($(this).text());
+        data = {
+            'like_type': 'unlike',
+            'text_type': 'post',
+            'post_id': $(this).attr('postID')
+        };
+        sendDefaultPOST('/submit-like/', data, function(response) {
+            console.log(response);
+        });
+    }
+};
+
+
+var toggleLikeComment = function() {
+    "use strict";
+    var data;
+    if($(this).text().localeCompare('Like') === 0){
+        $(this).text('Unlike');
+        data = {
+            'like_type': 'like',
+            'text_type': 'comment',
+            'post_id': $(this).attr('commentID')
+        };
+        console.log(data);
+        sendDefaultPOST('/submit-like/', data, function(response) {
+            console.log(response);
+        });
+    }else if($(this).text().localeCompare('Unlike') === 0) {
+        $(this).text('Like');
+        console.log($(this).text());
+        data = {
+            'like_type': 'unlike',
+            'text_type': 'comment',
+            'post_id': $(this).attr('commentID')
+        };
+        sendDefaultPOST('/submit-like/', data, function(response) {
+            console.log(response);
+        });
+    }
+};
+
 function enableSubmitOnEnter() {
     "use strict";
     $(".comment-box").keydown(function(event) {
@@ -53,8 +110,9 @@ $( document ).ready(function() {
     "use strict";
     $(".comment-add").click(addComment);
     enableSubmitOnEnter();
-
     $("#post-add").click(addPost);
+    $('.like-post').click(toggleLikePost);
+    $('.like-comment').click(toggleLikeComment);
 
 });
 

@@ -101,25 +101,31 @@ def get_conversation_messages(cust_ids):
     row = cursor.fetchall()
     return row
 
-def get_likes_by_post(post_id):
+def get_likes_by_post(post_id, user_id):
     cursor = connection.cursor()
-    cursor.execute('SELECT COUNT(*) FROM likepost WHERE post_id=?', (post_id))
-    id_val = cursor.fetchone()
-    id_val = id_val[0]
-    return id_val
+    cursor.execute('SELECT * FROM likepost WHERE post_id=?', (post_id))
+    likes = cursor.fetchall()
+    is_liked = False
+    for like in likes:
+        if int(user_id) == int(like[1]):
+            is_liked = True
+    return len(likes), is_liked
 
-def get_likes_by_comment(comment_id):
+def get_likes_by_comment(comment_id, user_id):
     cursor = connection.cursor()
-    cursor.execute('SELECT COUNT(*) FROM likecomment WHERE post_id=?', (comment_id))
-    id_val = cursor.fetchone()
-    id_val = id_val[0]
-    return id_val
+    cursor.execute('SELECT * FROM likecomment WHERE comment_id=?', (comment_id))
+    likes = cursor.fetchall()
+    is_liked = False
+    for like in likes:
+        if user_id == like[1]:
+            is_liked = True
+    return len(likes), is_liked
 
 def like_post(post_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO likepost(post_id, cust_id) VALUES(?,?)',(post_id, cust_id))
 
-def like_post(comment_id, cust_id):
+def like_comment(comment_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO likecomment(comment_id, cust_id) VALUES(?,?)',(comment_id, cust_id))
 
@@ -313,7 +319,7 @@ def remove_a_comment(comment_id):
     cursor.execute("DELETE FROM Comment WHERE Comment_Id ="+comment_id)
 
 
-def unlike_a_Post(post_id, cust_id):
+def unlike_a_post(post_id, cust_id):
     # DELETE FROM User_Likes_Post WHERE Post = ? AND User = ?
     # post_id INT,
     # cust_id INT,
@@ -599,7 +605,7 @@ def produce_list_of_all_items_advertised():
 
     cursor.execute(sql_call)
     val = cursor.fetchall()
-    
+
     return val
 
 # check this one
@@ -621,17 +627,17 @@ def produce_list_of_transactions_item_name_cust_name(
     val = cursor.fetchone()
     return val
 
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):        
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):
     cursor = connection.cursor()
     date = time.strftime("%d/%m/%Y")
-    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
+    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))
     adv_obj = cursor.fetchone()
     return adv_obj
 
 def delete_advertisement(adv_id):
     cursor = connection.cursor()
     cursor.execute('DELETE FROM advertisement WHERE adv_id = '+str(adv_id))
-    
+
 
 def get_revenue_of_item(adv_id, type_in, customer_acc_num):
     if(adv_id == ""):
