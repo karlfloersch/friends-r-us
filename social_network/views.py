@@ -87,6 +87,8 @@ def profile_view(request, page_owner, sub_page=None):
     # Redirect if the signed in user is an employee
     if request.user.last_name == 'employee':
         return HttpResponseRedirect('/employee')
+    if request.user.last_name == 'manager':
+        return HttpResponseRedirect('/manager')
     # Get the page owner's user object
     user = User.objects.filter(username=page_owner)
     if user.count() == 0:
@@ -184,6 +186,12 @@ def employee_view(request):
 
 
 @login_required
+def manager_view(request):
+    """ Manager dashboard view """
+    return render(request, "manager.html")
+
+
+@login_required
 def get_messages_ajax(request):
     convo_user = User.objects.filter(username=request.POST["convo_user"])[0]
     messages = queries.get_conversation_messages([request.user.first_name,
@@ -267,6 +275,12 @@ def delete_advertisement_ajax(request):
 def list_all_customers_ajax(request):
     val = queries.customer_list()
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
+@login_required
+def list_all_employees_ajax(request):
+    val = queries.employee_list()
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
 
 @login_required
 def del_customer_ajax(request):

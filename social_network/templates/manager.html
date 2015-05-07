@@ -3,7 +3,7 @@
 
 
 {% block js %}
-<script src="{% static "js/employee.js" %}"></script>
+<script src="{% static "js/manager.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -55,7 +55,7 @@
 <table border="1" id = "sales_table" style="display:none;">
 </table>
 
-<button class="btn btn-default" type="list_all_customers" id="list-all-customers">list all customers</button> 
-<table class="table" id = "customer_table" style="display:none;">
+<button class="btn btn-default" type="list-all-employees" id="list-all-employees">list all customers</button> 
+<table class="table" id = "employee_table" style="display:none;">
 </table>
 {% endblock %}
