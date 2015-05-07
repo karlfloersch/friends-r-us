@@ -61,6 +61,15 @@ body {
     resize: none;
 }
 
+.like-post {
+    color:#337AB7;
+    cursor: pointer;
+}
+.like-comment {
+    color:#337AB7;
+    cursor: pointer;
+}
+
 #post-add {
     margin-top: 15px;
 }
