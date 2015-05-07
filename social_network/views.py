@@ -208,17 +208,8 @@ def create_advertisement_ajax(request):
     type_ad = request.POST.get("type")
     company = request.POST.get("company")
     employee_id = request.user.first_name
-    print('things went well')
-    print(item_name)
-    print(unit_price)
-    print(content)
-    print(type_ad)
-    print(company)
-    print(employee_id)
-    print('things went well')
-    #data = {'item_name':item_name}
-    # add ur querey friends = queries.get_users_by_firstname(name)
-    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad, date, company)
+
+    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
@@ -539,7 +530,7 @@ def logout_view(request):
 
 def validate_date(d):
     try:
-        datetime.strptime(d, '%m/%d/%Y')
+        datetime.datetime.strptime(d, '%m/%d/%Y')
         return True
     except ValueError:
         return False
