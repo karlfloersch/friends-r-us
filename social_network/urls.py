@@ -43,6 +43,8 @@ urlpatterns = patterns('',
 
                        url(r'^employee/list-item-suggestions/$', views.list_item_suggestions_ajax,
                            name='list_item_suggestions'),
+                       url(r'^accounts/purchase-item/$', views.purchase_item_ajax,
+                           name='purchase_item'),
 
                        url(r'^messages/get_messages/$', views.get_messages_ajax,
                            name='messages'),

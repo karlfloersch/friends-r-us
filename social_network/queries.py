@@ -92,6 +92,27 @@ def get_user_messages(cust_id):
     row = cursor.fetchall()
     return row
 
+def check_aval_units(adv_id, qty):
+    cursor = connection.cursor()
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?', (adv_id))
+    val = cursor.fetchone()
+
+    return (val[0] - qty > 0)
+
+def buy_item(adv_id, qty, cust_id):
+    cursor = connection.cursor()
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?', (adv_id))
+    val = cursor.fetchone()
+    sumval = int(val[0]) - int(qty[0])
+    cursor.execute('UPDATE advertisement SET num_aval_units=? WHERE adv_id =?', (sumval, adv_id))
+    cursor.execute('INSERT INTO buy(num_units, customer_acc_num, adv_id) VALUES(?,?,?)', (qty, cust_id, adv_id));
+
+    #num_units        INT, 
+    # date             DATETIME, 
+    # time             TIMESTAMP, 
+    # customer_acc_num INT, 
+    # adv_id           INT(30),
+
 
 def get_conversation_messages(cust_ids):
     cursor = connection.cursor()
@@ -202,12 +223,13 @@ def get_number_available_units(adv_id):
     return num[0]
 
 def validate_purchase_quantity(adv_id, num_units):
+    print(num_units)
     cursor = connection.cursor()
     cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     num_ = num[0]
 
-    if (num_ - num_units) > 0:
+    if (num_ - int(num_units[0])) > 0:
         return True
     else:
         return False

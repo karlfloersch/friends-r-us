@@ -19,6 +19,15 @@ var addComment = function() {
     $('.commentList').scrollTop($('.commentList')[0].scrollHeight);
 };
 
+var purchase= function(){
+    var data = {
+        'item_id_input':$('#item_id_input').val(),
+        'quantity_input':$('#quantity_input').val()
+    };
+        sendDefaultPOST('/purchase-item/', data, function(response) {
+        console.log(response);
+    });
+};
 var addPost = function() {
     "use strict";
     var $posts = $("#posts");
@@ -115,6 +124,7 @@ $( document ).ready(function() {
     $("#post-add").click(addPost);
     $('.like-post').click(toggleLikePost);
     $('.like-comment').click(toggleLikeComment);
+    $('#list_item_suggestions').click(purchase);
 
 });
 

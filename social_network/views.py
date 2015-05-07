@@ -118,6 +118,7 @@ def profile_view(request, page_owner, sub_page=None):
     data['form'] = DocumentForm()  # A empty, unbound form
     val = queries.adv_list()
     data['ad_id'] = random.choice(val)
+
     return render(request, "profile.html", dictionary=data)
 
 
@@ -373,6 +374,20 @@ def submit_comment_ajax(request):
     queries.make_a_comment(data['comment_text'], data['post_id'],
                            request.user.first_name)
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+@login_required
+def purchase_item_ajax(request):
+    item_id = request.POST.get("item_id_input")
+    quant_id = request.POST.get("quantity_input")
+    cust_id = request.user.first_name
+    tvalue = queries.validate_purchase_quantity((item_id,), (quant_id,))
+    if not tvalue:
+        return HttpResponse(json.dumps({}), content_type="application/json")
+    else:
+        queries.buy_item((item_id,), (quant_id,), (cust_id,))
+        return HttpResponseRedirect("/")
+
+
 
 
 @login_required
