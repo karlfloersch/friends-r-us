@@ -36,6 +36,8 @@ def sort_posts(posts):
 
 def build_page(username, user_info, user_id, circles, circle_name, circle_id):
     page_info = queries.get_page(user_id, circle_name)
+    print("IM HERE")
+    pp.pprint(page_info)
     page_id = page_info[4]
     posts_info = queries.get_posts(page_id)
 
@@ -54,7 +56,6 @@ def build_page(username, user_info, user_id, circles, circle_name, circle_id):
         comments = sorted(comments, key=lambda x: x[2], reverse=True)
         num_likes, is_liked = queries.get_likes_by_post((post[0],), user_id)
         post = post + author_info + (comments,) + (num_likes,) + (is_liked,)
-        pp.pprint(post)
         posts.append(post)
 
     posts = sort_posts(posts)
@@ -123,6 +124,7 @@ def get_current_circle(circles, sub_page):
         circle_name = 'Friends'
     circle_id = None
     for circle in circles:
+        print(circle)
         if circle[2] == circle_name:
             circle_id = circle[0]
     return circle_name, circle_id
@@ -219,7 +221,6 @@ def submit_like_ajax(request):
             return HttpResponse(json.dumps(data),
                                 content_type="application/json")
         data['success'] = True
-        print("I AM INSANE\n\n\n\n\nINDSIOF")
         if post_type == 'post':
             queries.like_post(post_id, request.user.first_name)
         elif post_type == 'comment':
@@ -254,7 +255,7 @@ def delete_advertisement_ajax(request):
 
     return HttpResponse(json.dumps({}) ,content_type="application/json")
 
-    
+
 @login_required
 def list_all_customers_ajax(request):
     val = queries.customer_list()
@@ -262,7 +263,7 @@ def list_all_customers_ajax(request):
 
 def generate_mailing_list_ajax(request):
     val = queries.customer_mailing_list()
-    
+
     print(val)
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
 @login_required
