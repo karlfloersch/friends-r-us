@@ -423,15 +423,18 @@ def delete_message(message_id):
 
 
 def get_user_circles_ids(user_id):
-    """ Get a list of all the user's circles """
-    cursor = connection.cursor()
-    sql_call = str("SELECT id FROM circle C WHERE C.owner_id = " + user_id +
-                   " UNION SELECT circle_id FROM circle C INNER JOIN " +
-                   "memberofcircle A ON C.id = A.circle_id WHERE " +
-                   "A.cust_id = " + str(user_id))
+    #""" Get a list of all the user's circles """
+    #cursor = connection.cursor()
+    #sql_call = str("SELECT id FROM circle C WHERE C.owner_id = " + user_id +
+    #              " UNION SELECT circle_id FROM circle C INNER JOIN " +
+    #               "memberofcircle A ON C.id = A.circle_id WHERE " +
+    #               "A.cust_id = " + str(user_id))
     # sql_call = str("SELECT circle_id FROM memberofcircle WHERE cust_id="
     #               + user_id)
-    cursor.execute(sql_call)
+
+    cursor = connection.cursor()
+    connection.execute('SELECT C.id, C.owner_id FROM circle C INNER JOIN circlemember CM ON C.id = CM.circle_id WHERE CM.cust_id=?', (user_id))
+    #cursor.execute(sql_call)
     return cursor.fetchall()
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
