@@ -638,8 +638,10 @@ def list_users_by_product(product_id):
     users = cursor.fetchall()
     return users
 
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):
     cursor = connection.cursor()
+    date = datetime.datetime.now()
+    #dt = datetime.datetime.strptime(date, '%Y-%d-%m')
     cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))
     adv_obj = cursor.fetchone()
     return adv_obj

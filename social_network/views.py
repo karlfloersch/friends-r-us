@@ -333,12 +333,12 @@ def create_advertisement_ajax(request):
     employee_id = request.user.first_name
 
     # print("bob")
-    print(datetime.datetime.now())
-    product_id =33331
-    val= queries.list_users_by_product(product_id)
-    print (val)
-    print("bob")
-    # queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
+    #pdate = datetime.datetime.now()
+    # product_id =33331
+    # val= queries.list_users_by_product(product_id)
+    # print (val)
+    # print("bob")
+    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
 
     return HttpResponse(json.dumps({}) , content_type="application/json")
 
