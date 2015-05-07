@@ -9,8 +9,7 @@ from django.shortcuts import render_to_response
 from .forms import DocumentForm
 from .models import Document
 from . import queries
-import datetime 
-from datetime import datetime
+import datetime
 import json
 
 
@@ -28,27 +27,15 @@ def make_data(request, username):
     return data
 
 
-@login_required
-def profile_view(request, username, sub_page=None):
-    """ Simple view to test querying the DB """
-    user = User.objects.filter(username=username)
-    if user.count() == 0:
-        return HttpResponseRedirect('../../')
-    # User exhists so display page
-    # Get the page owner's user id, information and circles
-    user = user[0]
-    user_id = user.first_name
-    user_info = queries.get_user_info_by_id(user_id)
-    circles = queries.get_user_circles_info(user_id)
-    circle_name, circle_id = get_current_circle(circles, sub_page)
-    # Get the page's posts and comments
-    if request.user.last_name == 'employee':
-        return HttpResponseRedirect('/employee')
-    if not circle_id:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
+def sort_posts(posts):
+    print(posts)
+
+
+def build_page(username, user_info, user_id, circles, circle_name, circle_id):
     page_info = queries.get_page(user_id, circle_name)
     page_id = page_info[4]
     posts_info = queries.get_posts(page_id)
+
     posts = []
     for post in posts_info:
         author_info = queries.get_username_and_name_by_id(post[5])
@@ -60,33 +47,64 @@ def profile_view(request, username, sub_page=None):
             comments.append(comment + comment_author_info)
         post = post + author_info + (comments,)
         posts.append(post)
-    page_data = {"username": user.username,
+
+    sort_posts(posts)
+    page_data = {"username": username,
                  "first_name": user_info[1],
                  "last_name": user_info[2],
                  "circles": circles,
                  "current_circle": {'name': circle_name, 'id': circle_id},
                  "posts": posts}
-    data = make_data(request, username)
+    return page_data
+
+
+def upload_image(data, request, username, page_owner):
+    if request.user.username == page_owner:
+        data['form'] = DocumentForm(request.POST, request.FILES)
+        if data['form'].is_valid():
+            newdoc = Document(username=page_owner,
+                              docfile=request.FILES['docfile'])
+            newdoc.save()
+            # Redirect to the document list after POST
+            return HttpResponseRedirect('/accounts/' + page_owner)
+        else:
+            return render(request, "profile.html", dictionary=data)
+
+
+@login_required
+def profile_view(request, page_owner, sub_page=None):
+    """ Simple view to test querying the DB """
+    # Redirect if the signed in user is an employee
+    if request.user.last_name == 'employee':
+        return HttpResponseRedirect('/employee')
+    # Get the page owner's user object
+    user = User.objects.filter(username=page_owner)
+    if user.count() == 0:
+        return HttpResponseRedirect('../../')
+    # Get the page owner's information and circles
+    user = user[0]
+    user_id = user.first_name
+    user_info = queries.get_user_info_by_id(user_id)
+    # Get the page owner's circles
+    circles = queries.get_user_circles_info(user_id)
+    circle_name, circle_id = get_current_circle(circles, sub_page)
+    # Redirect if the circle for this page does not exist
+    if not circle_id:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+    # Get the page's posts, comments and all related data
+    page_data = build_page(page_owner, user_info, user_id,
+                           circles, circle_name, circle_id)
+    # Add the page data to our data object
+    data = make_data(request, page_owner)
     data['page_data'] = page_data
-    if username == request.user.username:
+    # Add the current navigation item indicator
+    if page_owner == request.user.username:
         data['nbar'] = "nav_home"
-    if not request.method == 'POST':
-        return render(request, "profile.html", dictionary=data)
-    # Handle file upload
     if request.method == 'POST':
-        if request.user.username == username:
-            data['form'] = DocumentForm(request.POST, request.FILES)
-            if data['form'].is_valid():
-                username = request.user.username
-                newdoc = Document(username=username,
-                                  docfile=request.FILES['docfile'])
-                newdoc.save()
-                # Redirect to the document list after POST
-                return HttpResponseRedirect('/accounts/' + username)
-            else:
-                return render(request, "profile.html", dictionary=data)
-    else:
-        data['form'] = DocumentForm()  # A empty, unbound form
+        # Handle file upload
+        return upload_image(data, request, request.user.username, page_owner)
+    data['form'] = DocumentForm()  # A empty, unbound form
+    return render(request, "profile.html", dictionary=data)
 
 
 def get_current_circle(circles, sub_page):
@@ -151,7 +169,7 @@ def messages_view(request):
 
 @login_required
 def employee_view(request):
-    """ Employee dashboard view """    
+    """ Employee dashboard view """
     return render(request, "employee.html")
 
 
