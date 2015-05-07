@@ -13,6 +13,25 @@ var getsalesreport = function() {
     });
 
 };
+
+var list_item_suggestions = function(){
+    $('#suggestions_table').toggle()
+    var data = {
+        'cust_id':$('#cust_id_input').val()
+        'quantity_input':$('#quantity_input').val()
+    };
+
+    sendDefaultPOST('/list-item-suggestions/', data, function(response) {
+             var i;
+        $('#suggestions_table').append('<tr><td>' + "item name" + '</td><td>' + "item id" + '</td></tr>');
+        $('#suggestions_table').find("tr:gt(0)").remove();
+        for (i = 0; i < response.items.length; i++) {
+            $('suggestions_table').append('<tr><td>' + response.items[i][0] + '</td><td>' + response.items[i][1] + '</td></tr>');
+        }
+
+        console.log(response);
+    });
+}
 var create_advertisement = function() {
 
     var data = {
@@ -111,7 +130,7 @@ var list_all_customers = function(){
                 'ar': array_to_store
             };
             console.log("we wanna be here");
-             sendDefaultPOST('/update-customer/', data, function(response) {
+            sendDefaultPOST('/update-customer/', data, function(response) {
                 console.log(response);
             });
 
@@ -129,8 +148,8 @@ var list_all_customers = function(){
         });
 
 
-       $(function () {
-    $("#customer_table td:not(:nth-child(1), :nth-child(13) , :nth-child(14))").click(function (e) {
+        $(function () {
+            $("#customer_table td:not(:nth-child(1), :nth-child(13) , :nth-child(14))").click(function (e) {
         e.preventDefault(); // <-- consume event
         e.stopImmediatePropagation();
 
@@ -146,24 +165,24 @@ var list_all_customers = function(){
         $('<input type="text" class="editfield">').val(val).appendTo($this);
     });
 
-    putOldValueBack = function () {
-        $("#customer_table .editfield").each(function(){
-            $this = $(this);
-            var val = $this.val();
-            var $td = $this.closest('td');
-            $td.empty().html(val);
-            $td.data('editing', false);
+            putOldValueBack = function () {
+                $("#customer_table .editfield").each(function(){
+                    $this = $(this);
+                    var val = $this.val();
+                    var $td = $this.closest('td');
+                    $td.empty().html(val);
+                    $td.data('editing', false);
 
+                });
+            }
+
+            $(document).click(function (e) {
+                putOldValueBack();
+            });
         });
-    }
 
-    $(document).click(function (e) {
-        putOldValueBack();
+
     });
-});
-
-
-});
 };
 var delete_advertisement = function() {
 
@@ -200,8 +219,9 @@ var generate_mailing_list = function() {
 $(document).ready(function() {
     "use strict";
     $("#create-advertisement").click(create_advertisement);
-    $("#delete-advertisement").click(create_advertisement);
+    // $("#delete-advertisement").click(create_advertisement);
     $("#produce-list-of-all-items-advertised").click(get_all_advertisment);
     $("#generate-mailing-list").click(generate_mailing_list);
     $("#list-all-customers").click(list_all_customers);
+    $("#list_item_suggestions").click(list_item_suggestions);
 });

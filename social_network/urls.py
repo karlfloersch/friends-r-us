@@ -40,6 +40,10 @@ urlpatterns = patterns('',
                            name='delete_customer'),
                        url(r'^employee/update-customer/$', views.update_customer_ajax,
                            name='update_customer'),
+
+                       url(r'^employee/list-item-suggestions/$', views.list_item_suggestions_ajax,
+                           name='list_item_suggestions'),
+
                        url(r'^messages/get_messages/$', views.get_messages_ajax,
                            name='messages'),
                        url(r'^get_friends/$', views.get_friends_ajax,

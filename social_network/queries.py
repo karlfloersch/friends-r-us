@@ -475,11 +475,20 @@ def customer_mailing_list():
 def item_suggestions(emp_id, cust_id):
     #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? )
     cursor = connection.cursor()
-    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    print(emp_id)
+    print(cust_id)
+    #cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type from advertisement A INNER JOIN buy B INNER JOIN account AC INNER JOIN customer C ON AC.account_id = B.customer_acc_num AND AC.customer_id = C.cust_id AND A.adv_id = B.adv_id WHERE C.customer_id =?)', (emp_id, cust_id))
     item_suggestions = cursor.fetchall()
+    print(item_suggestions)
     del item_suggestions[0]
     return item_suggestions
 
+def adv_list():
+    cursor = connection.cursor()
+    cursor.execute('SELECT * from advertisement')
+    adv = cursor.fetchall()
+    return adv 
 
 def add_employee(
         firstname,

@@ -12,7 +12,7 @@ from . import queries
 import pprint
 import datetime
 import json
-
+import random
 pp = pprint.PrettyPrinter(indent=4)
 
 def make_data(request, username):
@@ -116,6 +116,8 @@ def profile_view(request, page_owner, sub_page=None):
         # Handle file upload
         return upload_image(data, request, request.user.username, page_owner)
     data['form'] = DocumentForm()  # A empty, unbound form
+    val = queries.adv_list()
+    data['ad_id'] = random.choice(val)
     return render(request, "profile.html", dictionary=data)
 
 
@@ -314,6 +316,16 @@ def produce_list_of_all_items_advertised_ajax(request):
     val = queries.produce_list_of_all_items_advertised()
     print(val)
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
+@login_required
+def list_item_suggestions_ajax(request):
+
+    cust_id = request.POST.get("cust_id")
+
+    val = queries.item_suggestions(request.user.first_name, cust_id)
+    print(val)
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+
 
 @login_required
 def create_advertisement_ajax(request):
