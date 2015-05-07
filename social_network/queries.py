@@ -190,13 +190,13 @@ def create_a_circle(owner_id, name, circle_type):
 #todo write method to get number of items available
 def get_number_available_units(adv_id):
     cursor = connection.cursor()
-    cursor = execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     return num[0]
 
 def validate_purchase_quantity(adv_id, num_units):
     cursor = connection.cursor()
-    cursor = execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     num_ = num[0]
 
@@ -462,14 +462,14 @@ def update_customer_credit_card(account_id, credit_card_num):
 
 def customer_mailing_list():
     cursor = connection.cursor()
-    cursor = execute('SELECT DISTINCT email FROM customer')
+    cursor.execute('SELECT DISTINCT email FROM customer')
     email_list = cursor.fetchall()
     return email_list
 
 def item_suggestions(emp_id, cust_id):
     #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? ) 
     cursor = connection.cursor()
-    cursor = execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
     item_suggestions = cursor.fetchall()
     return item_suggestions
 
@@ -659,3 +659,5 @@ def customer_list():
     cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth FROM person P INNER JOIN customer C ON P.id = C.cust_id')
     cust_list = cursor.fetchall()
     return cust_list
+
+def advertisements_by_company():
