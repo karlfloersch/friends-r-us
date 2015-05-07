@@ -196,8 +196,22 @@ def get_friends_ajax(request):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 @login_required
-def create_advertisement_ajax(request):
-    queries.delete_advertisement(33333)
+def delete_advertisement_ajax(request):
+    id_ = request.POST.get("id")
+    # print(id_)
+    queries.delete_advertisement(id_)
+
+    return HttpResponse(json.dumps({}) ,content_type="application/json")
+def generate_mailing_list_ajax(request):
+    val = queries.customer_mailing_list()
+    print(val)
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
+@login_required
+def produce_list_of_all_items_advertised_ajax(request):
+    print("here")
+    val = queries.produce_list_of_all_items_advertised()
+    print(val)
+    return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
 
 @login_required
 def create_advertisement_ajax(request):
@@ -217,7 +231,7 @@ def create_advertisement_ajax(request):
     employee_id = request.user.first_name
 
     queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    return HttpResponse(json.dumps({}) , content_type="application/json")
 
 
 def submit_post_ajax(request):
