@@ -436,10 +436,6 @@ def get_user_circles_ids(user_id):
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
     cursor = connection.cursor()
-    #customer_id     INTEGER PRIMARY KEY,
-    #account_id       INT,
-    #create_date DATETIME NOT NULL,
-    #credit_card_num VARCHAR(50),
     ts = datetime.datetime.now()
 
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
@@ -505,11 +501,6 @@ def add_employee(
     return id_val[0]
 
 
-
-
-
-
-
 def get_employee_id(firstname, lastname, address):
     #sql_call = str(
     #    "select id from person where lastname = " +
@@ -526,11 +517,10 @@ def get_employee_id(firstname, lastname, address):
     return id_val[0]
 
 
-def delete_employee(ssn):
-    #sql_call = str("Delete from employee Where ssn = " + ssn)
+def delete_employee(emp_id):
+    connection.execute("PRAGMA foreign_keys = ON")
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM users WHERE ssn = ?',(ssn))
-    #cursor.execute(sql_call)
+    cursor.execute('DELETE FROM person where emp_id=?',(emp_id))
 
 
 # needs to be done
@@ -680,8 +670,11 @@ def customer_list():
     cursor = connection.cursor()
     cursor.execute("SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, strftime('%d-%m-%Y', C.date_of_birth) FROM person P INNER JOIN customer C ON P.id = C.cust_id")
     cust_list = cursor.fetchall()
-    print(cust_list[0])
     return cust_list
+
+def empoyee_list():
+    cursor = connection.cursor()
+    cursor.execute("SELECT P.firstnae, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role FROM person P INNER JOIN employee E ON P.id = E.employee_id")
 
 def advertisements_by_company(company_name):
     cursor = connection.cursor()
