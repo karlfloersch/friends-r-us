@@ -574,24 +574,29 @@ def update_employee(
     #cursor.execute(sql_call)
 
 
-def obtain_sales_report_by_month(date):
-
-    cursor = connection.cursor()
+#def obtain_sales_report_by_month(date):
+#    cursor = connection.cursor()
     # emp_id INT,
     # adv_id INT,
-    sql_call = str(
-        "SELECT  A.adv_id,  A.item_name , E.emp_id, " +
-        "SUM(P.num_units) as TSaleOnItem, SUM(P.num_units * A.unit_price) " +
-        " FROM employee E INNER JOIN buy P INNER JOIN advertisement A ON " +
-        "P.adv_id =A.adv_id AND A.Employee = E.emp_id  " +
-        "WHERE MONTH(P.Date) = " +
-        date +
-        " GROUP BY A.adv_id")
+#    sql_call = str(
+#        "SELECT  A.adv_id,  A.item_name , E.emp_id, " +
+#        "SUM(P.num_units) as TSaleOnItem, SUM(P.num_units * A.unit_price) " +
+#       " FROM employee E INNER JOIN buy P INNER JOIN advertisement A ON " +
+#        "P.adv_id =A.adv_id AND A.Employee = E.emp_id  " +
+#        "WHERE MONTH(P.date) = " +
+#        date +
+#        " GROUP BY A.adv_id")
+#    cursor.execute(sql_call)
+#    val = cursor.fetchone()
+#    return val
 
-    cursor.execute(sql_call)
-    val = cursor.fetchone()
-    return val
 
+def sales_report_month(date):
+    cursor = connection.cursor()
+    #SELECT  A.AdvertisementId,  A.Item_Name , E.EmployeeId, SUM(P.Number_Of_Units) as TSaleOnItem, SUM(P.Number_Of_Units * A.Unit_Price)  FROM Employee E INNER JOIN Purchase P INNER JOIN Advertisement A ON P.Advertisement =A.AdvertisementId AND A.Employee = E.EmployeeId  WHERE MONTH(P.Date) = ? GROUP BY A.AdvertisementId
+    cursor.execute('SELECT A.adv_id, A.item_name, E.emp_id, SUM(B.num_units) as TSaleOnItem, SUM(B.num_units * A.unit_price) FROM employee E INNER JOIN buy B INNER JOIN advertisement A ON B.adv_id = A.adv_id AND A.employee_id = E.emp_id WHERE strftime('%m', B.date)=? GROUP BY A.adv_id', (date))
+    report = cursor.fechone()
+    return report
 
 def produce_list_of_all_items_advertised():
     cursor = connection.cursor()
@@ -599,7 +604,7 @@ def produce_list_of_all_items_advertised():
         "SELECT A.adv_id, A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
 
     cursor.execute(sql_call)
-    val = cursor.fetchone()
+    val = cursor.fetchall()
     return val
 
 # check this one
@@ -618,7 +623,7 @@ def produce_list_of_transactions_item_name_cust_name(
         " OR (C.lastname=" + lastname + " AND C.firstname=" + firstname + ")")
 
     cursor.execute(sql_call)
-    val = cursor.fetchone()
+    val = cursor.fetchall()
     return val
 
 def transactions_by_customer_id(cust_id):
@@ -629,7 +634,7 @@ def transactions_by_customer_id(cust_id):
 
 def list_users_by_product(product_id):
     cursor = connection.cursor()
-    cursor.execute('SELECT P.firstname, P.lastname, C.email FROM buy B INNER JOIN (person P INNER JOIN customer C ON P.id = C.cust_id) ON B.adv_id=?)',(product_id))
+    cursor.execute('SELECT P.firstname, P.lastname, C.email FROM buy B INNER JOIN (person P INNER JOIN customer C ON P.id = C.cust_id) ON B.customer_acc_num=? AND B.adv_id=?)',(product_id))
     users = cursor.fetchall()
     return users
 
@@ -667,7 +672,7 @@ def customer_rep_highest_revenue():
 
 def customer_list():
     cursor = connection.cursor()
-    cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth FROM person P INNER JOIN customer C ON P.id = C.cust_id')
+    cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, strftime('%d-%m-%Y', C.date_of_birth) FROM person P INNER JOIN customer C ON P.id = C.cust_id')
     cust_list = cursor.fetchall()
     return cust_list
 
