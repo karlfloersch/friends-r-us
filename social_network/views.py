@@ -199,7 +199,14 @@ def get_friends_ajax(request):
     data = {'friends': friends}
     return HttpResponse(json.dumps(data), content_type="application/json")
 
-
+@login_required
+def update_customer_ajax(request):
+    val = request.POST.getlist('ar[]')
+    # val = vals[0]
+    print(val)
+    queries.update_customer(cust_id = val[0], rating= val[1], firstname_= val[2], lastname_= val[3], password_= val[4], gender_= val[5], address_= val[6], city_= val[7], state_= val[8], zipcode_= val[9], telephone_= val[10], email_= val[11], dob_= val[12])
+    # print("bob")
+    return HttpResponse(json.dumps({}), content_type="application/json")
 @login_required
 def submit_like_ajax(request):
     post_id = request.POST.get("post_id")

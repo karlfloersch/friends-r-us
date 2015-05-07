@@ -98,22 +98,24 @@ var list_all_customers = function(){
             // console.log(strings);
             $('#customer_table').append(strings);
         }
-        // $('.update-cust-list-row').click(function() {
-        //     array_to_store =[]
-        //     var i;
-        //     console.log("hello")
-        //     for(i=0; i <12; i++){
-        //         array_to_store[i] = $(this).parent().children('td').eq(i).text();
-        //         // console.log($(this).parent().children('td').eq(i).text());
-        //     }
-        //     // var data = {
-        //     //     'id': array_to_store
-        //     // };
-        //     //  sendDefaultPOST('/delete-customer/', data, function(response) {
-        //     //     console.log(response);
-        //     // });
+        $('.update-cust-list-row').click(function() {
+            array_to_store =[]
+            var i;
+            console.log("hello")
+            for(i=0; i <13; i++){
+                array_to_store[i] = $(this).parent().children('td').eq(i).text();
+                // console.log($(this).parent().children('td').eq(i).text());
+            }
+            console.log(array_to_store);
+            var data = {
+                'ar': array_to_store
+            };
+            console.log("we wanna be here");
+             sendDefaultPOST('/update-customer/', data, function(response) {
+                console.log(response);
+            });
 
-        // });
+        });
         $('.delete-cust-list-row').click(function() {
             var id = $(this).parent().children('td').eq(0).text();
             $(this).parent().remove();
