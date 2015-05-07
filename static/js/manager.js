@@ -67,17 +67,12 @@ var get_all_advertisment = function() {
 var list_all_employees = function(){
 // list_all_customers_ajax
     // ('#employee_table').toggle()
-    console.log("POODLE");
     var data = {
     };
     sendDefaultPOST('/list-all-employees/', data, function(response) {
-        // console.log(response);
-        // mailing-list
-        // P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth
-        // ;
         $('#employee_table').toggle();
         var i;
-        $('#employee_table').append('<tr><td>' + "id" +'</td><td>' + "firstname" + '</td><td>'+"lastname"+'</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"email"+'</td><td>'+"rating"+'</td><td>'+"date_of_birth"+ '</td></tr>');
+        $('#employee_table').append('<tr><td>' + "firstname" +'</td><td>' + "lastname" + '</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"SSN"+'</td><td>'+"hourly rate"+'</td><td>'+"role"+'</td><td>'+ '</td></tr>');
         $('#employee_table').find("tr:gt(0)").remove();
         // console.log("bobs");
         for (i = 0; i < response.items.length; i++) {
@@ -130,7 +125,7 @@ var list_all_employees = function(){
 
 
        $(function () {
-    $("#customer_table td:not(:nth-child(1), :nth-child(13) , :nth-child(14))").click(function (e) {
+    $("#employee_table td:not(:nth-child(11) , :nth-child(12))").click(function (e) {
         e.preventDefault(); // <-- consume event
         e.stopImmediatePropagation();
 
@@ -147,7 +142,7 @@ var list_all_employees = function(){
     });
 
     putOldValueBack = function () {
-        $("#customer_table .editfield").each(function(){
+        $("#employee_table .editfield").each(function(){
             $this = $(this);
             var val = $this.val();
             var $td = $this.closest('td');
