@@ -201,7 +201,14 @@ def get_friends_ajax(request):
     data = {'friends': friends}
     return HttpResponse(json.dumps(data), content_type="application/json")
 
-
+@login_required
+def update_customer_ajax(request):
+    val = request.POST.getlist('ar[]')
+    # val = vals[0]
+    print(val)
+    queries.update_customer(cust_id = val[0], rating= val[1], firstname_= val[2], lastname_= val[3], password_= val[4], gender_= val[5], address_= val[6], city_= val[7], state_= val[8], zipcode_= val[9], telephone_= val[10], email_= val[11], dob_= val[12])
+    # print("bob")
+    return HttpResponse(json.dumps({}), content_type="application/json")
 @login_required
 def submit_like_ajax(request):
     post_id = request.POST.get("post_id")
@@ -261,6 +268,12 @@ def list_all_customers_ajax(request):
     val = queries.customer_list()
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
 
+@login_required
+def del_customer_ajax(request):
+    id_ = request.POST.get("id")
+    val = queries.remove_customer(id_)
+    return HttpResponse(json.dumps({}) ,content_type="application/json")
+
 def generate_mailing_list_ajax(request):
     val = queries.customer_mailing_list()
 
@@ -290,7 +303,13 @@ def create_advertisement_ajax(request):
     company = request.POST.get("company")
     employee_id = request.user.first_name
 
-    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
+    # print("bob")
+    print(datetime.datetime.now())
+    product_id =33331
+    val= queries.list_users_by_product(product_id)
+    print (val)
+    print("bob")
+    # queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
 
     return HttpResponse(json.dumps({}) , content_type="application/json")
 

@@ -47,7 +47,7 @@ CREATE TABLE employee
   ( 
      emp_id      INTEGER PRIMARY KEY, 
      ssn         CHAR(11) NOT NULL, 
-     start_date  DATE, 
+     start_date  DATETIME NOT NULL, 
      hourly_rate INT, 
      role        VARCHAR(100),
      FOREIGN KEY (emp_id) REFERENCES person(id) ON DELETE CASCADE 
@@ -65,7 +65,7 @@ CREATE TABLE employeemanages
 CREATE TABLE customer_preferences 
   ( 
      customer_id INT, 
-     preference  VARCHAR(20), 
+     preference  VARCHAR(100), 
      PRIMARY KEY (customer_id, preference), 
      FOREIGN KEY (customer_id) REFERENCES customer(cust_id) ON DELETE CASCADE 
   ); 
@@ -86,7 +86,7 @@ CREATE TABLE message
         sender                             INT,
         receiver                          INT, 
         subject                            VARCHAR(30),
-        date                              DATE, 
+        date                              TIMESTAMP, 
         PRIMARY KEY              (id),
         FOREIGN KEY              (sender) REFERENCES person(id),
         FOREIGN KEY              (receiver) REFERENCES customer(cust_id)
@@ -101,7 +101,7 @@ CREATE TABLE advertisement
      content        TEXT, 
      employee_id    INT, 
      type           VARCHAR(20), 
-     date           DATE, 
+     date           TIMESTAMP, 
      company        VARCHAR(150),
      FOREIGN KEY (employee_id) REFERENCES employee(emp_id) 
   ); 
@@ -110,7 +110,7 @@ CREATE TABLE buy
   ( 
      transaction_id   INTEGER PRIMARY KEY,  
      num_units        INT, 
-     date             DATE, 
+     date             DATETIME, 
      time             TIMESTAMP, 
      customer_acc_num INT, 
      adv_id           INT(30), 
@@ -242,111 +242,111 @@ CREATE TABLE advertise
 INSERT INTO person
 VALUES (100100101,'Alice','McKeeny','pw','F','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649881);
 INSERT INTO customer
-VALUES (100100101,'alice@blah.com',8,10/10/88);
+VALUES (100100101,'alice@blah.com',8,'2008-10-10 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100101,'l');
+VALUES (100100101,'cars, life insurance');
 
 INSERT INTO person
 VALUES (100100102,'Bob','Wonderwall','pw','M','21 MajorApt,Oak St.','NewYork','NY',11700,4314649882);
 INSERT INTO customer
-VALUES (100100102,'bob@blah.com',5,6/8/88);
+VALUES (100100102,'bob@blah.com',5,'1988-06-08 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100102,'o');
+VALUES (100100102,'cars, clothing');
 
 INSERT INTO person
 VALUES (100100103,'Elisa','Roth','pw','F','43 Corvette Apt, Maple St','Stony Brook','NY',11790,4314649883);
 INSERT INTO customer
-VALUES (100100103,'elisa@blah.com',5,11/10/92);
+VALUES (100100103,'elisa@blah.com',5,'1992-11-10 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100103,'l');
+VALUES (100100103,'clothing');
 
 INSERT INTO person
 VALUES (100100104,'Kelly','Mcdonald','pw','F','54 East Apt,Oak St','NewYork','NY',11700,4314649884);
 INSERT INTO customer
-VALUES (100100104,'kelly@blah.com',5,11/11/91);
+VALUES (100100104,'kelly@blah.com',5,'1991-11-11 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100104,'e');
+VALUES (100100104,'clothing, toys');
 
 INSERT INTO person
 VALUES (100100105,'Wendy','Stanley','pw','F','21 MajorApt,Oak St.','Stony Brook','NY',11790,4314649885);
 INSERT INTO customer
-VALUES (100100105,'wendy@blah.com',2,8/8/92);
+VALUES (100100105,'wendy@blah.com',2,'1992-08-08 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100105,'e');
+VALUES (100100105,'life insurance');
 
 INSERT INTO person
 VALUES (100100106,'Dennis','Ritchie','pw','M','43 Corvette Apt, Maple St','NewYork','NY',11700,4314649886);
 INSERT INTO customer
-VALUES (100100106,'den@blah.com',2,3/2/92);
+VALUES (100100106,'den@blah.com',2,'1992-03-02 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100106,'e');
+VALUES (100100106,'life insurance');
 
 INSERT INTO person
 VALUES (100100107,'Patrick','Norris','pw','M','Chapin Apt 1001,Health Drive','Stony Brook','NY',11790,4314649887);
 INSERT INTO customer
-VALUES (100100107,'patnor@blahblah.com',2,8/7/92);
+VALUES (100100107,'patnor@blahblah.com',2,'1992-08-07 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100107,'a');
+VALUES (100100107,'cars, clothing');
 
 INSERT INTO person
 VALUES (100100108,'Chuck','Stewart','pw','M','54 East Apt,Oak St','NewYork','NY',11700,4314649888);
 INSERT INTO customer
-VALUES (100100108,'chuck@blah.com',2,2/1/91);
+VALUES (100100108,'chuck@blah.com',2,'1991-02-07 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100108,'h');
+VALUES (100100108,'clothing, life insurance');
 
 INSERT INTO person
 VALUES (100100109,'Brad','Norton','pw','M','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649889);
 INSERT INTO customer
-VALUES (100100109,'brad@blah.com',2,9/1/92);
+VALUES (100100109,'brad@blah.com',2,'1992-09-01 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100109,'r');
+VALUES (100100109,'life insurance');
 
 INSERT INTO person
 VALUES (100100110,'Jeniffer','Buffet','pw','F','Chapin Apt 1223,Health Drive','NewYork','NY',11700,4314649890);
 INSERT INTO customer
-VALUES (100100110,'jennycool123@blah.com',2,8/1/89);
+VALUES (100100110,'jennycool123@blah.com',2,'1989-08-01 00:00:01');
 INSERT INTO customer_preferences
-VALUES (100100110,'e');
+VALUES (100100110,'life insurance');
 
 
 /*ACCOUNTS*/
 
 INSERT INTO account
-VALUES (100100101,90010101,4/10/11,'4123132454456550');
+VALUES (100100101,90010101,'2011-10-04 00:00:01','4123132454456550');
 
 INSERT INTO account
-VALUES (100100102,90010102,4/10/11,'1221344356657880');
+VALUES (100100102,90010102,'2011-10-04 00:00:01','1221344356657880');
 
 INSERT INTO account
-VALUES (100100103,90010103,4/10/11,'9889677645543220');
+VALUES (100100103,90010103,'2011-10-04 00:00:01','9889677645543220');
 
 INSERT INTO account
-VALUES (100100104,90010104,4/10/11,'1221655609907660');
+VALUES (100100104,90010104,'2011-10-04 00:00:01','1221655609907660');
 
 INSERT INTO account
-VALUES (100100105,90010105,5/10/11,'1221322334434550');
+VALUES (100100105,90010105,'2011-10-05 00:00:01','1221322334434550');
 
 INSERT INTO account
-VALUES (100100106,90010106,5/10/11,'9889877867764550');
+VALUES (100100106,90010106,'2011-10-05 00:00:01','9889877867764550');
 
 INSERT INTO account
-VALUES (100100107,90010107,6/10/11,'3443566576678770');
+VALUES (100100107,90010107,'2011-10-06 00:00:01','3443566576678770');
 
 INSERT INTO account
-VALUES (100100108,90010108,6/10/11,'1221122132232330');
+VALUES (100100108,90010108,'2011-10-06 00:00:01','1221122132232330');
 
 INSERT INTO account
-VALUES (100100109,90010109,6/10/11,'1234432145544550');
+VALUES (100100109,90010109,'2011-10-06 00:00:01','1234432145544550');
 
 INSERT INTO account
-VALUES (100100110,90010110,6/10/11,'2345543289000980');
+VALUES (100100110,90010110,'2011-10-06 00:00:01','2345543289000980');
 
 INSERT INTO account
-VALUES (100100101,90010111,7/10/11,'2345543282424980');
+VALUES (100100101,90010111,'2011-10-07 00:00:01','2345543282424980');
 
 INSERT INTO account
-VALUES (100100102,90010112,7/10/11,'2345543289003440');
+VALUES (100100102,90010112,'2011-10-07 00:00:01','2345543289003440');
 
 
 /*CIRCLE*/
@@ -433,7 +433,6 @@ VALUES (900005,12/10/11,'2008-01-01 00:00:01','we won! We won!',100100102,20112)
 INSERT INTO comment
 VALUES (900006,12/10/11,'2008-01-01 00:00:01','Congrats!',100100109,20114);
 
-
 /*MESSAGE*/
 INSERT INTO message
 VALUES (3001,'Hey! Do u have assignent 1 questions?',100100101,100100102,'hey!',10/10/11);
@@ -468,33 +467,34 @@ VALUES (111220,'111444111',1/5/11,35,'Manager');
 
 
 /*advertisement*/
-INSERT INTO advertisement
-VALUES (33331,'2012-Mustang',30,22000,'Ford Mustang! First 10 cutomers get a 10%Discount!',111221,'car',4/10/11,'Ford');
 
 INSERT INTO advertisement
-VALUES (33332,'Superman Shirt',100,5,'Just $5!!!!!!!',111222,'clothing',4/10/11,'GAP');
+VALUES (33331,'2012-Mustang',30,22000,'Ford Mustang! First 10 cutomers get a 10%Discount!',111221,'car','2011-04-10 00:00:01','Ford');
 
 INSERT INTO advertisement
-VALUES (33333,'2014-Mustang',30,22000,'Ford Mustang!',111221,'car',4/10/15,'Ford');
+VALUES (33332,'Superman Shirt',100,5,'Just $5!!!!!!!',111222,'clothing','2011-04-10 00:00:01','GAP');
 
 INSERT INTO advertisement
-VALUES (33334,'2015-Mustang',30,22000,'Ford Mustang!',111221,'car',4/10/15,'Ford');
+VALUES (33333,'2014-Mustang',30,22000,'Ford Mustang!',111221,'car','2015-04-10 00:00:01','Ford');
+
+INSERT INTO advertisement
+VALUES (33334,'2015-Mustang',30,22000,'Ford Mustang!',111221,'car','20015-04-10 00:00:01','Ford');
 
 /*buy*/
 INSERT INTO buy
-VALUES (200010001,1,4/22/11,'0000-00-00 00:00:00',100100106,33331);
+VALUES (200010001,1,'2011-04-22 00:00:01','0000-00-00 00:00:00',100100106,33331);
 
 INSERT INTO buy
-VALUES (200010002,2,4/23/1,'0000-00-00 00:00:00',100100106,33332);
+VALUES (200010002,2,'2011-04-23 00:00:01','0000-00-00 00:00:00',100100106,33332);
 
 INSERT INTO buy
-VALUES (200010003,4,4/23/11,'0000-00-00 00:00:00',100100107,33332);
+VALUES (200010003,4,'2011-04-23 00:00:01','0000-00-00 00:00:00',100100107,33332);
 
 INSERT INTO buy
-VALUES (200010004,2,4/23/11,'0000-00-00 00:00:00',100100108,33332);
+VALUES (200010004,2,'2011-04-23 00:00:01','0000-00-00 00:00:00',100100108,33332);
 
 INSERT INTO buy
-VALUES (200010005,2,4/23/11,'0000-00-00 00:00:00',100100108,33333);
+VALUES (200010005,2,'2011-04-23 00:00:01','0000-00-00 00:00:00',100100108,33333);
 
 /*likepost */
 INSERT INTO likepost
