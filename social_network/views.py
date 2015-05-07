@@ -28,15 +28,7 @@ def make_data(request, username):
 
 
 def sort_posts(posts):
-    print("\n\n\n")
-    for post in posts:
-        print(post)
-        print("*** NEXT ***")
-    print("\n\n\nSHIIT\n\n\n")
     posts = sorted(posts, key=lambda x: x[2], reverse=True)
-    for post in posts:
-        print(post)
-        print("*** NEXT ***")
     return posts
 
 
