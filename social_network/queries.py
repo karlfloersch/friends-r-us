@@ -119,7 +119,7 @@ def like_post(post_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO likepost(post_id, cust_id) VALUES(?,?)',(post_id, cust_id))
 
-def like_post(comment_id, cust_id):
+def like_comment(comment_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO likecomment(comment_id, cust_id) VALUES(?,?)',(comment_id, cust_id))
 
@@ -133,7 +133,7 @@ def make_a_post(content, customer_id, page_id):
     #  comment_count INT,
     #  customerid    INT,
     #  page_id        INT,
-    ts = datetime.datetime.now()
+    ts = 'null'
     date_now = time.strftime("%d/%m/%Y")
     cursor = connection.cursor()
     cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
@@ -171,7 +171,7 @@ def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
 
 def create_a_circle(owner_id, name, circle_type):
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO circle(owner_id, name, circle_type) VALUES(?,?,?)',(owner_id, name, circle_type))
+    cursor.execute('INSERT INTO circle(owner_id, name, circle_type) VALUES(?,?,?)',(owner_id, name, circle_type))    
     cursor.execute('SELECT id FROM circle WHERE owner_id=? AND name=? AND circle_type=?', (owner_id, name, circle_type))
     circle_id = cursor.fetchone()
     print(circle_id)
@@ -190,18 +190,18 @@ def create_a_circle(owner_id, name, circle_type):
 #todo write method to get number of items available
 def get_number_available_units(adv_id):
     cursor = connection.cursor()
-    cursor = execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     return num[0]
 
 def validate_purchase_quantity(adv_id, num_units):
     cursor = connection.cursor()
-    cursor = execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
+    cursor.execute('SELECT num_aval_units FROM advertisement WHERE adv_id=?',(adv_id))
     num = cursor.fetchone()
     num_ = num[0]
 
     if (num_ - num_units) > 0:
-        return True
+        return True 
     else:
         return False
 
@@ -210,7 +210,7 @@ def purchase_one_or_advertised_item(adv_id, num_units, date, customer_acc_num):
     cursor = connection.cursor()
     #cursor.execute(UPDATE advertisement SET num_aval_units = num_aval_units - num_units WHERE adv_id= " +
     #   ad_id)
-
+  
     cursor.execute('UPDATE adversitement SET num_aval_units= num_aval_units - 1 WHERE adv_id=?',(adv_id))
     date_now = time.strftime("%d/%m/%Y")
     time = datetime.datetime.now()
@@ -430,10 +430,10 @@ def get_user_circles_ids(user_id):
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
     cursor = connection.cursor()
-    #customer_id     INTEGER PRIMARY KEY,
+    #customer_id     INTEGER PRIMARY KEY, 
     #account_id       INT,
     #create_date DATETIME NOT NULL,
-    #credit_card_num VARCHAR(50),
+    #credit_card_num VARCHAR(50), 
     ts = datetime.datetime.now()
 
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
@@ -467,9 +467,9 @@ def customer_mailing_list():
     return email_list
 
 def item_suggestions(emp_id, cust_id):
-    #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? )
+    #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? ) 
     cursor = connection.cursor()
-    cursor = execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
+    cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
     item_suggestions = cursor.fetchall()
     return item_suggestions
 
@@ -499,7 +499,7 @@ def add_employee(
 
 
 
-
+    
 
 
 
@@ -595,11 +595,10 @@ def obtain_sales_report_by_month(date):
 def produce_list_of_all_items_advertised():
     cursor = connection.cursor()
     sql_call = str(
-        "SELECT A.adv_id, A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
+        "SELECT A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
 
     cursor.execute(sql_call)
-    val = cursor.fetchall()
-    
+    val = cursor.fetchone()
     return val
 
 # check this one
@@ -621,17 +620,16 @@ def produce_list_of_transactions_item_name_cust_name(
     val = cursor.fetchone()
     return val
 
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):        
+
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
     cursor = connection.cursor()
-    date = time.strftime("%d/%m/%Y")
     cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
     adv_obj = cursor.fetchone()
     return adv_obj
 
 def delete_advertisement(adv_id):
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM advertisement WHERE adv_id = '+str(adv_id))
-    
+    cursor.execute('DELETE FROM advertisement WHERE adv_id=?',(adv_id))
 
 def get_revenue_of_item(adv_id, type_in, customer_acc_num):
     if(adv_id == ""):
@@ -647,3 +645,19 @@ def get_revenue_of_item(adv_id, type_in, customer_acc_num):
     revenue_obj = cursor.fetchone()
     return revenue_obj
 
+def customer_rep_highest_revenue():
+    #SELECT E.SSN, P2.First_Name, P2.Last_Name,  SUM(P.Number_Of_Units * A.Unit_Price) AS Revenue FROM Employee E INNER JOIN Advertisement A  INNER JOIN Purchase P INNER JOIN Person P2 ON E.SSN = P2.SSN AND E.SSN = A.Employee AND P.Advertisement = A.AdvertisementId GROUP BY E.EmployeeId
+    #ORDER BY Revenue DESC LIMIT 1 
+    cursor = connection.cursor()
+    cursor.execute('SELECT E.SSN, P.firstname, P.lastname, SUM(B.num_units * A.unit_price) AS Revenue FROM employee E INNER JOIN advertisement A INNER JOIN buy B INNER JOIN person P ON E.emp_id = P.id AND E.ssn = A.employee_id AND B.adv_id = A.adv_id GROUP BY E.emp_id ORDER BY Revenue DESC LIMIT 1')
+    rep = cursor.fetchone()
+    return rep
+
+
+def customer_list():
+    cursor = connection.cursor()
+    cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth FROM person P INNER JOIN customer C ON P.id = C.cust_id')
+    cust_list = cursor.fetchall()
+    return cust_list
+
+def advertisements_by_company():
