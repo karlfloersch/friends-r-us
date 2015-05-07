@@ -443,11 +443,16 @@ def create_account_view(request):
             user.is_active = True
             user.save()
             # month day year
-
-            return HttpResponseRedirect("/login")
+            if not request.POST.get("employee_create", False):
+                return HttpResponseRedirect("/login")
+            else:
+                return HttpResponseRedirect("/employee")
         else:
+            if not request.POST.get("employee_create", False):
+                return HttpResponseRedirect("/login")
+            else:
+                return HttpResponseRedirect("/employee")
             print("invalid")
-            return render(request, 'registration.html', dictionary=data)
 
 
 def validate_new_user(request):
