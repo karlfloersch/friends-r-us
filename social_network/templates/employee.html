@@ -9,63 +9,49 @@
 {% block content %}
 <!-- item_name, num_aval_units, unit_price, content, employee_id, type, date, company) -->
 
-item name: <input type ="text" id="item_name"><br>
-num avaliable units: <input type ="text" id="num_aval_units"><br>
-unit price: <input type ="text" id="unit_price"><br>
-content: <input type ="text" id="content"><br>
-type: <input type ="text" id="type"><br>
-company:<input type ="text" id="company"><br>
+<label>item name:</label> <input type ="text" id="item_name" class="form-control">
+
+<label>num avaliable units:</label> <input type ="text" id="num_aval_units" class="form-control">
+<label>unit price:</label> <input type ="text" id="unit_price" class="form-control">
+<label>content: </label> <input type ="text" id="content" class="form-control">
+<label>type: </label> <input type ="text" id="type" class="form-control">
+<label>company:</label> <input type ="text" id="company" class="form-control">
 
 <!-- item name: <input type ="text" name="item_name"><br> -->
 
-<button type="create_advertisement" id="create-advertisement">Create Advertisement</button> 
+<button class="btn btn-default" type="create_advertisement" id="create-advertisement">Create Advertisement</button> 
 
 <br>
 <br>
 
 
-<button type="produce_list_of_all_items_advertised" id="produce-list-of-all-items-advertised">produce list of all items advertised</button> 
- <table border="1" table style="width:50%" id = "advertisement-list">
- </table>
+<button class="btn btn-default" type="produce_list_of_all_items_advertised" id="produce-list-of-all-items-advertised">produce list of all items advertised</button> 
+<table class="table" id = "advertisement-list">
+</table>
 <br>
 
-
-<button type="generate_mailing_list" id="generate-mailing-list">Generate mailing list</button> 
+<button class="btn btn-default" type="generate_mailing_list" id="generate-mailing-list">Generate mailing list</button> 
+<table class="table" id = "mailing-list">
+</table>
 <br>
 <br>
+<button class="btn btn-default" type="getsalesreportbutton" onclick="getsalesreport" >Obtain a sales report for a particular month</button> 
+<select name = "month"  class="form-control" style="max-width: 200px">
+	<option value="1">jan</option>
+	<option value="2">feb</option>
+	<option value="3">march</option>
+	<option value="4">april</option>
+	<option value="5">may</option>
+	<option value="6">june</option>
+	<option value="7">july</option>
+	<option value="8">august</option>
+	<option value="9">september</option>
+	<option value="10">october</option>
+	<option value="11">november</option>
+	<option value="12">december</option>
+</select> 
 
- <select name = "month">
-			  <option value="1">jan</option>
-			  <option value="2">feb</option>
-			  <option value="3">march</option>
-			  <option value="4">april</option>
-			  <option value="5">may</option>
-			  <option value="6">june</option>
-			  <option value="7">july</option>
-			  <option value="8">august</option>
-			  <option value="9">september</option>
-			  <option value="10">october</option>
-			  <option value="11">november</option>
-			  <option value="12">december</option>
-		 </select> 
- <button type="getsalesreportbutton" onclick="getsalesreport" >Obtain a sales report for a particular month</button> 
- <!-- <button type="bhidesalesreportbutton" onclick="hidesalesreport" >hide</button>  -->
- <table border="1" table style="width:25%" id = "sales_table">
-  <tr>
-  <!-- A.AdvertisementId,  A.Item_Name , E.EmployeeId, SUM(P.Number_Of_Units) -->
-    <td><th>Ad ID</th></td>
-    <td><th>Item Name</th></td>		
-    <td><th>employee id</th></td>
-    <td><th>sales</th></td>
-    <tbody style="display:none" id = "sales_table_values">
-      <tr>
-		    <td>Jill</td>
-		    <td>Smith</td>		
-		    <td>50</td>
-		    <td>50</td>
-  		</tr>
-    </tbody>
-  </tr>
-
- </table>
+<!-- <button type="bhidesalesreportbutton" onclick="hidesalesreport" >hide</button>  -->
+<table border="1" id = "sales_table">
+</table>
 {% endblock %}
