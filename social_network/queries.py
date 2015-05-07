@@ -462,7 +462,7 @@ def update_customer_credit_card(account_id, credit_card_num):
 
 def customer_mailing_list():
     cursor = connection.cursor()
-    cursor = execute('SELECT DISTINCT email FROM customer')
+    cursor.execute('SELECT DISTINCT email FROM customer')
     email_list = cursor.fetchall()
     return email_list
 
@@ -595,10 +595,11 @@ def obtain_sales_report_by_month(date):
 def produce_list_of_all_items_advertised():
     cursor = connection.cursor()
     sql_call = str(
-        "SELECT A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
+        "SELECT A.adv_id, A.item_name, A.unit_price, A.num_aval_units FROM advertisement A")
 
     cursor.execute(sql_call)
-    val = cursor.fetchone()
+    val = cursor.fetchall()
+    
     return val
 
 # check this one
@@ -629,7 +630,8 @@ def create_advertisement(item_name, num_aval_units, unit_price, content, employe
 
 def delete_advertisement(adv_id):
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM advertisement WHERE adv_id=?',(adv_id))
+    cursor.execute('DELETE FROM advertisement WHERE adv_id = '+str(adv_id))
+    
 
 def get_revenue_of_item(adv_id, type_in, customer_acc_num):
     if(adv_id == ""):

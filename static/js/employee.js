@@ -14,21 +14,7 @@ var getsalesreport = function() {
 
 };
 var create_advertisement = function() {
-     // item_name, num_aval_units, unit_price, content, employee_id, type, date, company
-    // var today = new Date();
-    // var dd = today.getDate();
-    // var mm = today.getMonth()+1; //January is 0!
-    // var yyyy = today.getFullYear();
 
-    // if(dd<10) {
-    //     dd='0'+dd
-    // } 
-
-    // if(mm<10) {
-    //     mm='0'+mm
-    // } 
-
-    // today = mm+'/'+dd+'/'+yyyy;
     var data = {
 
         'item_name': $('#item_name').val(),
@@ -42,14 +28,71 @@ var create_advertisement = function() {
     };
     sendDefaultPOST('/create-advertisement/', data, function(response) {
         console.log(response);
-
-        // in here, populate the shit
     });
 
 };
+
+var get_all_advertisment = function(){
+    var data = {
+
+    };
+    sendDefaultPOST('/produce-list-of-all-items-advertised/', data, function(response) {
+        console.log(response.items);
+        var i;
+        // A.adv_id, A.item_name, A.unit_price, A.num_aval_units
+        $('#advertisement-list').append('<tr><td>' + "advertisement ID"+ '</td><td>' + "item name" + '</td><td>' + "unit price" + '</td><td>'+ "num avaliable units"+'</td></tr>');
+        for(i = 0; i<response.items.length; i++){
+            $('#advertisement-list').append('<tr><td>' + response.items[i][0] + '</td><td>' + response.items[i][1] + '</td><td>' + response.items[i][2] + '</td><td>'+ response.items[i][3] + '</td><td class="delete-ad-list-row">Delete</td></tr>');
+        }
+        $('.delete-ad-list-row').click(function (){
+            var id = $(this).parent().children('td').eq(0).text();
+            $(this).parent().remove();
+           
+            var data = {
+                'id' : id 
+            };
+            sendDefaultPOST('/delete-advertisement/', data, function(response) {
+            console.log(response);
+
+
+        // in here, populate the shit
+        });
+
+
+        });
+
+
+    });
+
+};
+var delete_advertisement = function() {
+
+    var data = {
+
+    };
+    sendDefaultPOST('/delete-advertisement/', data, function(response) {
+        console.log(response);
+    });
+
+};
+var generate_mailing_list = function() {
+
+    var data = {
+
+    };
+    sendDefaultPOST('/generate-mailing-list/', data, function(response) {
+        console.log(response);
+    });
+
+};
+
+
 $( document ).ready(function() {
     "use strict";
     $("#create-advertisement").click(create_advertisement);
+    $("#delete-advertisement").click(create_advertisement);
+    $("#produce-list-of-all-items-advertised").click(get_all_advertisment);
+    $("#generate-mailing-list").click(generate_mailing_list);
 });
 
 
