@@ -9,9 +9,11 @@ from django.shortcuts import render_to_response
 from .forms import DocumentForm
 from .models import Document
 from . import queries
+import pprint
 import datetime
 import json
 
+pp = pprint.PrettyPrinter(indent=4)
 
 def make_data(request, username):
     homepage = False
@@ -46,6 +48,7 @@ def build_page(username, user_info, user_id, circles, circle_name, circle_id):
             comment_author_info = queries.get_username_and_name_by_id(
                 comment[4])
             comments.append(comment + comment_author_info)
+        comments = sorted(comments, key=lambda x: x[2], reverse=True)
         post = post + author_info + (comments,)
         posts.append(post)
 
@@ -95,6 +98,7 @@ def profile_view(request, page_owner, sub_page=None):
     # Get the page's posts, comments and all related data
     page_data = build_page(page_owner, user_info, user_id,
                            circles, circle_name, circle_id)
+    pp.pprint(page_data)
     # Add the page data to our data object
     data = make_data(request, page_owner)
     data['page_data'] = page_data

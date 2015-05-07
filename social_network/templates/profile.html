@@ -74,6 +74,7 @@
                         <img src="{% with '../media/avatars/'|add:post.9|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now s %}">
                         </div>
                         <label>{{ post.7 }} {{ post.8 }}</label>
+                        <div class="date sub-text">5 Likes - <a href="#">Like</a><br>{{ post.2 }}</div>
                     </div>
                     <div class="commentBox">
                         <p class="taskDescription">{{ post.3 }}</p>

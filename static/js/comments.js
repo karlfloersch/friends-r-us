@@ -23,6 +23,7 @@ var addPost = function() {
     "use strict";
     var $posts = $("#posts");
     var post = $("#post-box").val();
+    var numLikes = 5;
     var data = {
         'post_text': post,
         'page_name': $('#circle-name').attr('value'),
@@ -32,7 +33,7 @@ var addPost = function() {
         console.log(response);
     });
     $("#post-box").val('');
-    $posts.prepend('<div class="detailBox"><div class="titleBox"><div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div><label>' + fullname + '</label></div><div class="commentBox"><p class="taskDescription">' + post + '</p></div><div class="actionBox"><ul class="commentList"></ul><form role="form"><div class="row"><div class="col-md-10"><textarea rows="1" cols="40" class="form-control comment-box" type="text" placeholder="Write a comment..."></textarea></div><div class="col-md-2"><button type="button" class="btn btn-default comment-add">Add</button></div></div></form></div></div>');
+    $posts.prepend('<div class="detailBox"><div class="titleBox"><div class="commenterImage"> <img src="../../media/avatars/' + username + '.jpg"> </div><label>' + fullname + '</label><div class="date sub-text">' + numLikes + ' Likes - <a href="#">Like</a><br>' + fullname + ', on ' + today + '</div></div><div class="commentBox"><p class="taskDescription">' + post + '</p></div><div class="actionBox"><ul class="commentList"></ul><form role="form"><div class="row"><div class="col-md-10"><textarea rows="1" cols="40" class="form-control comment-box" type="text" placeholder="Write a comment..."></textarea></div><div class="col-md-2"><button type="button" class="btn btn-default comment-add">Add</button></div></div></form></div></div>');
     $(".comment-add").click(addComment);
     enableSubmitOnEnter();
 };
