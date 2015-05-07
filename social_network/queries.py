@@ -454,7 +454,7 @@ def remove_customer(cust_id, acc_id):
     #Check to see if account is deleted when a customer is removed from the system.
 
 def update_customer(cust_id, rating, firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_):
-    cursor = conneciton.cursor()
+    cursor = connection.cursor()
     cursor.execute('UPDATE customer SET email=?, rating=?, date_of_birth=? WHERE id =?',(email_, rating, dob_))
     cursor.execute('UPDATE person SET firstname =?, lastname=?, password=?, gender=?, address=?, city=?, state=?, telephone=? WHERE id = ?',(firstname, lastname, password, gender, address, city, state, telephone, cust_id))
 
