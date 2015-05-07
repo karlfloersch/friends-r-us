@@ -39,7 +39,7 @@ CREATE TABLE customer
      cust_id     INTEGER PRIMARY KEY, 
      email       VARCHAR(50), 
      rating      INT, 
-     date_of_birth DATETIME NOT NULL, 
+     date_of_birth TIMESTAMP NOT NULL, 
      FOREIGN KEY (cust_id) REFERENCES person(id) ON DELETE CASCADE 
   ); 
 
@@ -242,70 +242,70 @@ CREATE TABLE advertise
 INSERT INTO person
 VALUES (100100101,'Alice','McKeeny','pw','F','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649881);
 INSERT INTO customer
-VALUES (100100101,'alice@blah.com',8,10/10/88);
+VALUES (100100101,'alice@blah.com',8,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100101,'l');
 
 INSERT INTO person
 VALUES (100100102,'Bob','Wonderwall','pw','M','21 MajorApt,Oak St.','NewYork','NY',11700,4314649882);
 INSERT INTO customer
-VALUES (100100102,'bob@blah.com',5,6/8/88);
+VALUES (100100102,'bob@blah.com',5,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100102,'o');
 
 INSERT INTO person
 VALUES (100100103,'Elisa','Roth','pw','F','43 Corvette Apt, Maple St','Stony Brook','NY',11790,4314649883);
 INSERT INTO customer
-VALUES (100100103,'elisa@blah.com',5,11/10/92);
+VALUES (100100103,'elisa@blah.com',5,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100103,'l');
 
 INSERT INTO person
 VALUES (100100104,'Kelly','Mcdonald','pw','F','54 East Apt,Oak St','NewYork','NY',11700,4314649884);
 INSERT INTO customer
-VALUES (100100104,'kelly@blah.com',5,11/11/91);
+VALUES (100100104,'kelly@blah.com',5,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100104,'e');
 
 INSERT INTO person
 VALUES (100100105,'Wendy','Stanley','pw','F','21 MajorApt,Oak St.','Stony Brook','NY',11790,4314649885);
 INSERT INTO customer
-VALUES (100100105,'wendy@blah.com',2,8/8/92);
+VALUES (100100105,'wendy@blah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100105,'e');
 
 INSERT INTO person
 VALUES (100100106,'Dennis','Ritchie','pw','M','43 Corvette Apt, Maple St','NewYork','NY',11700,4314649886);
 INSERT INTO customer
-VALUES (100100106,'den@blah.com',2,3/2/92);
+VALUES (100100106,'den@blah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100106,'e');
 
 INSERT INTO person
 VALUES (100100107,'Patrick','Norris','pw','M','Chapin Apt 1001,Health Drive','Stony Brook','NY',11790,4314649887);
 INSERT INTO customer
-VALUES (100100107,'patnor@blahblah.com',2,8/7/92);
+VALUES (100100107,'patnor@blahblah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100107,'a');
 
 INSERT INTO person
 VALUES (100100108,'Chuck','Stewart','pw','M','54 East Apt,Oak St','NewYork','NY',11700,4314649888);
 INSERT INTO customer
-VALUES (100100108,'chuck@blah.com',2,2/1/91);
+VALUES (100100108,'chuck@blah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100108,'h');
 
 INSERT INTO person
 VALUES (100100109,'Brad','Norton','pw','M','Chapin Apt 2010,Health Drive','Stony Brook','NY',11790,4314649889);
 INSERT INTO customer
-VALUES (100100109,'brad@blah.com',2,9/1/92);
+VALUES (100100109,'brad@blah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100109,'r');
 
 INSERT INTO person
 VALUES (100100110,'Jeniffer','Buffet','pw','F','Chapin Apt 1223,Health Drive','NewYork','NY',11700,4314649890);
 INSERT INTO customer
-VALUES (100100110,'jennycool123@blah.com',2,8/1/89);
+VALUES (100100110,'jennycool123@blah.com',2,'2008-01-01 00:00:01');
 INSERT INTO customer_preferences
 VALUES (100100110,'e');
 

@@ -600,7 +600,7 @@ def update_employee(
 def sales_report_month(date):
     cursor = connection.cursor()
     #SELECT  A.AdvertisementId,  A.Item_Name , E.EmployeeId, SUM(P.Number_Of_Units) as TSaleOnItem, SUM(P.Number_Of_Units * A.Unit_Price)  FROM Employee E INNER JOIN Purchase P INNER JOIN Advertisement A ON P.Advertisement =A.AdvertisementId AND A.Employee = E.EmployeeId  WHERE MONTH(P.Date) = ? GROUP BY A.AdvertisementId
-    cursor.execute('SELECT A.adv_id, A.item_name, E.emp_id, SUM(B.num_units) as TSaleOnItem, SUM(B.num_units * A.unit_price) FROM employee E INNER JOIN buy B INNER JOIN advertisement A ON B.adv_id = A.adv_id AND A.employee_id = E.emp_id WHERE strftime(%m, B.date)=? GROUP BY A.adv_id', (date))
+    cursor.execute("SELECT A.adv_id, A.item_name, E.emp_id, SUM(B.num_units) as TSaleOnItem, SUM(B.num_units * A.unit_price) FROM employee E INNER JOIN buy B INNER JOIN advertisement A ON B.adv_id = A.adv_id AND A.employee_id = E.emp_id WHERE strftime('%m', B.date)=? GROUP BY A.adv_id", (date))
     report = cursor.fechone()
     return report
 
@@ -678,8 +678,9 @@ def customer_rep_highest_revenue():
 
 def customer_list():
     cursor = connection.cursor()
-    cursor.execute('SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, strftime(%d-%m-%Y, C.date_of_birth) FROM person P INNER JOIN customer C ON P.id = C.cust_id')
+    cursor.execute("SELECT P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, strftime('%d-%m-%Y', C.date_of_birth) FROM person P INNER JOIN customer C ON P.id = C.cust_id")
     cust_list = cursor.fetchall()
+    print(cust_list[0])
     return cust_list
 
 def advertisements_by_company(company_name):
