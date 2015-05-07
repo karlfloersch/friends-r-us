@@ -77,24 +77,25 @@ var list_all_customers = function(){
         // console.log(response);
         // mailing-list
         // P.id, P.firstname, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, C.email, C.rating, C.date_of_birth
-
+        // ;
+        $('#customer_table').toggle();
         var i;
         $('#customer_table').append('<tr><td>' + "id" +'</td><td>' + "firstname" + '</td><td>'+"lastname"+'</td><td>'+"gender"+'</td><td>'+"address"+'</td><td>'+"city"+'</td><td>'+"state"+'</td><td>'+"zipcode"+'</td><td>'+"telephone"+'</td><td>'+"email"+'</td><td>'+"rating"+'</td><td>'+"date_of_birth"+ '</td></tr>');
         $('#customer_table').find("tr:gt(0)").remove();
+        // console.log("bobs");
         for (i = 0; i < response.items.length; i++) {
             var j;
             var strings = '<tr><td>'
-            console.log('bob');
+            // console.log('bob');
             for(j = 0 ; j<response.items[i].length; j++){
                 if(j==response.items[i].length-1){
                     strings = strings + response.items[i][j];
                 }else{
-                    console.log(response.items[i][j]);
                     strings = strings + response.items[i][j] + '</td><td>';
                 }
             }
             strings = strings +'</td><td class="update-cust-list-row">Update' +'</td><td class="delete-cust-list-row">Delete'+ '</td></tr>'
-
+            // console.log(strings);
             $('#customer_table').append(strings);
         }
         // $('.update-cust-list-row').click(function() {

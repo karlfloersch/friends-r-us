@@ -203,11 +203,6 @@ def delete_advertisement_ajax(request):
 @login_required
 def list_all_customers_ajax(request):
     val = queries.customer_list()
-    
-    print(val[0])
-    t = datetime.datetime(val[0][12])
-    t.strftime('%m/%d/%Y')
-
     return HttpResponse(json.dumps({'items':val}) ,content_type="application/json")
 
 @login_required
