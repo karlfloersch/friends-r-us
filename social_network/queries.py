@@ -675,7 +675,7 @@ def customer_list():
     cust_list = cursor.fetchall()
     return cust_list
 
-def empoyee_list():
+def employee_list():
     cursor = connection.cursor()
     cursor.execute("SELECT P.firstnae, P.lastname, P.gender, P.address, P.city, P.state, P.zipcode, P.telephone, strftime('%d-%m-%Y', E.start_date), E.hourly_rate, E.role FROM person P INNER JOIN employee E ON P.id = E.employee_id")
 
