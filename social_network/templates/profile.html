@@ -74,7 +74,7 @@
                         <img src="{% with '../media/avatars/'|add:post.9|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}?{% now s %}">
                         </div>
                         <label>{{ post.7 }} {{ post.8 }}</label>
-                        <div class="date sub-text">{{ post.11 }} Likes - <span class="like-post" postID="{{ post.0 }}">{% if post.12 %}Unlike{% else %}Like{% endif %}</span><br>{{ post.2 }}</div>
+                        <div class="date sub-text"><span class="num-likes">{{ post.11 }}</span> Likes - <span class="like-post" postID="{{ post.0 }}">{% if post.12 %}Unlike{% else %}Like{% endif %}</span><br>{{ post.2 }}</div>
                     </div>
                     <div class="commentBox">
                         <p class="taskDescription">{{ post.3 }}</p>
@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="commentText">
                                     <p class="">{{ comment.3 }}</p> 
-                                    <span class="date sub-text">{{ comment.9 }} Likes - <span class="like-comment" commentID="{{ comment.0 }}">{% if comment.10 %}Unlike{% else %}Like{% endif %}</span><br>{{ comment.6 }} {{ comment.7 }}, on {{ comment.2|date:'m/d/Y' }} '</span>
+                                    <span class="date sub-text"><span class="num-likes">{{ comment.9 }}</span> Likes - <span class="like-comment" commentID="{{ comment.0 }}">{% if comment.10 %}Unlike{% else %}Like{% endif %}</span><br>{{ comment.6 }} {{ comment.7 }}, on {{ comment.2|date:'m/d/Y' }} '</span>
                             </li>
                             {% endfor %}
                         </ul>

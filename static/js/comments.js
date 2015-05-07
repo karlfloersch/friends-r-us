@@ -48,7 +48,9 @@ var toggleLikePost = function() {
             'text_type': 'post',
             'post_id': $(this).attr('postID')
         };
-        console.log(data);
+        console.log();
+        var current_likes = parseInt($($(this).parent().find('.num-likes').get(0)).text());
+        $($(this).parent().find('.num-likes').get(0)).text(String(current_likes + 1));
         sendDefaultPOST('/submit-like/', data, function(response) {
             console.log(response);
         });
@@ -60,6 +62,8 @@ var toggleLikePost = function() {
             'text_type': 'post',
             'post_id': $(this).attr('postID')
         };
+        var current_likes = parseInt($($(this).parent().find('.num-likes').get(0)).text());
+        $($(this).parent().find('.num-likes').get(0)).text(String(current_likes - 1));
         sendDefaultPOST('/submit-like/', data, function(response) {
             console.log(response);
         });
@@ -77,7 +81,6 @@ var toggleLikeComment = function() {
             'text_type': 'comment',
             'post_id': $(this).attr('commentID')
         };
-        console.log(data);
         sendDefaultPOST('/submit-like/', data, function(response) {
             console.log(response);
         });
