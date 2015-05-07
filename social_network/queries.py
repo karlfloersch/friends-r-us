@@ -133,7 +133,7 @@ def make_a_post(content, customer_id, page_id):
     #  comment_count INT,
     #  customerid    INT,
     #  page_id        INT,
-    ts = 'null'
+    ts = datetime.datetime.now()
     date_now = time.strftime("%d/%m/%Y")
     cursor = connection.cursor()
     cursor.execute('INSERT INTO post(date, time, content, comment_count, customerid, page_id) VALUES(?,?,?,?,?,?)', (date_now, ts, content, '0', customer_id, page_id))
@@ -171,7 +171,7 @@ def search_for_a_user_add_to_circle(circle_id, real_first_name, real_last_name):
 
 def create_a_circle(owner_id, name, circle_type):
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO circle(owner_id, name, circle_type) VALUES(?,?,?)',(owner_id, name, circle_type))    
+    cursor.execute('INSERT INTO circle(owner_id, name, circle_type) VALUES(?,?,?)',(owner_id, name, circle_type))
     cursor.execute('SELECT id FROM circle WHERE owner_id=? AND name=? AND circle_type=?', (owner_id, name, circle_type))
     circle_id = cursor.fetchone()
     print(circle_id)
@@ -201,7 +201,7 @@ def validate_purchase_quantity(adv_id, num_units):
     num_ = num[0]
 
     if (num_ - num_units) > 0:
-        return True 
+        return True
     else:
         return False
 
@@ -210,7 +210,7 @@ def purchase_one_or_advertised_item(adv_id, num_units, date, customer_acc_num):
     cursor = connection.cursor()
     #cursor.execute(UPDATE advertisement SET num_aval_units = num_aval_units - num_units WHERE adv_id= " +
     #   ad_id)
-  
+
     cursor.execute('UPDATE adversitement SET num_aval_units= num_aval_units - 1 WHERE adv_id=?',(adv_id))
     date_now = time.strftime("%d/%m/%Y")
     time = datetime.datetime.now()
@@ -430,10 +430,10 @@ def get_user_circles_ids(user_id):
 
 def add_customer(firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_, email_, dob_, credit_card_num):
     cursor = connection.cursor()
-    #customer_id     INTEGER PRIMARY KEY, 
+    #customer_id     INTEGER PRIMARY KEY,
     #account_id       INT,
     #create_date DATETIME NOT NULL,
-    #credit_card_num VARCHAR(50), 
+    #credit_card_num VARCHAR(50),
     ts = datetime.datetime.now()
 
     cursor.execute('INSERT INTO person(firstname, lastname, password, gender, address, city, state, zipcode, telephone) VALUES(?,?,?,?,?,?,?,?,?)',( firstname_, lastname_, password_, gender_, address_, city_, state_, zipcode_, telephone_))
@@ -467,7 +467,7 @@ def customer_mailing_list():
     return email_list
 
 def item_suggestions(emp_id, cust_id):
-    #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? ) 
+    #SELECT A.Item_Name, A.Advertisement_Id  FROM  Advertisement  A  WHERE A.Employee = ? AND A.Number_Of_Units>0  AND A.Type  IN (SELECT DISTINCT (A.Type) FROM Advertisement A INNER JOIN Purchase P INNER JOIN User U ON A.Advertisement_Id = P.Advertisement AND P.User = U.User_Id WHERE U.User_Id = ? )
     cursor = connection.cursor()
     cursor = execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
     item_suggestions = cursor.fetchall()
@@ -499,7 +499,7 @@ def add_employee(
 
 
 
-    
+
 
 
 
@@ -621,9 +621,9 @@ def produce_list_of_transactions_item_name_cust_name(
     return val
 
 
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):        
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
+    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))
     adv_obj = cursor.fetchone()
     return adv_obj
 

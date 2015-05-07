@@ -29,6 +29,9 @@ def make_data(request, username):
 
 def sort_posts(posts):
     print(posts)
+    sorted(posts, key=lambda x: x[2], reverse=True)
+    for post in posts:
+        print(post)
 
 
 def build_page(username, user_info, user_id, circles, circle_name, circle_id):
@@ -401,7 +404,7 @@ def validate_new_user(request):
 
 
 def isInt(s):
-    try: 
+    try:
         int(s)
         return True
     except ValueError:
