@@ -620,10 +620,10 @@ def produce_list_of_transactions_item_name_cust_name(
     val = cursor.fetchone()
     return val
 
-
-def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company):
+def create_advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, company):        
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))
+    date = time.strftime("%d/%m/%Y")
+    cursor.execute('INSERT INTO advertisement(item_name, num_aval_units, unit_price, content, employee_id, type, date, company) VALUES(?,?,?,?,?,?,?,?)',(item_name, num_aval_units, unit_price, content, employee_id, type, date, company))    
     adv_obj = cursor.fetchone()
     return adv_obj
 
