@@ -471,6 +471,7 @@ def item_suggestions(emp_id, cust_id):
     cursor = connection.cursor()
     cursor.execute('SELECT A.item_name, A.adv_id FROM advertisement A WHERE A.employee_id=? AND A.num_aval_units > 0 AND A.type IN (SELECT DISTINCT A.type FROM advertisement A INNER JOIN buy B INNER JOIN customer C ON A.adv_id = B.adv_id AND B.customer_acc_num = C.cust_id WHERE C.cust_id=?)',(emp_id, cust_id))
     item_suggestions = cursor.fetchall()
+    del item_suggestions[0]
     return item_suggestions
 
 
@@ -660,4 +661,4 @@ def customer_list():
     cust_list = cursor.fetchall()
     return cust_list
 
-def advertisements_by_company():
+# def advertisements_by_company():

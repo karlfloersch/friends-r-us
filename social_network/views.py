@@ -227,12 +227,8 @@ def create_advertisement_ajax(request):
     company = request.POST.get("company")
     employee_id = request.user.first_name
 
-    # queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
-    emp_id = 111221
-    cust_id= 100100106
-    val =queries.item_suggestions(emp_id, cust_id)
-
-    print(val)
+    queries.create_advertisement(item_name, num_units, unit_price, content, employee_id, type_ad,company)
+ 
     return HttpResponse(json.dumps({}) , content_type="application/json")
 
 
