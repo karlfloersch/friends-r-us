@@ -178,13 +178,12 @@ CREATE TABLE createpage
 
 CREATE TABLE comment 
   ( 
-     id        INT, 
+     id        INTEGER PRIMARY KEY, 
      date      DATE, 
      time      TIMESTAMP, 
      content   TEXT, 
      author_id INT, 
      post_id INT,
-     PRIMARY KEY (id), 
      FOREIGN KEY (author_id) REFERENCES customer (cust_id) ON DELETE NO ACTION,
      FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE
 
